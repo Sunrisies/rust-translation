@@ -1,0 +1,50 @@
+[
+  {
+    "kind": "Block",
+    "raw": "/**\r\n * Inspector widget to aid in debugging 3D Tiles\r\n *\r\n * @alias Cesium3DTilesInspector\r\n * @constructor\r\n *\r\n * @param {Element|string} container The DOM element or ID that will contain the widget.\r\n * @param {Scene} scene the Scene instance to use.\r\n */",
+    "start": 260,
+    "end": 519
+  },
+  {
+    "kind": "Line",
+    "raw": "//>>includeStart('debug', pragmas.debug);\r",
+    "start": 576,
+    "end": 618
+  },
+  {
+    "kind": "Line",
+    "raw": "//>>includeEnd('debug');\r",
+    "start": 703,
+    "end": 728
+  },
+  {
+    "kind": "Line",
+    "raw": "// Create warning text when the Wireframe checkbox is disabled\r",
+    "start": 4072,
+    "end": 4135
+  },
+  {
+    "kind": "Block",
+    "raw": "/**\r\n   * Gets the parent container.\r\n   * @memberof Cesium3DTilesInspector.prototype\r\n   *\r\n   * @type {Element}\r\n   */",
+    "start": 11822,
+    "end": 11942
+  },
+  {
+    "kind": "Block",
+    "raw": "/**\r\n   * Gets the view model.\r\n   * @memberof Cesium3DTilesInspector.prototype\r\n   *\r\n   * @type {Cesium3DTilesInspectorViewModel}\r\n   */",
+    "start": 12033,
+    "end": 12171
+  },
+  {
+    "kind": "Block",
+    "raw": "/**\r\n * @returns {boolean} true if the object has been destroyed, false otherwise.\r\n */",
+    "start": 12265,
+    "end": 12352
+  },
+  {
+    "kind": "Block",
+    "raw": "/**\r\n * Destroys the widget.  Should be called if permanently\r\n * removing the widget from layout.\r\n */",
+    "start": 12439,
+    "end": 12542
+  }
+]
