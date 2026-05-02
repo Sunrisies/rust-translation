@@ -3,11 +3,15 @@ import knockout from "../ThirdParty/knockout.js";
 import InspectorShared from "../InspectorShared.js";
 import Cesium3DTilesInspectorViewModel from "./Cesium3DTilesInspectorViewModel.js";
 
-/* * 调试 3D Tiles 的 Inspector 小部件
-* @alias Cesium3DTilesInspector
-* @constructor
-* @param {Element|string} container 将包含该小部件的 DOM 元素或 ID。
-* @param {Scene} scene 要使用的 Scene 实例。 */
+/**
+ * 调试 3D Tiles 的辅助工具——检查器小部件
+ *
+ * @alias Cesium3DTilesInspector
+ * @constructor
+ *
+ * @param {Element|string} container 将包含小部件的 DOM 元素或 ID。
+ * @param {Scene} scene 要使用的Scene实例。
+ */
 function Cesium3DTilesInspector(container, scene) {
   // >>includeStart('debug', pragmas.debug);
   Check.defined("container", container);
@@ -336,22 +340,24 @@ function Cesium3DTilesInspector(container, scene) {
 }
 
 Object.defineProperties(Cesium3DTilesInspector.prototype, {
-  /* *  
-   * 获取父容器。  
-   * @memberof Cesium3DTilesInspector.prototype  
-   *  
-   * @type {Element} */
+  /**
+   * 获取父容器。
+   * @memberof Cesium3DTilesInspector.prototype
+   *
+   * @type {Element}
+   */
   container: {
     get: function () {
       return this._container;
     },
   },
 
-  /* *  
-   * 获取视图模型。  
-   * @memberof Cesium3DTilesInspector.prototype  
-   *  
-   * @type {Cesium3DTilesInspectorViewModel} */
+  /**
+   * 获取视图模型。
+   * @memberof Cesium3DTilesInspector.prototype
+   *
+   * @type {Cesium3DTilesInspectorViewModel}
+   */
   viewModel: {
     get: function () {
       return this._viewModel;
@@ -359,13 +365,17 @@ Object.defineProperties(Cesium3DTilesInspector.prototype, {
   },
 });
 
-/* *  
-* @returns {boolean} 如果对象已被销毁，则返回 true，否则返回 false。 */
+/**
+ * @returns {boolean} true 如果对象已被销毁，则返回 false，否则返回 true。
+ */
 Cesium3DTilesInspector.prototype.isDestroyed = function () {
   return false;
 };
 
-/* *  销毁小部件。如果永久性地从布局中移除小部件，则应该调用此函数。 */
+/**
+ * 销毁小部件。如果永久删除，应调用此操作。
+ * 将小部件从布局中移除。
+ */
 Cesium3DTilesInspector.prototype.destroy = function () {
   knockout.cleanNode(this._element);
   this._container.removeChild(this._element);
