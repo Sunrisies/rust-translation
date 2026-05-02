@@ -1,5 +1,7 @@
+mod translation;
 use serde::Serialize;
 use std::{fmt, fs, path::Path};
+use translation::MAX_NEW_TOKENS;
 /// 表示一个注释
 #[derive(Debug, Clone, Serialize)]
 pub struct Comment {
@@ -223,20 +225,52 @@ fn main() {
     println!("注释信息已保存至: {:?}", comments_file);
 
     // 2. 模拟翻译（这里用占位示例，实际应调用翻译 API）
+    // let translated: Vec<String> = comments
+    //     .iter()
+    //     .map(|c| {
+    //         if c.kind == CommentKind::Line {
+    //             let inner = c.raw.trim_start_matches("//").trim();
+    //             if inner.is_empty() {
+    //                 c.raw.clone()
+    //             } else {
+    //                 format!("// [译]{}", inner)
+    //             }
+    //         } else {
+    //             // 多行注释：保留 /* 和 */ 符号，只替换内部文字
+    //             let inner = &c.raw[2..c.raw.len() - 2];
+    //             format!("/* [译]{} */", inner)
+    //         }
+    //     })
+    //     .collect();
     let translated: Vec<String> = comments
         .iter()
         .map(|c| {
-            if c.kind == CommentKind::Line {
-                let inner = c.raw.trim_start_matches("//").trim();
-                if inner.is_empty() {
-                    c.raw.clone()
-                } else {
-                    format!("// [译]{}", inner)
+            // 提取注释内容（去掉注释符号）
+            let content = match c.kind {
+                CommentKind::Line => c.raw.trim_start_matches("//").trim().to_owned(),
+                CommentKind::Block => {
+                    let inner = &c.raw[2..c.raw.len() - 2]; // 去掉 /* 和 */
+                    inner.trim().to_owned()
                 }
-            } else {
-                // 多行注释：保留 /* 和 */ 符号，只替换内部文字
-                let inner = &c.raw[2..c.raw.len() - 2];
-                format!("/* [译]{} */", inner)
+            };
+            if content.is_empty() {
+                return c.raw.clone();
+            }
+            // 调用翻译
+            let translated_content = translation::translate_text(
+                &content,
+                true,           // verbose
+                MAX_NEW_TOKENS, // 可用常量
+                file_path,
+                0,   // para_idx 可自增
+                0,   // chunk_idx
+                0.0, // temperature
+                Some(translation::SYSTEM_PROMPT_JS),
+            );
+            // 重组注释
+            match c.kind {
+                CommentKind::Line => format!("// {}", translated_content),
+                CommentKind::Block => format!("/* {} */", translated_content),
             }
         })
         .collect();

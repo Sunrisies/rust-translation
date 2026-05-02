@@ -3,20 +3,16 @@ import knockout from "../ThirdParty/knockout.js";
 import InspectorShared from "../InspectorShared.js";
 import Cesium3DTilesInspectorViewModel from "./Cesium3DTilesInspectorViewModel.js";
 
-/* [译]*
- * Inspector widget to aid in debugging 3D Tiles
- *
- * @alias Cesium3DTilesInspector
- * @constructor
- *
- * @param {Element|string} container The DOM element or ID that will contain the widget.
- * @param {Scene} scene the Scene instance to use.
-  */
+/* * 调试 3D Tiles 的 Inspector 小部件
+* @alias Cesium3DTilesInspector
+* @constructor
+* @param {Element|string} container 将包含该小部件的 DOM 元素或 ID。
+* @param {Scene} scene 要使用的 Scene 实例。 */
 function Cesium3DTilesInspector(container, scene) {
-  // [译]>>includeStart('debug', pragmas.debug);
+  // >>includeStart('debug', pragmas.debug);
   Check.defined("container", container);
   Check.typeOf.object("scene", scene);
-  // [译]>>includeEnd('debug');
+  // >>includeEnd('debug');
 
   container = getElement(container);
   const element = document.createElement("div");
@@ -122,7 +118,7 @@ function Cesium3DTilesInspector(container, scene) {
     ),
   );
 
-  // [译]Create warning text when the Wireframe checkbox is disabled
+  // 当 Wireframe 复选框被禁用时，创建警告文本
   const warningText = document.createElement("p");
   warningText.setAttribute(
     "data-bind",
@@ -340,24 +336,22 @@ function Cesium3DTilesInspector(container, scene) {
 }
 
 Object.defineProperties(Cesium3DTilesInspector.prototype, {
-  /* [译]*
-   * Gets the parent container.
-   * @memberof Cesium3DTilesInspector.prototype
-   *
-   * @type {Element}
-    */
+  /* *  
+   * 获取父容器。  
+   * @memberof Cesium3DTilesInspector.prototype  
+   *  
+   * @type {Element} */
   container: {
     get: function () {
       return this._container;
     },
   },
 
-  /* [译]*
-   * Gets the view model.
-   * @memberof Cesium3DTilesInspector.prototype
-   *
-   * @type {Cesium3DTilesInspectorViewModel}
-    */
+  /* *  
+   * 获取视图模型。  
+   * @memberof Cesium3DTilesInspector.prototype  
+   *  
+   * @type {Cesium3DTilesInspectorViewModel} */
   viewModel: {
     get: function () {
       return this._viewModel;
@@ -365,17 +359,13 @@ Object.defineProperties(Cesium3DTilesInspector.prototype, {
   },
 });
 
-/* [译]*
- * @returns {boolean} true if the object has been destroyed, false otherwise.
-  */
+/* *  
+* @returns {boolean} 如果对象已被销毁，则返回 true，否则返回 false。 */
 Cesium3DTilesInspector.prototype.isDestroyed = function () {
   return false;
 };
 
-/* [译]*
- * Destroys the widget.  Should be called if permanently
- * removing the widget from layout.
-  */
+/* *  销毁小部件。如果永久性地从布局中移除小部件，则应该调用此函数。 */
 Cesium3DTilesInspector.prototype.destroy = function () {
   knockout.cleanNode(this._element);
   this._container.removeChild(this._element);
