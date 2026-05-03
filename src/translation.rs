@@ -40,17 +40,29 @@ pub fn translate_text(
     temperature: f32,
     custom_system_prompt: Option<&str>,
 ) -> String {
-    if text.trim().is_empty() {
+    if text.trim().is_empty() || should_skip(text) {
         return text.to_owned();
     }
 
-    // 1. 保护占位符 «0» / «h3» 等
+    // 0. 保护内联 JSDoc 标签（如 {@link ...}, {@code ...}）
+    let inline_tag_re = Regex::new(r"\{@(?:link|code|linkcode|linkplain)\s+[^}]*\}").unwrap();
+    let mut inline_tag_map: HashMap<String, String> = HashMap::new();
+    let mut inline_counter = 0;
+    let protected_inline = inline_tag_re
+        .replace_all(text, |caps: &regex::Captures| {
+            let key = format!("⊂INLINE{}⊃", inline_counter);
+            inline_tag_map.insert(key.clone(), caps[0].to_owned());
+            inline_counter += 1;
+            key
+        })
+        .into_owned();
+
+    // 1. 保护普通占位符 «0» / «h3» 等
     let ph_pattern = Regex::new(r"«(h?\d+)»").unwrap();
     let mut temp_map: HashMap<String, String> = HashMap::new();
     let mut counter = 0;
-
     let protected_text = ph_pattern
-        .replace_all(text, |caps: &regex::Captures| {
+        .replace_all(&protected_inline, |caps: &regex::Captures| {
             let key = format!("⊂PH{}⊃", counter);
             temp_map.insert(key.clone(), caps[0].to_owned());
             counter += 1;
@@ -58,65 +70,59 @@ pub fn translate_text(
         })
         .into_owned();
 
-    // 2. 构建请求
-    let system_prompt = custom_system_prompt.unwrap_or(SYSTEM_PROMPT_MD);
-    let user_message = format!("请翻译以下内容为简体中文：\n{}", protected_text);
-
+    // 2. 构建 payload
+    let system_prompt = custom_system_prompt.unwrap_or(SYSTEM_PROMPT_JS);
     let payload = serde_json::json!({
         "messages": [
-            { "role": "system", "content": system_prompt },
-            { "role": "user", "content": user_message }
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": format!("请翻译以下内容为简体中文：\n{}", protected_text)}
         ],
         "max_tokens": max_tokens,
         "temperature": temperature
     });
 
-    // 3. 发送 HTTP 请求（带重试）
+    // 3. HTTP 请求（带重试）
     let client = reqwest::blocking::Client::builder()
         .timeout(std::time::Duration::from_secs(REQUEST_TIMEOUT_SECS))
         .build()
-        .unwrap();
+        .expect("构建 HTTP 客户端失败");
 
     let mut raw_content: Option<String> = None;
     let mut last_error = String::new();
 
     for attempt in 0..=MAX_RETRIES {
-        let response = client
-            .post(SERVER_URL)
-            .json(&payload)
-            .send()
-            .and_then(|r| r.error_for_status());
-
-        match response {
-            Ok(resp) => match resp.json::<serde_json::Value>() {
-                Ok(data) => {
-                    if let Some(choices) = data["choices"].as_array() {
-                        if let Some(msg) = choices[0]["message"]["content"].as_str() {
-                            raw_content = Some(msg.trim().to_owned());
-                            if verbose {
-                                let usage = &data["usage"];
-                                eprintln!(
-                                    "    输入 tokens: {}, 输出 tokens: {}",
-                                    usage
-                                        .get("prompt_tokens")
-                                        .and_then(|v| v.as_u64())
-                                        .unwrap_or(0),
-                                    usage
-                                        .get("completion_tokens")
-                                        .and_then(|v| v.as_u64())
-                                        .unwrap_or(0)
-                                );
+        match client.post(SERVER_URL).json(&payload).send() {
+            Ok(resp) => match resp.error_for_status() {
+                Ok(resp) => match resp.json::<serde_json::Value>() {
+                    Ok(data) => {
+                        if let Some(choices) = data["choices"].as_array() {
+                            if let Some(msg) = choices[0]["message"]["content"].as_str() {
+                                raw_content = Some(msg.trim().to_owned());
+                                if verbose {
+                                    let usage = &data["usage"];
+                                    eprintln!(
+                                        "    输入 tokens: {}, 输出 tokens: {}",
+                                        usage
+                                            .get("prompt_tokens")
+                                            .and_then(|v| v.as_u64())
+                                            .unwrap_or(0),
+                                        usage
+                                            .get("completion_tokens")
+                                            .and_then(|v| v.as_u64())
+                                            .unwrap_or(0)
+                                    );
+                                }
+                                break;
                             }
-                            break;
                         }
+                        last_error = "响应缺少 choices".into();
                     }
-                    last_error = "Response missing choices".into();
-                }
-                Err(e) => last_error = format!("JSON parse error: {}", e),
+                    Err(e) => last_error = format!("JSON 解析错误: {}", e),
+                },
+                Err(e) => last_error = format!("HTTP 状态错误: {}", e),
             },
-            Err(e) => last_error = format!("HTTP error: {}", e),
+            Err(e) => last_error = format!("请求错误: {}", e),
         }
-
         if attempt < MAX_RETRIES {
             eprintln!(
                 "    ⚠ 翻译请求失败 (尝试 {}/{}): {}",
@@ -132,34 +138,31 @@ pub fn translate_text(
         Some(r) => r,
         None => {
             eprintln!("  [翻译失败] {} – 保留原文", last_error);
-            // 记录调试信息
-            if let Ok(debug) = DEBUG_ENABLED.lock() {
-                if *debug {
-                    if let Ok(mut samples) = DEBUG_SAMPLES.lock() {
-                        samples.push(serde_json::json!({
-                            "file": file_label,
-                            "paragraph_index": para_idx,
-                            "chunk_index": chunk_idx,
-                            "protected_text": protected_text,
-                            "translated_raw": null,
-                            "translated_final": text,
-                            "original_text_preview": &text[..std::cmp::min(200, text.len())],
-                            "error": last_error
-                        }));
-                    }
-                }
+            if *DEBUG_ENABLED.lock().unwrap() {
+                DEBUG_SAMPLES.lock().unwrap().push(serde_json::json!({
+                    "file": file_label,
+                    "paragraph_index": para_idx,
+                    "chunk_index": chunk_idx,
+                    "protected_text": protected_text,
+                    "translated_raw": null,
+                    "translated_final": text,
+                    "original_text_preview": &text[..std::cmp::min(200, text.len())],
+                    "error": last_error
+                }));
             }
             return text.to_owned();
         }
     };
 
-    // 4. 恢复临时标记
+    // 4. 恢复占位符：先 inline 标签，再普通占位符
     let mut content = raw.clone();
+    for (key, orig) in &inline_tag_map {
+        content = content.replace(key.as_str(), orig);
+    }
     for (key, orig_ph) in &temp_map {
         if content.contains(key.as_str()) {
             content = content.replace(key.as_str(), orig_ph);
         } else {
-            // 尝试恢复丢失的标记
             let n: String = key
                 .chars()
                 .skip_while(|c| !c.is_ascii_digit())
@@ -179,17 +182,14 @@ pub fn translate_text(
             }
         }
     }
-
-    // 清除残留的临时标记
+    // 清除任何残留的临时标记
     let leftover_re = Regex::new(r"⊂\s*PH\s*\d+\s*⊃?").unwrap();
     content = leftover_re.replace_all(&content, "").into_owned();
 
-    // 5. 重试检查（仅当温度低时检查）
+    // 5. 重试检查（如果翻译结果仍含大量英文单词）
     if temperature < 0.1 && needs_retry(&content, text) {
         for attempt in 1..=MAX_RETRIES {
             eprintln!("    ⚠ 检测到未翻译内容，重试 ({}/{})", attempt, MAX_RETRIES);
-            // 提高温度重新翻译
-            let retry_temp = temperature + 0.2;
             let retry_text = translate_text(
                 text,
                 verbose,
@@ -197,7 +197,7 @@ pub fn translate_text(
                 file_label,
                 para_idx,
                 chunk_idx,
-                retry_temp,
+                temperature + 0.2,
                 custom_system_prompt,
             );
             if !needs_retry(&retry_text, text) {
@@ -206,51 +206,108 @@ pub fn translate_text(
         }
     }
 
-    // 6. 保存调试样本
-    if let Ok(debug) = DEBUG_ENABLED.lock() {
-        if *debug {
-            if let Ok(mut samples) = DEBUG_SAMPLES.lock() {
-                samples.push(serde_json::json!({
-                    "file": file_label,
-                    "paragraph_index": para_idx,
-                    "chunk_index": chunk_idx,
-                    "protected_text": protected_text,
-                    "translated_raw": raw,
-                    "translated_final": content,
-                    "original_text_preview": &text[..std::cmp::min(200, text.len())]
-                }));
-            }
-        }
+    // 6. 记录调试信息
+    if *DEBUG_ENABLED.lock().unwrap() {
+        DEBUG_SAMPLES.lock().unwrap().push(serde_json::json!({
+            "file": file_label,
+            "paragraph_index": para_idx,
+            "chunk_index": chunk_idx,
+            "protected_text": protected_text,
+            "translated_raw": raw,
+            "translated_final": content,
+            "original_text_preview": &text[..std::cmp::min(200, text.len())]
+        }));
     }
 
     content
 }
-
-/// 检查翻译结果是否仍需重试（英文单词占比 > 30%）
+/// 改进版重试判断：忽略不可见字符差异，排除标识符，避免误判
 fn needs_retry(translated: &str, original: &str) -> bool {
-    // 剔除占位符
-    let placeholder_re = Regex::new(r"«h?\d+»|⊂PH\d+⊃").unwrap();
-    let clean_trans = placeholder_re.replace_all(translated, "").trim().to_owned();
-    let clean_orig = placeholder_re.replace_all(original, "").trim().to_owned();
+    // 如果翻译结果中包含至少3个中文字符，说明已有实质性翻译，不再重试
+    let chinese_chars = translated
+        .chars()
+        .filter(|c| ('\u{4e00}'..='\u{9fa5}').contains(c))
+        .count();
+    if chinese_chars >= 3 {
+        return false;
+    }
 
-    // 英文单词计数
-    let eng_count = |s: &str| -> usize {
-        let eng_re = Regex::new(r"\b[a-zA-Z]{2,}\b").unwrap();
-        eng_re.find_iter(s).count()
+    let normalize = |s: &str| -> String {
+        let re = Regex::new(r"«h?\d+»|⊂PH\d+⊃|⊂INLINE\d+⊃|\s+").unwrap();
+        re.replace_all(s, " ").trim().to_owned()
     };
-    let total_words = |s: &str| -> usize { s.split_whitespace().count() };
+    let norm_orig = normalize(original);
+    let norm_trans = normalize(translated);
 
-    let eng_tr = eng_count(&clean_trans);
-    let total_tr = total_words(&clean_trans);
-    if total_tr == 0 {
+    if norm_orig == norm_trans {
         return false;
     }
 
-    let eng_or = eng_count(&clean_orig);
-    let total_or = total_words(&clean_orig).max(1);
-    if eng_or as f64 / (total_or as f64) < 0.5 {
+    let is_identifier = |word: &str| -> bool {
+        word.len() > 1
+            && word
+                .chars()
+                .all(|c| c.is_uppercase() || c == '_' || c.is_numeric())
+    };
+
+    let eng_words = |s: &str| -> usize {
+        Regex::new(r"\b[a-zA-Z]{2,}\b")
+            .unwrap()
+            .find_iter(s)
+            .filter(|m| !is_identifier(m.as_str()))
+            .count()
+    };
+
+    let eng_trans = eng_words(&norm_trans);
+    let total_trans = norm_trans.split_whitespace().count();
+    if total_trans == 0 {
         return false;
     }
+    let eng_orig = eng_words(&norm_orig);
+    let total_orig = norm_orig.split_whitespace().count().max(1);
+    if eng_orig as f64 / (total_orig as f64) < 0.5 {
+        return false;
+    }
+    (eng_trans as f64 / total_trans as f64) > 0.3
+}
 
-    (eng_tr as f64 / total_tr as f64) > 0.3
+/// 判断文本是否应该跳过翻译（如纯代码、纯符号、无英文的自然语言等）
+pub fn should_skip(text: &str) -> bool {
+    // 1. 移除所有占位符
+    let cleaned = Regex::new(r"«h?\d+»|⊂PH\d+⊃|⊂INLINE\d+⊃")
+        .unwrap()
+        .replace_all(text, "");
+    let trimmed = cleaned.trim();
+
+    // 空内容直接跳过
+    if trimmed.is_empty() {
+        return true;
+    }
+
+    // 2. 如果包含函数调用或赋值符号，且没有自然语言单词，判定为代码
+    if (trimmed.contains('(') && trimmed.contains(')'))
+        || trimmed.contains('=')
+        || trimmed.contains(';')
+    {
+        let has_natural = Regex::new(
+            r#"\b(the|is|are|a|an|this|that|it|you|not|for|with|from|and|or|in|on|of|to)\b"#,
+        )
+        .unwrap()
+        .is_match(trimmed);
+        if !has_natural {
+            return true;
+        }
+    }
+
+    // 3. 若内容无空格，很可能是一个单独的标识符或符号，跳过
+    if !trimmed.contains(' ') {
+        return true;
+    }
+
+    // 4. 没有连续两个英文字母，跳过
+    if !Regex::new(r"[a-zA-Z]{2,}").unwrap().is_match(trimmed) {
+        return true;
+    }
+
+    false
 }

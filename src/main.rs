@@ -1,4 +1,5 @@
 mod translation;
+use regex::Regex;
 use serde::Serialize;
 use std::{fmt, fs, path::Path};
 use translation::MAX_NEW_TOKENS;
@@ -213,7 +214,7 @@ pub fn replace_comments(source: &str, translated: &[String]) -> String {
 
 // ── 演示用法 ──
 fn main() {
-    let file_path = "./example/example1.js";
+    let file_path = "./example/example2.js";
     let source = fs::read_to_string(file_path).expect("无法读取文件");
 
     let comments = extract_comments(&source);
@@ -271,12 +272,14 @@ fn main() {
 fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> String {
     let lines: Vec<&str> = raw.lines().collect();
     if lines.len() <= 2 {
-        // 极短注释（例如单行 /* xxx */），按整体处理
-        let inner = &raw[2..raw.len() - 2]; // 去掉开头 /* 和结尾 */
+        let inner = &raw[2..raw.len() - 2];
+        if translation::should_skip(inner) {
+            return raw.to_owned();
+        }
         let trans = translation::translate_text(
             inner.trim(),
             false,
-            1024,
+            translation::MAX_NEW_TOKENS,
             file_label,
             comment_idx,
             0,
@@ -287,77 +290,70 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
     }
 
     let mut rebuilt: Vec<String> = Vec::new();
-
-    // 正则：匹配一行注释的三个部分 —— 前导空白 + 星号及紧接的空格 + 剩余内容
-    let line_re = regex::Regex::new(r"^(\s*\*\s?)(.*)$").unwrap();
+    let line_re = Regex::new(r"^(\s*\*\s?)(.*)$").unwrap();
 
     for line in lines {
         if let Some(caps) = line_re.captures(line) {
-            let prefix = caps.get(1).map(|m| m.as_str()).unwrap_or("* "); // 如 "   * " 或 " *"
+            let prefix = caps.get(1).map(|m| m.as_str()).unwrap_or("* ");
             let content = caps.get(2).map(|m| m.as_str()).unwrap_or("");
 
-            // 如果是纯星号行或内容为空，保留原样
             if content.trim().is_empty() {
                 rebuilt.push(line.to_owned());
                 continue;
             }
 
-            // 检查是否为 JSDoc 标签行（以 @ 开头，可能含 {type} 和 name）
+            // JSDoc 标签行（以 @ 开头）
             if let Some(stripped) = content.trim().strip_prefix('@') {
-                // 解析标签：@tagname {type} [name] description
                 let tag_re =
-                    regex::Regex::new(r"^(\w+)(\s+\{[^}]*\})?(\s+\[?[^\s\]]*\]?)?(?:\s+(.*))?")
-                        .unwrap();
+                    Regex::new(r"^(\w+)(\s+\{[^}]*\})?(\s+\[?[^\s\]]*\]?)?(?:\s+(.*))?").unwrap();
                 if let Some(tag_caps) = tag_re.captures(stripped) {
                     let tag = tag_caps.get(1).map(|m| m.as_str()).unwrap_or("");
                     let type_part = tag_caps.get(2).map(|m| m.as_str()).unwrap_or("");
                     let name_part = tag_caps.get(3).map(|m| m.as_str()).unwrap_or("");
                     let desc = tag_caps.get(4).map(|m| m.as_str()).unwrap_or("");
 
-                    if desc.is_empty() {
-                        // 无描述：原样保留整行
+                    if desc.is_empty() || translation::should_skip(desc) {
                         rebuilt.push(line.to_owned());
                     } else {
-                        // 只翻译描述部分
                         let trans_desc = translation::translate_text(
                             desc,
                             false,
-                            1024,
+                            translation::MAX_NEW_TOKENS,
                             file_label,
                             comment_idx,
                             0,
                             0.0,
                             Some(translation::SYSTEM_PROMPT_JS),
                         );
-                        // 重新组装：@tag {type} name 翻译的描述
                         let new_content =
                             format!("@{}{}{} {}", tag, type_part, name_part, trans_desc);
-                        // 注意：前缀保持不变，因此缩进完整保留
                         rebuilt.push(format!("{}{}", prefix, new_content));
                     }
                 } else {
-                    // 无法解析的标签行，保留原样
                     rebuilt.push(line.to_owned());
                 }
             } else {
-                // 普通文本行：整行翻译（保留前缀）
-                let trans = translation::translate_text(
-                    content,
-                    false,
-                    1024,
-                    file_label,
-                    comment_idx,
-                    0,
-                    0.0,
-                    Some(translation::SYSTEM_PROMPT_JS),
-                );
-                rebuilt.push(format!("{}{}", prefix, trans));
+                // 普通文本行
+                if translation::should_skip(content) {
+                    rebuilt.push(format!("{}{}", prefix, content));
+                } else {
+                    let trans = translation::translate_text(
+                        content,
+                        false,
+                        translation::MAX_NEW_TOKENS,
+                        file_label,
+                        comment_idx,
+                        0,
+                        0.0,
+                        Some(translation::SYSTEM_PROMPT_JS),
+                    );
+                    rebuilt.push(format!("{}{}", prefix, trans));
+                }
             }
         } else {
-            // 首行或尾行（/** 或 */），直接保留
+            // 首行或尾行（/** 或 */）
             rebuilt.push(line.to_owned());
         }
     }
-
     rebuilt.join("\n")
 }
