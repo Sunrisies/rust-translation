@@ -1,7 +1,10 @@
 mod translation;
 use regex::Regex;
 use serde::Serialize;
-use std::{fmt, fs, path::Path};
+use std::{
+    fmt, fs, io,
+    path::{Path, PathBuf},
+};
 use translation::MAX_NEW_TOKENS;
 /// 表示一个注释
 #[derive(Debug, Clone, Serialize)]
@@ -212,60 +215,110 @@ pub fn replace_comments(source: &str, translated: &[String]) -> String {
     result
 }
 
-// ── 演示用法 ──
-fn main() {
-    let file_path = "./example/example2.js";
-    let source = fs::read_to_string(file_path).expect("无法读取文件");
+fn main() -> io::Result<()> {
+    let args: Vec<String> = std::env::args().collect();
+    let program = args[0].clone();
 
-    let comments = extract_comments(&source);
+    // 解析参数（极简版，不引入 clap）
+    let mut positional = Vec::new();
+    let mut verbose = false;
+    let mut force = false;
 
-    // 1. 将提取的注释详情写入 JSON 文件（便于查看或批量翻译）
-    let comments_json = serde_json::to_string_pretty(&comments).unwrap_or_else(|_| "[]".into());
-    let comments_file = Path::new(file_path).with_extension("comments.json");
-    fs::write(&comments_file, comments_json).expect("无法写入注释 JSON");
-    println!("注释信息已保存至: {:?}", comments_file);
-    // ── 翻译注释（区分 Block 和 Line） ──
-    let translated: Vec<String> = comments
-        .iter()
-        .enumerate()
-        .map(|(idx, c)| {
-            if c.raw.trim().is_empty() {
-                return c.raw.clone();
+    let mut i = 1;
+    while i < args.len() {
+        match args[i].as_str() {
+            "--verbose" | "-v" => verbose = true,
+            "--force" | "-f" => force = true,
+            "--help" | "-h" => {
+                print_usage(&program);
+                return Ok(());
             }
-
-            match c.kind {
-                CommentKind::Line => {
-                    // 单行注释：去掉 // 后翻译，再组装
-                    let inner = c.raw.trim_start_matches("//").trim();
-                    if inner.is_empty() {
-                        return c.raw.clone();
-                    }
-                    let trans = translation::translate_text(
-                        inner,
-                        true,
-                        1024,
-                        file_path,
-                        idx,
-                        0,
-                        0.0,
-                        Some(translation::SYSTEM_PROMPT_JS),
-                    );
-                    format!("// {}", trans)
-                }
-                CommentKind::Block => {
-                    // 多行注释：按行解析，保护 JSDoc 标签
-                    translate_block_comment(&c.raw, file_path, idx)
+            _ => {
+                if args[i].starts_with('-') {
+                    eprintln!("未知选项: {}", args[i]);
+                    print_usage(&program);
+                    std::process::exit(1);
+                } else {
+                    positional.push(args[i].clone());
                 }
             }
-        })
-        .collect();
-    // 3. 替换回源码
-    let new_source = replace_comments(&source, &translated);
+        }
+        i += 1;
+    }
 
-    // 4. 写入翻译后的 JS 文件
-    let output_path = Path::new(file_path).with_extension("translated.js");
-    fs::write(&output_path, new_source).expect("无法写入翻译后的文件");
-    println!("翻译后的文件已保存至: {:?}", output_path);
+    if positional.is_empty() {
+        print_usage(&program);
+        std::process::exit(1);
+    }
+
+    let input_path = PathBuf::from(&positional[0]);
+    if !input_path.exists() {
+        eprintln!("错误：输入路径不存在: {}", input_path.display());
+        std::process::exit(1);
+    }
+
+    // 确定输出路径
+    let (single_file, output_path) = if input_path.is_file() {
+        // 单文件模式
+        let default_output = input_path.with_extension("translated.js");
+        let out = if positional.len() > 1 {
+            PathBuf::from(&positional[1])
+        } else {
+            default_output
+        };
+        (true, out)
+    } else if input_path.is_dir() {
+        // 目录模式
+        let out = if positional.len() > 1 {
+            PathBuf::from(&positional[1])
+        } else {
+            input_path.join("translated")
+        };
+        (false, out)
+    } else {
+        eprintln!("错误：输入路径既不是文件也不是目录");
+        std::process::exit(1);
+    };
+
+    // 开始翻译
+    if single_file {
+        process_file(&input_path, &output_path, verbose, force)?;
+        println!("翻译完成: {}", output_path.display());
+    } else {
+        // 收集所有 JS/TS 文件
+        let extensions = ["js", "ts", "jsx", "tsx"];
+        let mut files = Vec::new();
+        collect_files(&input_path, &extensions, &mut files)?;
+
+        if files.is_empty() {
+            eprintln!("未找到任何 JavaScript/TypeScript 文件");
+            return Ok(());
+        }
+
+        println!("找到 {} 个文件待翻译", files.len());
+        if verbose {
+            println!("输出目录: {}", output_path.display());
+        }
+
+        let input_base = input_path.canonicalize()?;
+        let output_base = output_path
+            .canonicalize()
+            .unwrap_or_else(|_| output_path.clone());
+
+        for file in &files {
+            // 计算相对路径，保持目录结构
+            let rel = file.strip_prefix(&input_base).unwrap_or(file);
+            let out_file = output_base.join(rel);
+
+            if let Err(e) = process_file(file, &out_file, verbose, force) {
+                eprintln!("  [错误] {}: {}", file.display(), e);
+            }
+        }
+
+        println!("翻译完成，输出目录: {}", output_base.display());
+    }
+
+    Ok(())
 }
 
 /// 精确翻译多行注释：保留所有缩进、* 前缀、空行、JSDoc 标签结构
@@ -356,4 +409,105 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
         }
     }
     rebuilt.join("\n")
+}
+// ─── 打印使用说明 ───
+fn print_usage(program: &str) {
+    eprintln!("用法:");
+    eprintln!("  {} <input> [output] [选项]", program);
+    eprintln!("");
+    eprintln!("参数:");
+    eprintln!("  <input>     输入文件或目录");
+    eprintln!("  [output]    输出文件或目录（默认为 <input>/translated 或添加后缀）");
+    eprintln!("");
+    eprintln!("选项:");
+    eprintln!("  --verbose, -v  显示详细进度");
+    eprintln!("  --force, -f    强制覆盖已有翻译文件");
+    eprintln!("  --help, -h     显示此帮助");
+}
+// ─── 递归收集指定扩展名的文件 ───
+fn collect_files(dir: &Path, extensions: &[&str], files: &mut Vec<PathBuf>) -> io::Result<()> {
+    if !dir.is_dir() {
+        return Ok(());
+    }
+    for entry in fs::read_dir(dir)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            collect_files(&path, extensions, files)?;
+        } else {
+            if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+                if extensions.contains(&ext) {
+                    files.push(path);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+// ─── 单个文件处理逻辑 ───
+fn process_file(
+    input_path: &Path,
+    output_path: &Path,
+    verbose: bool,
+    force: bool,
+) -> io::Result<()> {
+    if !force && output_path.exists() && output_path.metadata()?.len() > 0 {
+        if verbose {
+            eprintln!("  [跳过] {} 已存在", output_path.display());
+        }
+        return Ok(());
+    }
+
+    let source = fs::read_to_string(input_path)?;
+    let comments = extract_comments(&source);
+
+    if verbose {
+        eprintln!(
+            "  [处理] {} ({} 条注释)",
+            input_path.display(),
+            comments.len()
+        );
+    }
+
+    // 翻译每条注释
+    let translated: Vec<String> = comments
+        .iter()
+        .enumerate()
+        .map(|(idx, c)| match c.kind {
+            CommentKind::Line => {
+                let inner = c.raw.trim_start_matches("//").trim();
+                if inner.is_empty() || translation::should_skip(inner) {
+                    c.raw.clone()
+                } else {
+                    let trans = translation::translate_text(
+                        inner,
+                        verbose,
+                        translation::MAX_NEW_TOKENS,
+                        &input_path.display().to_string(),
+                        idx,
+                        0,
+                        0.0,
+                        Some(translation::SYSTEM_PROMPT_JS),
+                    );
+                    format!("// {}", trans)
+                }
+            }
+            CommentKind::Block => {
+                translate_block_comment(&c.raw, &input_path.display().to_string(), idx)
+            }
+        })
+        .collect();
+
+    let new_source = replace_comments(&source, &translated);
+
+    if let Some(parent) = output_path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    fs::write(output_path, new_source)?;
+
+    if verbose {
+        eprintln!("  [完成] -> {}", output_path.display());
+    }
+    Ok(())
 }
