@@ -1,7 +1,9 @@
 use crate::log_info;
+use once_cell::sync::Lazy;
 use regex::Regex;
 use std::collections::HashMap;
 use std::sync::{LazyLock, Mutex};
+use std::time::Instant;
 // ── 全局配置 ──
 const SERVER_URL: &str = "http://localhost:12323/v1/chat/completions";
 pub const MAX_NEW_TOKENS: u32 = 1024;
@@ -40,6 +42,7 @@ pub fn translate_text(
     temperature: f32,
     custom_system_prompt: Option<&str>,
 ) -> String {
+    let t_start = Instant::now();
     if text.trim().is_empty() || should_skip(text) {
         return text.to_owned();
     }
@@ -80,16 +83,19 @@ pub fn translate_text(
         "max_tokens": max_tokens,
         "temperature": temperature
     });
-
+    // HTTP 请求计时
+    let t_req_start = Instant::now();
     // 3. HTTP 请求（带重试）
     let client = reqwest::blocking::Client::builder()
         .timeout(std::time::Duration::from_secs(REQUEST_TIMEOUT_SECS))
         .build()
         .expect("构建 HTTP 客户端失败");
-
+    let t_req_end = Instant::now();
+    let req_ms = t_req_end.duration_since(t_req_start).as_millis();
     let mut raw_content: Option<String> = None;
     let mut last_error = String::new();
-
+    let mut prompt_tokens = 0u64;
+    let mut completion_tokens = 0u64;
     for attempt in 0..=MAX_RETRIES {
         match client.post(SERVER_URL).json(&payload).send() {
             Ok(resp) => match resp.error_for_status() {
@@ -100,16 +106,17 @@ pub fn translate_text(
                                 raw_content = Some(msg.trim().to_owned());
                                 if verbose {
                                     let usage = &data["usage"];
+                                    prompt_tokens = usage
+                                        .get("prompt_tokens")
+                                        .and_then(|v| v.as_u64())
+                                        .unwrap_or(0);
+                                    completion_tokens = usage
+                                        .get("completion_tokens")
+                                        .and_then(|v| v.as_u64())
+                                        .unwrap_or(0);
                                     log_info(&format!(
                                         "    输入 tokens: {}, 输出 tokens: {}",
-                                        usage
-                                            .get("prompt_tokens")
-                                            .and_then(|v| v.as_u64())
-                                            .unwrap_or(0),
-                                        usage
-                                            .get("completion_tokens")
-                                            .and_then(|v| v.as_u64())
-                                            .unwrap_or(0)
+                                        prompt_tokens, completion_tokens
                                     ));
                                 }
                                 break;
@@ -218,6 +225,11 @@ pub fn translate_text(
             "original_text_preview": &text[..std::cmp::min(200, text.len())]
         }));
     }
+    let total_ms = t_start.elapsed().as_millis();
+    log_info(&format!(
+        "    翻译耗时: 总计{}ms (网络{}ms), tokens: {}→{}",
+        total_ms, req_ms, prompt_tokens, completion_tokens
+    ));
 
     content
 }
@@ -272,42 +284,72 @@ fn needs_retry(translated: &str, original: &str) -> bool {
 }
 
 /// 判断文本是否应该跳过翻译（如纯代码、纯符号、无英文的自然语言等）
-pub fn should_skip(text: &str) -> bool {
-    // 1. 移除所有占位符
-    let cleaned = Regex::new(r"«h?\d+»|⊂PH\d+⊃|⊂INLINE\d+⊃")
+static SKIP_PLACEHOLDER_RE: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r"«h?\d+»|⊂PH\d+⊃|⊂INLINE\d+⊃").unwrap());
+static NATURAL_WORD_RE: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r#"\b(the|is|are|a|an|this|that|it|you|not|for|with|from|and|or|in|on|of|to)\b"#)
         .unwrap()
-        .replace_all(text, "");
-    let trimmed = cleaned.trim();
+});
+static HAS_ALPHA_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"[a-zA-Z]{2,}").unwrap());
 
-    // 空内容直接跳过
+pub fn should_skip(text: &str) -> bool {
+    let cleaned = SKIP_PLACEHOLDER_RE.replace_all(text, "");
+    let trimmed = cleaned.trim();
     if trimmed.is_empty() {
         return true;
     }
-
-    // 2. 如果包含函数调用或赋值符号，且没有自然语言单词，判定为代码
     if (trimmed.contains('(') && trimmed.contains(')'))
         || trimmed.contains('=')
         || trimmed.contains(';')
     {
-        let has_natural = Regex::new(
-            r#"\b(the|is|are|a|an|this|that|it|you|not|for|with|from|and|or|in|on|of|to)\b"#,
-        )
-        .unwrap()
-        .is_match(trimmed);
-        if !has_natural {
+        if !NATURAL_WORD_RE.is_match(trimmed) {
             return true;
         }
     }
-
-    // 3. 若内容无空格，很可能是一个单独的标识符或符号，跳过
     if !trimmed.contains(' ') {
         return true;
     }
-
-    // 4. 没有连续两个英文字母，跳过
-    if !Regex::new(r"[a-zA-Z]{2,}").unwrap().is_match(trimmed) {
+    if !HAS_ALPHA_RE.is_match(trimmed) {
         return true;
     }
-
     false
 }
+// pub fn should_skip(text: &str) -> bool {
+//     // 1. 移除所有占位符
+//     let cleaned = Regex::new(r"«h?\d+»|⊂PH\d+⊃|⊂INLINE\d+⊃")
+//         .unwrap()
+//         .replace_all(text, "");
+//     let trimmed = cleaned.trim();
+
+//     // 空内容直接跳过
+//     if trimmed.is_empty() {
+//         return true;
+//     }
+
+//     // 2. 如果包含函数调用或赋值符号，且没有自然语言单词，判定为代码
+//     if (trimmed.contains('(') && trimmed.contains(')'))
+//         || trimmed.contains('=')
+//         || trimmed.contains(';')
+//     {
+//         let has_natural = Regex::new(
+//             r#"\b(the|is|are|a|an|this|that|it|you|not|for|with|from|and|or|in|on|of|to)\b"#,
+//         )
+//         .unwrap()
+//         .is_match(trimmed);
+//         if !has_natural {
+//             return true;
+//         }
+//     }
+
+//     // 3. 若内容无空格，很可能是一个单独的标识符或符号，跳过
+//     if !trimmed.contains(' ') {
+//         return true;
+//     }
+
+//     // 4. 没有连续两个英文字母，跳过
+//     if !Regex::new(r"[a-zA-Z]{2,}").unwrap().is_match(trimmed) {
+//         return true;
+//     }
+
+//     false
+// }

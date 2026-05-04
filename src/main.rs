@@ -1,12 +1,12 @@
 mod translation;
-
 use regex::Regex;
 use serde::Serialize;
 use std::{
     fs,
     io::{self, BufWriter, Write},
     path::{Path, PathBuf},
-    sync::Mutex,
+    sync::{Arc, Condvar, Mutex},
+    time::{Instant, SystemTime},
 };
 
 // ── 全局日志文件 ──
@@ -14,15 +14,47 @@ static LOG_FILE: std::sync::LazyLock<Mutex<Option<BufWriter<fs::File>>>> =
     std::sync::LazyLock::new(|| Mutex::new(None));
 
 pub(crate) fn log_info(msg: &str) {
-    eprintln!("{}", msg);
+    let now = SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap();
+    let ts = format!("[{}.{:03}]", now.as_secs(), now.subsec_millis());
+    let line = format!("{} {}", ts, msg);
+    eprintln!("{}", line);
     if let Ok(mut guard) = LOG_FILE.lock() {
         if let Some(ref mut writer) = *guard {
-            let _ = writeln!(writer, "{}", msg);
+            let _ = writeln!(writer, "{}", line);
             let _ = writer.flush();
         }
     }
 }
+/// 简单的信号量实现，用于限制并发线程数
+struct Semaphore {
+    permits: Mutex<usize>,
+    cv: Condvar,
+}
 
+impl Semaphore {
+    fn new(max: usize) -> Self {
+        Semaphore {
+            permits: Mutex::new(max),
+            cv: Condvar::new(),
+        }
+    }
+
+    fn acquire(&self) {
+        let mut permits = self.permits.lock().unwrap();
+        while *permits == 0 {
+            permits = self.cv.wait(permits).unwrap();
+        }
+        *permits -= 1;
+    }
+
+    fn release(&self) {
+        let mut permits = self.permits.lock().unwrap();
+        *permits += 1;
+        self.cv.notify_one();
+    }
+}
 // ── 注释结构体（提取用） ──
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum CommentKind {
@@ -209,7 +241,7 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
         }
         let trans = translation::translate_text(
             inner.trim(),
-            false,
+            true,
             translation::MAX_NEW_TOKENS,
             file_label,
             comment_idx,
@@ -247,7 +279,7 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
                     } else {
                         let trans_desc = translation::translate_text(
                             desc,
-                            false,
+                            true,
                             translation::MAX_NEW_TOKENS,
                             file_label,
                             comment_idx,
@@ -268,7 +300,7 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
                 } else {
                     let trans = translation::translate_text(
                         content,
-                        false,
+                        true,
                         translation::MAX_NEW_TOKENS,
                         file_label,
                         comment_idx,
@@ -293,6 +325,7 @@ fn process_file(
     verbose: bool,
     force: bool,
 ) -> io::Result<()> {
+    let t_file_start = Instant::now();
     if !force && output_path.exists() && output_path.metadata()?.len() > 0 {
         log_info(&format!("  [跳过] {} 已存在", output_path.display()));
         return Ok(());
@@ -346,8 +379,12 @@ fn process_file(
         fs::create_dir_all(parent)?;
     }
     fs::write(output_path, new_source)?;
-
-    log_info(&format!("  [完成] -> {}", output_path.display()));
+    let file_ms = t_file_start.elapsed().as_millis();
+    log_info(&format!(
+        "  [文件完成] {}，总耗时 {}ms",
+        input_path.display(),
+        file_ms
+    ));
     Ok(())
 }
 
@@ -390,6 +427,7 @@ fn print_usage(program: &str) {
     eprintln!("  --force, -f    强制覆盖已有翻译文件");
     eprintln!("  --log <file>   将日志写入指定文件");
     eprintln!("  --help, -h     显示此帮助");
+    eprintln!("  --jobs <N>, -j <N>  并发处理文件数 (默认: CPU核心数)");
 }
 
 fn main() -> io::Result<()> {
@@ -400,7 +438,9 @@ fn main() -> io::Result<()> {
     let mut verbose = false;
     let mut force = false;
     let mut log_path: Option<PathBuf> = None;
-
+    let mut concurrency: usize = std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(4);
     let mut i = 1;
     while i < args.len() {
         match args[i].as_str() {
@@ -418,6 +458,15 @@ fn main() -> io::Result<()> {
             "--help" | "-h" => {
                 print_usage(&program);
                 return Ok(());
+            }
+            "--jobs" | "-j" => {
+                i += 1;
+                if i < args.len() {
+                    concurrency = args[i].parse().expect("--jobs 需要数字");
+                } else {
+                    eprintln!("错误: --jobs 需要指定数字");
+                    std::process::exit(1);
+                }
             }
             other => {
                 if other.starts_with('-') {
@@ -470,7 +519,8 @@ fn main() -> io::Result<()> {
         log_info("错误：输入路径既不是文件也不是目录");
         std::process::exit(1);
     };
-
+    // 开始时间
+    let start_time = Instant::now();
     if single_file {
         process_file(&input_path, &output_path, verbose, force)?;
         log_info(&format!("翻译完成: {}", output_path.display()));
@@ -503,25 +553,66 @@ fn main() -> io::Result<()> {
         //         log_info(&format!("  [错误] {}: {}", file.display(), e));
         //     }
         // }
+        // let total_files = files.len();
+        // for (file_idx, file) in files.iter().enumerate() {
+        //     let rel = file.strip_prefix(&input_base).unwrap_or(file);
+        //     let out_file = output_base.join(rel);
+
+        //     // 打印文件进度
+        //     log_info(&format!(
+        //         "文件 {}/{}: {}",
+        //         file_idx + 1,
+        //         total_files,
+        //         rel.display()
+        //     ));
+
+        //     if let Err(e) = process_file(file, &out_file, verbose, force) {
+        //         log_info(&format!("  [错误] {}: {}", file.display(), e));
+        //     }
+        // }
+
+        // log_info(&format!("翻译完成，输出目录: {}", output_base.display()));
+        let sem = Arc::new(Semaphore::new(concurrency));
+        let completed_counter = Arc::new(Mutex::new(0usize));
         let total_files = files.len();
-        for (file_idx, file) in files.iter().enumerate() {
-            let rel = file.strip_prefix(&input_base).unwrap_or(file);
-            let out_file = output_base.join(rel);
+        let mut handles = Vec::new();
 
-            // 打印文件进度
-            log_info(&format!(
-                "文件 {}/{}: {}",
-                file_idx + 1,
-                total_files,
-                rel.display()
-            ));
+        for file in files {
+            let sem = Arc::clone(&sem);
+            let completed_counter = Arc::clone(&completed_counter);
+            let out_file = output_base.join(file.strip_prefix(&input_base).unwrap_or(&file));
+            let verbose = verbose;
+            let force = force;
 
-            if let Err(e) = process_file(file, &out_file, verbose, force) {
-                log_info(&format!("  [错误] {}: {}", file.display(), e));
-            }
+            handles.push(std::thread::spawn(move || {
+                sem.acquire();
+                // 处理文件（内部会打印 [处理] 和 [完成]）
+                let result = process_file(&file, &out_file, verbose, force);
+                // 递增完成计数并报告进度
+                let mut completed = completed_counter.lock().unwrap();
+                *completed += 1;
+                log_info(&format!(
+                    "文件 {}/{} 完成: {}",
+                    *completed,
+                    total_files,
+                    out_file.display()
+                ));
+                sem.release();
+                result
+            }));
         }
 
+        // 等待所有线程结束，并捕捉可能的 panic
+        for handle in handles {
+            if let Err(e) = handle.join() {
+                log_info(&format!("线程异常: {:?}", e));
+            }
+        }
         log_info(&format!("翻译完成，输出目录: {}", output_base.display()));
+        // 结束时间
+        let end_time = Instant::now();
+        let duration = end_time - start_time;
+        log_info(&format!("翻译完成，耗时: {:?}", duration));
     }
 
     // 确保日志文件被刷新
