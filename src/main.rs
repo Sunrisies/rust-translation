@@ -1,49 +1,59 @@
 mod translation;
+
 use regex::Regex;
 use serde::Serialize;
 use std::{
-    fmt, fs, io,
+    fs,
+    io::{self, BufWriter, Write},
     path::{Path, PathBuf},
+    sync::Mutex,
 };
-use translation::MAX_NEW_TOKENS;
-/// 表示一个注释
+
+// ── 全局日志文件 ──
+static LOG_FILE: std::sync::LazyLock<Mutex<Option<BufWriter<fs::File>>>> =
+    std::sync::LazyLock::new(|| Mutex::new(None));
+
+pub(crate) fn log_info(msg: &str) {
+    eprintln!("{}", msg);
+    if let Ok(mut guard) = LOG_FILE.lock() {
+        if let Some(ref mut writer) = *guard {
+            let _ = writeln!(writer, "{}", msg);
+            let _ = writer.flush();
+        }
+    }
+}
+
+// ── 注释结构体（提取用） ──
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub enum CommentKind {
+    Line,
+    Block,
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct Comment {
-    /// 注释类型
     pub kind: CommentKind,
-    /// 注释原文（含 // 或 /* ... */ 标记）
     pub raw: String,
-    /// 注释在源码中的起始字节偏移
     pub start: usize,
-    /// 注释在源码中的结束字节偏移
     pub end: usize,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize)]
-pub enum CommentKind {
-    Line,  // //
-    Block, // /* */
-}
-
-/// 扫描 JS/TS 源码，返回所有注释（按出现顺序）
+// ─── 注释提取（完整实现） ───
 pub fn extract_comments(source: &str) -> Vec<Comment> {
     let chars: Vec<char> = source.chars().collect();
     let char_count = chars.len();
     let mut comments = Vec::new();
     let mut i = 0;
-    let mut expect_regex = true; // 初始视为可接受正则
+    let mut expect_regex = true;
 
     while i < char_count {
         let ch = chars[i];
 
-        // 更新 expect_regex：
-        // 遇到这些字符时，下一个 / 可能是正则开始
         match ch {
             '(' | '[' | '{' | ',' | ';' | ':' | '!' | '~' | '?' | '=' | '<' | '>' | '&' | '|'
             | '+' | '-' | '*' | '%' | '^' => {
                 expect_regex = true;
             }
-            // 标识符、数字、字符串、右括号等之后，/ 是除法
             c if c.is_alphanumeric()
                 || c == '_'
                 || c == '$'
@@ -56,12 +66,11 @@ pub fn extract_comments(source: &str) -> Vec<Comment> {
             {
                 expect_regex = false;
             }
-            _ => {} // 空白等不改变状态
+            _ => {}
         }
 
-        // 检测单行注释 //
+        // 单行注释 //
         if ch == '/' && i + 1 < char_count && chars[i + 1] == '/' {
-            // 确认不是除法（除号后面不能紧跟 /）
             let start = byte_offset(source, i);
             let mut j = i + 2;
             while j < char_count && chars[j] != '\n' {
@@ -76,11 +85,11 @@ pub fn extract_comments(source: &str) -> Vec<Comment> {
                 end,
             });
             i = j;
-            expect_regex = true; // 注释后可以出现正则
+            expect_regex = true;
             continue;
         }
 
-        // 检测多行注释 /*
+        // 多行注释 /* */
         if ch == '/' && i + 1 < char_count && chars[i + 1] == '*' {
             let start = byte_offset(source, i);
             let mut j = i + 2;
@@ -89,12 +98,12 @@ pub fn extract_comments(source: &str) -> Vec<Comment> {
                 if chars[j] == '*' && chars[j + 1] == '/' {
                     depth -= 1;
                     if depth == 0 {
-                        j += 2; // 跳过 */
+                        j += 2;
                         break;
                     }
                     j += 2;
                 } else if chars[j] == '/' && chars[j + 1] == '*' {
-                    depth += 1; // 支持嵌套（可选，JS 标准无嵌套，这里简单处理）
+                    depth += 1;
                     j += 2;
                 } else {
                     j += 1;
@@ -113,80 +122,60 @@ pub fn extract_comments(source: &str) -> Vec<Comment> {
             continue;
         }
 
-        // 处理字符串字面量
+        // 字符串字面量
         if ch == '\'' || ch == '"' || ch == '`' {
             let quote = ch;
-            let start = i;
             i += 1;
             while i < char_count {
-                let c = chars[i];
-                if c == '\\' {
-                    i += 2; // 跳过转义
-                } else if c == quote {
+                if chars[i] == '\\' {
+                    i += 2;
+                } else if chars[i] == quote {
                     i += 1;
                     break;
                 } else {
                     i += 1;
                 }
             }
-            // 字符串结束后，/ 不视为正则开始（因后缀已有标识符性质）
             expect_regex = false;
             continue;
         }
 
-        // 处理正则字面量
+        // 正则字面量
         if ch == '/' && expect_regex && !is_division_following(&chars, i) {
-            // 进入正则
-            let start = i;
             i += 1;
             let mut in_char_class = false;
             while i < char_count {
-                let c = chars[i];
-                if c == '\\' {
-                    i += 2; // 跳过转义
-                } else if c == '[' {
+                if chars[i] == '\\' {
+                    i += 2;
+                } else if chars[i] == '[' {
                     in_char_class = true;
                     i += 1;
-                } else if c == ']' {
+                } else if chars[i] == ']' {
                     in_char_class = false;
                     i += 1;
-                } else if c == '/' && !in_char_class {
-                    i += 1; // 结束
+                } else if chars[i] == '/' && !in_char_class {
+                    i += 1;
                     break;
                 } else {
                     i += 1;
                 }
             }
-            // 正则后可跟标志位
             while i < char_count && chars[i].is_alphabetic() {
                 i += 1;
             }
-            // 正则结束后，/ 是除法
             expect_regex = false;
             continue;
         }
 
-        // 其他字符，跳过
         i += 1;
     }
     comments
 }
 
-/// 辅助：判断当前位置的 / 是否可能是除法（即后面不能是换行、空格、* 等）
 fn is_division_following(chars: &[char], pos: usize) -> bool {
-    if pos + 1 >= chars.len() {
-        return false;
-    }
-    let next = chars[pos + 1];
-    // 若紧跟 =、空白、换行、注释开始等，不太可能是除法（可能为正则）
-    // 但实际上 / 后面如果跟着 * 或 / 我们已经在前面处理为注释了，
-    // 所以这里只需简单判断：如果后面是空白或换行，当作正则（不太准确，但影响不大）
-    // 严谨判断：除号右边必须是表达式开始，通常是数字、变量、括号等。
-    // 为简化，我们只检测明显不是除号的情况，如后面是空格、换行、*、/
-    matches!(next, ' ' | '\t' | '\n' | '\r' | '*' | '/')
+    pos + 1 < chars.len() && matches!(chars[pos + 1], ' ' | '\t' | '\n' | '\r' | '*' | '/')
 }
 
-/// 字符索引 → 字节偏移
 fn byte_offset(source: &str, char_index: usize) -> usize {
     source
         .char_indices()
@@ -195,14 +184,9 @@ fn byte_offset(source: &str, char_index: usize) -> usize {
         .unwrap_or(source.len())
 }
 
-/// 把翻译后的注释按顺序替换回源码
 pub fn replace_comments(source: &str, translated: &[String]) -> String {
     let comments = extract_comments(source);
-    assert_eq!(
-        comments.len(),
-        translated.len(),
-        "注释数量与翻译列表数量不一致"
-    );
+    assert_eq!(comments.len(), translated.len());
 
     let mut result = String::with_capacity(source.len());
     let mut last_end = 0;
@@ -215,113 +199,7 @@ pub fn replace_comments(source: &str, translated: &[String]) -> String {
     result
 }
 
-fn main() -> io::Result<()> {
-    let args: Vec<String> = std::env::args().collect();
-    let program = args[0].clone();
-
-    // 解析参数（极简版，不引入 clap）
-    let mut positional = Vec::new();
-    let mut verbose = false;
-    let mut force = false;
-
-    let mut i = 1;
-    while i < args.len() {
-        match args[i].as_str() {
-            "--verbose" | "-v" => verbose = true,
-            "--force" | "-f" => force = true,
-            "--help" | "-h" => {
-                print_usage(&program);
-                return Ok(());
-            }
-            _ => {
-                if args[i].starts_with('-') {
-                    eprintln!("未知选项: {}", args[i]);
-                    print_usage(&program);
-                    std::process::exit(1);
-                } else {
-                    positional.push(args[i].clone());
-                }
-            }
-        }
-        i += 1;
-    }
-
-    if positional.is_empty() {
-        print_usage(&program);
-        std::process::exit(1);
-    }
-
-    let input_path = PathBuf::from(&positional[0]);
-    if !input_path.exists() {
-        eprintln!("错误：输入路径不存在: {}", input_path.display());
-        std::process::exit(1);
-    }
-
-    // 确定输出路径
-    let (single_file, output_path) = if input_path.is_file() {
-        // 单文件模式
-        let default_output = input_path.with_extension("translated.js");
-        let out = if positional.len() > 1 {
-            PathBuf::from(&positional[1])
-        } else {
-            default_output
-        };
-        (true, out)
-    } else if input_path.is_dir() {
-        // 目录模式
-        let out = if positional.len() > 1 {
-            PathBuf::from(&positional[1])
-        } else {
-            input_path.join("translated")
-        };
-        (false, out)
-    } else {
-        eprintln!("错误：输入路径既不是文件也不是目录");
-        std::process::exit(1);
-    };
-
-    // 开始翻译
-    if single_file {
-        process_file(&input_path, &output_path, verbose, force)?;
-        println!("翻译完成: {}", output_path.display());
-    } else {
-        // 收集所有 JS/TS 文件
-        let extensions = ["js", "ts", "jsx", "tsx"];
-        let mut files = Vec::new();
-        collect_files(&input_path, &extensions, &mut files)?;
-
-        if files.is_empty() {
-            eprintln!("未找到任何 JavaScript/TypeScript 文件");
-            return Ok(());
-        }
-
-        println!("找到 {} 个文件待翻译", files.len());
-        if verbose {
-            println!("输出目录: {}", output_path.display());
-        }
-
-        let input_base = input_path.canonicalize()?;
-        let output_base = output_path
-            .canonicalize()
-            .unwrap_or_else(|_| output_path.clone());
-
-        for file in &files {
-            // 计算相对路径，保持目录结构
-            let rel = file.strip_prefix(&input_base).unwrap_or(file);
-            let out_file = output_base.join(rel);
-
-            if let Err(e) = process_file(file, &out_file, verbose, force) {
-                eprintln!("  [错误] {}: {}", file.display(), e);
-            }
-        }
-
-        println!("翻译完成，输出目录: {}", output_base.display());
-    }
-
-    Ok(())
-}
-
-/// 精确翻译多行注释：保留所有缩进、* 前缀、空行、JSDoc 标签结构
+// ─── 多行注释翻译（保留星号前缀与缩进） ───
 fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> String {
     let lines: Vec<&str> = raw.lines().collect();
     if lines.len() <= 2 {
@@ -355,7 +233,6 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
                 continue;
             }
 
-            // JSDoc 标签行（以 @ 开头）
             if let Some(stripped) = content.trim().strip_prefix('@') {
                 let tag_re =
                     Regex::new(r"^(\w+)(\s+\{[^}]*\})?(\s+\[?[^\s\]]*\]?)?(?:\s+(.*))?").unwrap();
@@ -386,7 +263,6 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
                     rebuilt.push(line.to_owned());
                 }
             } else {
-                // 普通文本行
                 if translation::should_skip(content) {
                     rebuilt.push(format!("{}{}", prefix, content));
                 } else {
@@ -404,48 +280,13 @@ fn translate_block_comment(raw: &str, file_label: &str, comment_idx: usize) -> S
                 }
             }
         } else {
-            // 首行或尾行（/** 或 */）
             rebuilt.push(line.to_owned());
         }
     }
     rebuilt.join("\n")
 }
-// ─── 打印使用说明 ───
-fn print_usage(program: &str) {
-    eprintln!("用法:");
-    eprintln!("  {} <input> [output] [选项]", program);
-    eprintln!("");
-    eprintln!("参数:");
-    eprintln!("  <input>     输入文件或目录");
-    eprintln!("  [output]    输出文件或目录（默认为 <input>/translated 或添加后缀）");
-    eprintln!("");
-    eprintln!("选项:");
-    eprintln!("  --verbose, -v  显示详细进度");
-    eprintln!("  --force, -f    强制覆盖已有翻译文件");
-    eprintln!("  --help, -h     显示此帮助");
-}
-// ─── 递归收集指定扩展名的文件 ───
-fn collect_files(dir: &Path, extensions: &[&str], files: &mut Vec<PathBuf>) -> io::Result<()> {
-    if !dir.is_dir() {
-        return Ok(());
-    }
-    for entry in fs::read_dir(dir)? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            collect_files(&path, extensions, files)?;
-        } else {
-            if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-                if extensions.contains(&ext) {
-                    files.push(path);
-                }
-            }
-        }
-    }
-    Ok(())
-}
 
-// ─── 单个文件处理逻辑 ───
+// ─── 单文件处理 ───
 fn process_file(
     input_path: &Path,
     output_path: &Path,
@@ -453,48 +294,48 @@ fn process_file(
     force: bool,
 ) -> io::Result<()> {
     if !force && output_path.exists() && output_path.metadata()?.len() > 0 {
-        if verbose {
-            eprintln!("  [跳过] {} 已存在", output_path.display());
-        }
+        log_info(&format!("  [跳过] {} 已存在", output_path.display()));
         return Ok(());
     }
 
     let source = fs::read_to_string(input_path)?;
     let comments = extract_comments(&source);
+    let total_comments = comments.len();
+    log_info(&format!(
+        "  [处理] {} ({} 条注释)",
+        input_path.display(),
+        comments.len()
+    ));
 
-    if verbose {
-        eprintln!(
-            "  [处理] {} ({} 条注释)",
-            input_path.display(),
-            comments.len()
-        );
-    }
-
-    // 翻译每条注释
     let translated: Vec<String> = comments
         .iter()
         .enumerate()
-        .map(|(idx, c)| match c.kind {
-            CommentKind::Line => {
-                let inner = c.raw.trim_start_matches("//").trim();
-                if inner.is_empty() || translation::should_skip(inner) {
-                    c.raw.clone()
-                } else {
-                    let trans = translation::translate_text(
-                        inner,
-                        verbose,
-                        translation::MAX_NEW_TOKENS,
-                        &input_path.display().to_string(),
-                        idx,
-                        0,
-                        0.0,
-                        Some(translation::SYSTEM_PROMPT_JS),
-                    );
-                    format!("// {}", trans)
-                }
+        .map(|(idx, c)| {
+            if total_comments > 1 {
+                log_info(&format!("    注释 {}/{} ...", idx + 1, total_comments));
             }
-            CommentKind::Block => {
-                translate_block_comment(&c.raw, &input_path.display().to_string(), idx)
+            match c.kind {
+                CommentKind::Line => {
+                    let inner = c.raw.trim_start_matches("//").trim();
+                    if inner.is_empty() || translation::should_skip(inner) {
+                        c.raw.clone()
+                    } else {
+                        let trans = translation::translate_text(
+                            inner,
+                            verbose,
+                            translation::MAX_NEW_TOKENS,
+                            &input_path.display().to_string(),
+                            idx,
+                            0,
+                            0.0,
+                            Some(translation::SYSTEM_PROMPT_JS),
+                        );
+                        format!("// {}", trans)
+                    }
+                }
+                CommentKind::Block => {
+                    translate_block_comment(&c.raw, &input_path.display().to_string(), idx)
+                }
             }
         })
         .collect();
@@ -506,8 +347,189 @@ fn process_file(
     }
     fs::write(output_path, new_source)?;
 
-    if verbose {
-        eprintln!("  [完成] -> {}", output_path.display());
+    log_info(&format!("  [完成] -> {}", output_path.display()));
+    Ok(())
+}
+
+// ─── 收集文件 ───
+fn collect_files(
+    base: &Path, // 输入目录的绝对路径
+    dir: &Path,
+    extensions: &[&str],
+    files: &mut Vec<PathBuf>,
+) -> io::Result<()> {
+    for entry in fs::read_dir(dir)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            collect_files(base, &path, extensions, files)?;
+        } else if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+            if extensions.contains(&ext) {
+                // 存储绝对路径，后续可轻松获取相对路径
+                if let Ok(abs) = path.canonicalize() {
+                    files.push(abs);
+                } else {
+                    files.push(path); // fallback
+                }
+            }
+        }
     }
+    Ok(())
+}
+
+fn print_usage(program: &str) {
+    eprintln!("用法:");
+    eprintln!("  {} <input> [output] [选项]", program);
+    eprintln!();
+    eprintln!("参数:");
+    eprintln!("  <input>     输入文件或目录");
+    eprintln!("  [output]    输出文件或目录（默认为 <input>/translated 或添加后缀）");
+    eprintln!();
+    eprintln!("选项:");
+    eprintln!("  --verbose, -v  显示详细进度");
+    eprintln!("  --force, -f    强制覆盖已有翻译文件");
+    eprintln!("  --log <file>   将日志写入指定文件");
+    eprintln!("  --help, -h     显示此帮助");
+}
+
+fn main() -> io::Result<()> {
+    let args: Vec<String> = std::env::args().collect();
+    let program = args[0].clone();
+
+    let mut positional = Vec::new();
+    let mut verbose = false;
+    let mut force = false;
+    let mut log_path: Option<PathBuf> = None;
+
+    let mut i = 1;
+    while i < args.len() {
+        match args[i].as_str() {
+            "--verbose" | "-v" => verbose = true,
+            "--force" | "-f" => force = true,
+            "--log" => {
+                i += 1;
+                if i < args.len() {
+                    log_path = Some(PathBuf::from(&args[i]));
+                } else {
+                    eprintln!("错误: --log 需要指定文件路径");
+                    std::process::exit(1);
+                }
+            }
+            "--help" | "-h" => {
+                print_usage(&program);
+                return Ok(());
+            }
+            other => {
+                if other.starts_with('-') {
+                    eprintln!("未知选项: {}", other);
+                    print_usage(&program);
+                    std::process::exit(1);
+                } else {
+                    positional.push(other.to_string());
+                }
+            }
+        }
+        i += 1;
+    }
+
+    if positional.is_empty() {
+        print_usage(&program);
+        std::process::exit(1);
+    }
+
+    // 初始化日志文件
+    if let Some(ref path) = log_path {
+        let file = fs::File::create(path).expect("无法创建日志文件");
+        let writer = BufWriter::new(file);
+        *LOG_FILE.lock().unwrap() = Some(writer);
+        log_info(&format!("日志开始，文件: {}", path.display()));
+    }
+
+    let input_path = PathBuf::from(&positional[0]);
+    if !input_path.exists() {
+        log_info(&format!("错误：输入路径不存在: {}", input_path.display()));
+        std::process::exit(1);
+    }
+
+    let (single_file, output_path) = if input_path.is_file() {
+        let default_output = input_path.with_extension("translated.js");
+        let out = if positional.len() > 1 {
+            PathBuf::from(&positional[1])
+        } else {
+            default_output
+        };
+        (true, out)
+    } else if input_path.is_dir() {
+        let out = if positional.len() > 1 {
+            PathBuf::from(&positional[1])
+        } else {
+            input_path.join("translated")
+        };
+        (false, out)
+    } else {
+        log_info("错误：输入路径既不是文件也不是目录");
+        std::process::exit(1);
+    };
+
+    if single_file {
+        process_file(&input_path, &output_path, verbose, force)?;
+        log_info(&format!("翻译完成: {}", output_path.display()));
+    } else {
+        let extensions = ["js", "ts", "jsx", "tsx"];
+        let input_base = input_path.canonicalize()?;
+        let mut files = Vec::new();
+        collect_files(&input_base, &input_base, &extensions, &mut files)?;
+
+        if files.is_empty() {
+            log_info("未找到任何 JavaScript/TypeScript 文件");
+            return Ok(());
+        }
+
+        log_info(&format!("找到 {} 个文件待翻译", files.len()));
+        if verbose {
+            log_info(&format!("输出目录: {}", output_path.display()));
+        }
+
+        let input_base = input_path.canonicalize()?;
+        let output_base = output_path
+            .canonicalize()
+            .unwrap_or_else(|_| output_path.clone());
+
+        // for file in &files {
+        //     let rel = file.strip_prefix(&input_base).unwrap_or(file);
+        //     let out_file = output_base.join(rel);
+
+        //     if let Err(e) = process_file(file, &out_file, verbose, force) {
+        //         log_info(&format!("  [错误] {}: {}", file.display(), e));
+        //     }
+        // }
+        let total_files = files.len();
+        for (file_idx, file) in files.iter().enumerate() {
+            let rel = file.strip_prefix(&input_base).unwrap_or(file);
+            let out_file = output_base.join(rel);
+
+            // 打印文件进度
+            log_info(&format!(
+                "文件 {}/{}: {}",
+                file_idx + 1,
+                total_files,
+                rel.display()
+            ));
+
+            if let Err(e) = process_file(file, &out_file, verbose, force) {
+                log_info(&format!("  [错误] {}: {}", file.display(), e));
+            }
+        }
+
+        log_info(&format!("翻译完成，输出目录: {}", output_base.display()));
+    }
+
+    // 确保日志文件被刷新
+    if let Ok(mut guard) = LOG_FILE.lock() {
+        if let Some(ref mut writer) = *guard {
+            let _ = writer.flush();
+        }
+    }
+
     Ok(())
 }

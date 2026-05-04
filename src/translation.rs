@@ -1,7 +1,7 @@
+use crate::log_info;
 use regex::Regex;
 use std::collections::HashMap;
 use std::sync::{LazyLock, Mutex};
-
 // ── 全局配置 ──
 const SERVER_URL: &str = "http://localhost:12323/v1/chat/completions";
 pub const MAX_NEW_TOKENS: u32 = 1024;
@@ -100,7 +100,7 @@ pub fn translate_text(
                                 raw_content = Some(msg.trim().to_owned());
                                 if verbose {
                                     let usage = &data["usage"];
-                                    eprintln!(
+                                    log_info(&format!(
                                         "    输入 tokens: {}, 输出 tokens: {}",
                                         usage
                                             .get("prompt_tokens")
@@ -110,7 +110,7 @@ pub fn translate_text(
                                             .get("completion_tokens")
                                             .and_then(|v| v.as_u64())
                                             .unwrap_or(0)
-                                    );
+                                    ));
                                 }
                                 break;
                             }
