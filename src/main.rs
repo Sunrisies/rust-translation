@@ -545,33 +545,6 @@ fn main() -> io::Result<()> {
             .canonicalize()
             .unwrap_or_else(|_| output_path.clone());
 
-        // for file in &files {
-        //     let rel = file.strip_prefix(&input_base).unwrap_or(file);
-        //     let out_file = output_base.join(rel);
-
-        //     if let Err(e) = process_file(file, &out_file, verbose, force) {
-        //         log_info(&format!("  [错误] {}: {}", file.display(), e));
-        //     }
-        // }
-        // let total_files = files.len();
-        // for (file_idx, file) in files.iter().enumerate() {
-        //     let rel = file.strip_prefix(&input_base).unwrap_or(file);
-        //     let out_file = output_base.join(rel);
-
-        //     // 打印文件进度
-        //     log_info(&format!(
-        //         "文件 {}/{}: {}",
-        //         file_idx + 1,
-        //         total_files,
-        //         rel.display()
-        //     ));
-
-        //     if let Err(e) = process_file(file, &out_file, verbose, force) {
-        //         log_info(&format!("  [错误] {}: {}", file.display(), e));
-        //     }
-        // }
-
-        // log_info(&format!("翻译完成，输出目录: {}", output_base.display()));
         let sem = Arc::new(Semaphore::new(concurrency));
         let completed_counter = Arc::new(Mutex::new(0usize));
         let total_files = files.len();
