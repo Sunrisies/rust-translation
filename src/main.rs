@@ -1,3 +1,4 @@
+mod md_translation;
 mod translation;
 use regex::Regex;
 use serde::Serialize;
@@ -339,41 +340,65 @@ fn process_file(
         input_path.display(),
         comments.len()
     ));
-
-    let translated: Vec<String> = comments
-        .iter()
-        .enumerate()
-        .map(|(idx, c)| {
-            if total_comments > 1 {
-                log_info(&format!("    注释 {}/{} ...", idx + 1, total_comments));
-            }
-            match c.kind {
-                CommentKind::Line => {
-                    let inner = c.raw.trim_start_matches("//").trim();
-                    if inner.is_empty() || translation::should_skip(inner) {
-                        c.raw.clone()
-                    } else {
-                        let trans = translation::translate_text(
-                            inner,
-                            verbose,
-                            translation::MAX_NEW_TOKENS,
-                            &input_path.display().to_string(),
-                            idx,
-                            0,
-                            0.0,
-                            Some(translation::SYSTEM_PROMPT_JS),
-                        );
-                        format!("// {}", trans)
+    let ext = input_path
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("");
+    let new_source = match ext {
+        "js" | "ts" | "jsx" | "tsx" => {
+            // 原有的 JS 处理逻辑
+            let comments = extract_comments(&source);
+            log_info(&format!(
+                "  [处理] {} ({} 条注释)",
+                input_path.display(),
+                comments.len()
+            ));
+            let translated: Vec<String> = comments
+                .iter()
+                .enumerate()
+                .map(|(idx, c)| {
+                    if total_comments > 1 {
+                        log_info(&format!("    注释 {}/{} ...", idx + 1, total_comments));
                     }
-                }
-                CommentKind::Block => {
-                    translate_block_comment(&c.raw, &input_path.display().to_string(), idx)
-                }
-            }
-        })
-        .collect();
+                    match c.kind {
+                        CommentKind::Line => {
+                            let inner = c.raw.trim_start_matches("//").trim();
+                            if inner.is_empty() || translation::should_skip(inner) {
+                                c.raw.clone()
+                            } else {
+                                let trans = translation::translate_text(
+                                    inner,
+                                    verbose,
+                                    translation::MAX_NEW_TOKENS,
+                                    &input_path.display().to_string(),
+                                    idx,
+                                    0,
+                                    0.0,
+                                    Some(translation::SYSTEM_PROMPT_JS),
+                                );
+                                format!("// {}", trans)
+                            }
+                        }
+                        CommentKind::Block => {
+                            translate_block_comment(&c.raw, &input_path.display().to_string(), idx)
+                        }
+                    }
+                })
+                .collect();
 
-    let new_source = replace_comments(&source, &translated);
+            replace_comments(&source, &translated)
+        }
+        "md" | "markdown" => {
+            log_info(&format!("  [处理] {} (Markdown)", input_path.display()));
+            md_translation::translate_markdown_file(&source)
+        }
+        _ => {
+            // 不支持的类型，原样复制
+            source.clone()
+        }
+    };
+
+    // let new_source = replace_comments(&source, &translated);
 
     if let Some(parent) = output_path.parent() {
         fs::create_dir_all(parent)?;
@@ -525,7 +550,7 @@ fn main() -> io::Result<()> {
         process_file(&input_path, &output_path, verbose, force)?;
         log_info(&format!("翻译完成: {}", output_path.display()));
     } else {
-        let extensions = ["js", "ts", "jsx", "tsx"];
+        let extensions = ["js", "ts", "jsx", "tsx", "md", "markdown"];
         let input_base = input_path.canonicalize()?;
         let mut files = Vec::new();
         collect_files(&input_base, &input_base, &extensions, &mut files)?;
