@@ -49,8 +49,15 @@ impl PlaceholderManager {
 
     // 恢复占位符，支持模糊匹配（防止 LLM 修改格式）
     pub fn restore(&self, text: &str) -> String {
-        let mut result = text.to_owned();
-        // 按编号从大到小替换，避免冲突
+        // 预处理：将常见的错误符号修复为正确的«»
+        let fixed = text
+            .replace('⊂', "«")
+            .replace('⊃', "»")
+            .replace('《', "«") // 有时双书名号也会出现
+            .replace('》', "»");
+
+        let mut result = fixed;
+        // 按编号从大到小替换
         let mut keys: Vec<(usize, String)> = self
             .map
             .keys()
@@ -65,28 +72,25 @@ impl PlaceholderManager {
             .collect();
         keys.sort_by_key(|(num, _)| *num);
         keys.reverse();
+
         for (_, ph) in keys {
             let orig = &self.map[&ph];
             if result.contains(&ph) {
                 result = result.replace(&ph, orig);
             } else {
-                // 尝试模糊匹配（防止 LLM 修改格式）
+                // 额外尝试：ph 本身可能已被修复，但编号数字前后可能有多余空格
                 let n_str = ph.trim_start_matches('«').trim_end_matches('»');
-                let variants = vec![
-                    format!("« {} »", n_str),
-                    format!("「{}」", n_str),
-                    format!("[{}]", n_str),
-                    format!("<{}>", n_str),
-                ];
-                for var in &variants {
-                    if result.contains(var) {
-                        result = result.replace(var, orig);
-                        break;
-                    }
+                let loose_re = Regex::new(&format!(r"«\s*{}\s*»", regex::escape(n_str))).unwrap();
+                if let Some(m) = loose_re.find(&result) {
+                    result = result.replace(m.as_str(), orig);
+                } else {
+                    // 最终回退：若仍找不到，记录警告并移除残留占位符
+                    log_info(&format!("    ⚠ 占位符 {} 未能恢复，已从输出中移除", ph));
                 }
             }
         }
-        // 清除残留的未匹配占位符（安全起见）
+
+        // 清除仍残留的任何正确格式占位符（安全措施）
         let leftover_re = Regex::new(r"«\s*\d+\s*»").unwrap();
         result = leftover_re.replace_all(&result, "").to_string();
         result
