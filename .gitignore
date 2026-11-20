@@ -1,0 +1,56 @@
+# ============ 依赖 ============
+node_modules/
+.pnpm-store/
+
+# ============ 构建产物 ============
+site/.output/
+site/.output_*/
+site/.nuxt/
+site/.data/
+site/dist/
+deploy/public/
+deploy/public_*/
+deploy-server/public/
+deploy-server/public_*/
+output/
+
+# ============ 上游英文源仓库（靠 update.sh 的 git pull 重新获取，不提交） ============
+repo/
+
+# ============ 模型文件（超大，绝不提交） ============
+*.gguf
+*.bin
+*.safetensors
+
+# ============ 打包产物（可重新生成） ============
+*.tar.gz
+*.zip
+
+# ============ 调试/临时文件 ============
+*.html.bak
+debug-shot.png
+static-shot.png
+views-shot.png
+landing-shot.png
+rendered-dom.html
+static-dom.html
+views-dom*.html
+views-final.html
+home-dom.html
+tab-dom.html
+*.log
+
+# ============ 备份/清理目录 ============
+_pruned/
+_backup/
+*.bak
+public_old*/
+.output_old*/
+
+# ============ 缓存（可选提交；如需团队共享译文进度可去掉这几行） ============
+# cache.json
+
+# ============ 系统文件 ============
+.DS_Store
+Thumbs.db
+*.swp

@@ -1,0 +1,49 @@
+{
+  "name": "nuxt",
+  "displayName": "Nuxt 中文文档",
+  "description": "使用本地 Hy-MT2-1.8B 翻译的 Nuxt v4.6.4 官方文档",
+  "version": "v4.6.4",
+
+  "source": {
+    "type": "git",
+    "url": "https://github.com/nuxt/nuxt.git",
+    "ref": "v4.6.4",
+    "docsDir": "docs",
+    "siteOrigin": "https://nuxt.com"
+  },
+
+  "translation": {
+    "model": "Hy-MT2-1.8B-Q4_K_M.gguf",
+    "api": "http://127.0.0.1:8999/v1/chat/completions",
+    "terms": {
+      "composable": "组合式函数",
+      "composables": "组合式函数",
+      "tree-shaking": "摇树优化",
+      "middleware": "中间件",
+      "server-side rendering": "服务端渲染",
+      "client-side rendering": "客户端渲染",
+      "hot module replacement": "热模块替换"
+    }
+  },
+
+  "deploy": {
+    "domain": "nuxt.sunrise1024.top",
+    "serverPath": "/var/www/nuxt-docs",
+    "workbuddy": {
+      "url": "https://nuxt-docs-zh.app.workbuddy.host/?sharecode=AYJMZQT7S7",
+      "domainPrefix": "nuxt-docs-zh"
+    },
+    "umami": {
+      "script": "https://umami.sunrise1024.top/script.js",
+      "workbuddyWebsiteId": "1b580d0f-9fca-40f0-a513-1401faa8d557",
+      "serverScript": "https://umami.sunrise1024.top/recorder.js",
+      "serverWebsiteId": "a95f5257-96c9-4c01-aa90-8c9d683ac000"
+    }
+  },
+
+  "stats": {
+    "totalDocs": 253,
+    "translated": 253,
+    "chapters": ["入门指南", "目录结构", "指南", "API", "社区", "Bridge 迁移", "Nuxt 3 迁移"]
+  }
+}

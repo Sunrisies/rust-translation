@@ -1,0 +1,31 @@
+# ============================================
+# Nuxt 中文文档 - Caddy 配置段
+# ============================================
+# 实际部署环境：Caddy 跑在 Docker 容器里（容器名 caddy）
+# 主机配置文件：/home/www/caddy/Caddyfile
+# 容器内路径：  /etc/caddy/Caddyfile（bind mount，但实测需容器内改才生效，见部署说明.md）
+#
+# 把下面这段追加到 /home/www/caddy/Caddyfile 末尾即可
+# 域名 nuxt.sunrise1024.top 的 A 记录已指向 47.111.168.59
+# Caddy 自动申请并续期 Let's Encrypt 证书
+
+nuxt.sunrise1024.top {
+    root * /var/www/nuxt-docs
+    encode gzip zstd
+    # 关键：Docus 站内链接无后缀（/getting-started/introduction -> introduction.html）
+    try_files {path} {path}.html {path}/ =404
+    handle_errors {
+        rewrite * /404.html
+        file_server
+    }
+    file_server {
+        index index.html
+    }
+}
+
+# --------------------------------------------
+# 如果改用其他域名，替换 nuxt.sunrise1024.top 即可。
+# 改配置后在容器内 reload（详见 部署说明.md 第三节坑 1）：
+#   docker exec caddy sh -c "sed 's|旧域名|新域名|g' /etc/caddy/Caddyfile > /tmp/new && cat /tmp/new > /etc/caddy/Caddyfile"
+#   docker exec caddy caddy reload --config /etc/caddy/Caddyfile
+# --------------------------------------------

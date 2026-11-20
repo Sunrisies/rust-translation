@@ -1,0 +1,1267 @@
+{
+  "1.getting-started/01.introduction.md": {
+    "hash": "94bbfd9dbc8421e1e3c7ee4c8bd44c7f581aa78fa4f266640407eee016e02e00",
+    "blocks": 42,
+    "time": "2026-11-20 13:10"
+  },
+  "1.getting-started/02.installation.md": {
+    "hash": "b3df98eecc653b04c1d8230f6c089a4e5872c30a3279acff5c68ddeff9cae48d",
+    "blocks": 24,
+    "time": "2026-11-20 13:10"
+  },
+  "1.getting-started/03.configuration.md": {
+    "hash": "96a902331bace71c17cdc929ce0052faf783d8046a8530f4402281bf4e69787a",
+    "blocks": 62,
+    "time": "2026-11-20 09:15"
+  },
+  "1.getting-started/04.views.md": {
+    "hash": "6ef55ff069a77ab99d64f994b71ff5f22e89f47a98650983383f8e3fcc643aeb",
+    "blocks": 18,
+    "time": "2026-11-20 13:10"
+  },
+  "1.getting-started/05.assets.md": {
+    "hash": "165d7c830b0fa4d872ec9178f44d05c0a6826e10d40f42efe610768427926552",
+    "blocks": 36,
+    "time": "2026-11-20 13:10"
+  },
+  "1.getting-started/06.styling.md": {
+    "hash": "8c24dee54e544b6cfdbc90f654b27a38531e65f734748d2a14b1cf004dc64d9c",
+    "blocks": 104,
+    "time": "2026-11-20 13:10"
+  },
+  "2.directory-structure/0.nuxt.md": {
+    "hash": "ad3e10fdf7cd758f673b0d8db006f00f530b9dc1212470957c91fbc1681bce32",
+    "blocks": 7,
+    "time": "2026-11-20 09:33"
+  },
+  "2.directory-structure/0.output.md": {
+    "hash": "fcb38e96fe42a0302ea2967a0c4e5572197febe80a8e02a07f83beaeb38e6a75",
+    "blocks": 5,
+    "time": "2026-11-20 09:33"
+  },
+  "2.directory-structure/1.app/1.assets.md": {
+    "hash": "778f57b19091fcad2b3547cda8e21a12fed14a85a5338483651578987f6c1409",
+    "blocks": 7,
+    "time": "2026-11-20 09:33"
+  },
+  "2.directory-structure/1.app/1.components.md": {
+    "hash": "b25f8d4e18d63fc0a40c6027c2cd41a9e1e5a831033ffdff358a5d8823717855",
+    "blocks": 102,
+    "time": "2026-11-20 09:33"
+  },
+  "2.directory-structure/1.app/1.composables.md": {
+    "hash": "75b990332f4d37ac5c100ada4cb2a3207fa47d07e72fa76e3eacb02a4e382107",
+    "blocks": 22,
+    "time": "2026-11-20 09:33"
+  },
+  "2.directory-structure/1.app/1.layouts.md": {
+    "hash": "152356304fe2ceae1a69b880a83efb017c19c05bd29337c9c976a8c4435b5017",
+    "blocks": 44,
+    "time": "2026-11-20 09:33"
+  },
+  "2.directory-structure/1.app/1.middleware.md": {
+    "hash": "b860cc2ce4382faf95e6dc1b3655db95c581d28e82586185eeb8c192019cdf69",
+    "blocks": 55,
+    "time": "2026-11-20 09:34"
+  },
+  "2.directory-structure/1.app/1.pages.md": {
+    "hash": "b76ec788f3c4b751f399b2e68c5db9c6ed2600ef8211e939a41ff178e3553009",
+    "blocks": 94,
+    "time": "2026-11-20 13:17"
+  },
+  "2.directory-structure/1.app/1.plugins.md": {
+    "hash": "a89133b7672589eec8098ebe7c5ed23e522fe5678bd8c0b805772fc5eb19c6d5",
+    "blocks": 50,
+    "time": "2026-11-20 13:17"
+  },
+  "2.directory-structure/1.app/1.utils.md": {
+    "hash": "057492984f367b74dd9c136fa64328086efe7408f61bb515007ea2cb58604ca7",
+    "blocks": 11,
+    "time": "2026-11-20 09:35"
+  },
+  "2.directory-structure/1.app/3.app-config.md": {
+    "hash": "476c49e43dcebbe17293bdf06c425a5db9dc491ef080376e0f3c9c96104f8578",
+    "blocks": 37,
+    "time": "2026-11-20 09:35"
+  },
+  "2.directory-structure/1.app/3.app.md": {
+    "hash": "9c8a27ea69f7513e01821a3bdec4591af845e1d84ef93be96f783ae77b9931fd",
+    "blocks": 14,
+    "time": "2026-11-20 09:35"
+  },
+  "2.directory-structure/1.app/3.error.md": {
+    "hash": "aa111970097e5d450c611abf5ab9eeb687c7be7a4e05c5363240d638a32cc82f",
+    "blocks": 8,
+    "time": "2026-11-20 13:17"
+  },
+  "2.directory-structure/1.app/3.spa-loading-template.md": {
+    "hash": "8ead2b1743d1624798bc7f17629e64c5f8704e7067d2af099817849f2f4737b2",
+    "blocks": 16,
+    "time": "2026-11-20 09:35"
+  },
+  "2.directory-structure/1.content.md": {
+    "hash": "caac19e5832de169a624f6f46509463b8af54217d5ed650b463bbef2c29307d9",
+    "blocks": 17,
+    "time": "2026-11-20 13:18"
+  },
+  "2.directory-structure/1.layers.md": {
+    "hash": "26565432054952aeabb6f7a0526a30752999557866f33dc082f4db1d80b6809c",
+    "blocks": 28,
+    "time": "2026-11-20 09:35"
+  },
+  "2.directory-structure/1.modules.md": {
+    "hash": "c051f386cf49902f7433c5922e1da797e96ba28f9ef2374cd965fc346ff9cc21",
+    "blocks": 14,
+    "time": "2026-11-20 13:18"
+  },
+  "2.directory-structure/1.node_modules.md": {
+    "hash": "959313f40e0f37946e0a3d3aa8ed944ab8ed1943517070493c591690c6ca9b4f",
+    "blocks": 4,
+    "time": "2026-11-20 09:35"
+  },
+  "2.directory-structure/1.public.md": {
+    "hash": "aeea61380826baf36984c5cde1a8c47ca92bdd9cdf3f973c8798839aadea7d28",
+    "blocks": 4,
+    "time": "2026-11-20 09:35"
+  },
+  "2.directory-structure/1.server.md": {
+    "hash": "22f4f71b9563612a0c5cb04106e629bdd0de1b44d26106f4b3de702f03af166e",
+    "blocks": 95,
+    "time": "2026-11-20 13:18"
+  },
+  "2.directory-structure/1.shared.md": {
+    "hash": "2d70b69db26fdb8a1ed8b651e457c87ef3ac164df4788acdf358319e3677f691",
+    "blocks": 23,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/1.test.md": {
+    "hash": "61bba547416780dc81b2f2df401b23978e6e7890ea465eca8a0a487949f31794",
+    "blocks": 8,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/2.env.md": {
+    "hash": "fc6709a30fee4d0cce546a74409b2feb0c4eabe9e0154ec885e2e289b87a8761",
+    "blocks": 27,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/2.gitignore.md": {
+    "hash": "5bd99a25dcb1cf24bfa9dcc9a1d8d1ba4524981c6a1d3ea70b5d58bfcf829915",
+    "blocks": 4,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/2.nuxtignore.md": {
+    "hash": "a30e1795318f72c6fbed2c9b6173c433bf83e220e15cee53b91d9c0aa2e0a518",
+    "blocks": 7,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/2.nuxtrc.md": {
+    "hash": "f6ee0e712824c3e543ce5ed2363d78ecbfbd66c3a2fb25652ff691884ed489de",
+    "blocks": 13,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/3.nuxt-config.md": {
+    "hash": "11662346f5c55626add2743b4770a72c8452942421f829931ed6b20f661c098c",
+    "blocks": 7,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/3.package.md": {
+    "hash": "7636ae5cad053c9cbed76227f075fa94e492e8ffb0ce29a57cfd846454041d3c",
+    "blocks": 4,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/3.tsconfig.md": {
+    "hash": "11308ea59dd64777c86b1f505bea7161b17812c12bd59e4fdc32b9df5e66a2d4",
+    "blocks": 10,
+    "time": "2026-11-20 09:36"
+  },
+  "2.directory-structure/index.md": {
+    "hash": "18219011ae6178314b86256f2d95b202c11b17ae85018525514f334157564981",
+    "blocks": 44,
+    "time": "2026-11-20 09:36"
+  },
+  "3.guide/0.index.md": {
+    "hash": "5d271d395099a3f25e9e9da4ca9126658de9349271769203ca164cae3978c850",
+    "blocks": 8,
+    "time": "2026-11-20 09:37"
+  },
+  "3.guide/1.concepts/1.rendering.md": {
+    "hash": "aef3759afcec89a18206ee4f331f22df69f00d6c00757714af325c975de415c4",
+    "blocks": 99,
+    "time": "2026-11-20 13:19"
+  },
+  "3.guide/1.concepts/10.vuejs-development.md": {
+    "hash": "cdf08ec19597701b0b42aac2b713a0ff84a00203085016d9859bb32821e250c4",
+    "blocks": 57,
+    "time": "2026-11-20 09:38"
+  },
+  "3.guide/1.concepts/2.nuxt-lifecycle.md": {
+    "hash": "e51632e2f76b3bf03f8c7f65c82cdd4ba9c7cf2402742dd4853b4c1c38bbf4e5",
+    "blocks": 62,
+    "time": "2026-11-20 13:19"
+  },
+  "3.guide/1.concepts/3.auto-imports.md": {
+    "hash": "e4bce644666ca522e7ba4d19996baafd17130e9d86dcafcb39743e338770c0e8",
+    "blocks": 48,
+    "time": "2026-11-20 09:38"
+  },
+  "3.guide/1.concepts/4.server-engine.md": {
+    "hash": "dcf257f378f15316f16251fb5e04adf022e8ccae556e66969c71173003e21708",
+    "blocks": 33,
+    "time": "2026-11-20 13:19"
+  },
+  "3.guide/1.concepts/5.modules.md": {
+    "hash": "8d1309a757ca277aa90817b7ac61396143a37a4ab0e7c6cd73b304bed6e0eb06",
+    "blocks": 14,
+    "time": "2026-11-20 09:38"
+  },
+  "3.guide/1.concepts/6.server-components.md": {
+    "hash": "49493c96f7cec8a73e21d44c0c6528582e13eb36b2d40c554d898c16e1f5831e",
+    "blocks": 69,
+    "time": "2026-11-20 09:39"
+  },
+  "3.guide/1.concepts/7.esm.md": {
+    "hash": "8c00ee980101409eb3126273bf0a72d60c7e45e16d831396b0dde46cdaaa4a6a",
+    "blocks": 63,
+    "time": "2026-11-20 09:39"
+  },
+  "3.guide/1.concepts/8.typescript.md": {
+    "hash": "b3ff11510e9a5a857d0ce25d1f593e36c9cf799f0435a1cb44fad3de078b6a03",
+    "blocks": 38,
+    "time": "2026-11-20 13:19"
+  },
+  "3.guide/1.concepts/9.code-style.md": {
+    "hash": "0bd554c67cc7b0f1da0098f822f2df6b3c197cc986e7dd98bd39ffcb6e135ff6",
+    "blocks": 8,
+    "time": "2026-11-20 13:19"
+  },
+  "3.guide/2.best-practices/accessibility.md": {
+    "hash": "80efa6a020e42fed40b64a9dc24e4d9949a9d446353758cc9397179c84ba62aa",
+    "blocks": 29,
+    "time": "2026-11-20 13:20"
+  },
+  "3.guide/2.best-practices/devcontainers.md": {
+    "hash": "9cadb7c12bd923d8e11aa7a325e9fe7a9931f29dafffb5ac30107ca220442541",
+    "blocks": 29,
+    "time": "2026-11-20 09:40"
+  },
+  "3.guide/2.best-practices/hydration.md": {
+    "hash": "2a703ab14c6ad1ae19641ff4b3d229b74c1fd8a9d003f90355ba5012bff7d707",
+    "blocks": 38,
+    "time": "2026-11-20 13:20"
+  },
+  "3.guide/2.best-practices/performance.md": {
+    "hash": "00f07db0a3e0b0d2748dd4d1358b52951a77287cf86637820c6b1c8d39b85d38",
+    "blocks": 101,
+    "time": "2026-11-20 13:20"
+  },
+  "3.guide/2.best-practices/plugins.md": {
+    "hash": "f8e1ae85f8a5fed9afca6a0265baa4a0ab583afc1313c959438bb4d141a9b8e2",
+    "blocks": 10,
+    "time": "2026-11-20 09:41"
+  },
+  "3.guide/3.ai/1.mcp.md": {
+    "hash": "f72d67422da48b4842594afc10b2ecb96847eb0018d4207146083eb55a140fb0",
+    "blocks": 143,
+    "time": "2026-11-20 09:41"
+  },
+  "3.guide/3.ai/2.llms-txt.md": {
+    "hash": "559bdc7d77d71becf106c74156920e0ced5dcea15754e2b748ed4665471b8ea6",
+    "blocks": 32,
+    "time": "2026-11-20 09:41"
+  },
+  "3.guide/4.modules/1.getting-started.md": {
+    "hash": "6d89972c2fb5126389fd90ee6614b076c33db642af2cf55778f7145e3415b86c",
+    "blocks": 42,
+    "time": "2026-11-20 09:42"
+  },
+  "3.guide/4.modules/2.module-anatomy.md": {
+    "hash": "88be5afd2df714dc15d6d13c0c5d52bea5ba26b3107598436158d4bd3310fc06",
+    "blocks": 42,
+    "time": "2026-11-20 09:42"
+  },
+  "3.guide/4.modules/3.recipes-basics.md": {
+    "hash": "ab4e76ee93c75097e108b700e7c9ce5e537c560356c799fbaa5ee9f1130c8d08",
+    "blocks": 48,
+    "time": "2026-11-20 09:42"
+  },
+  "3.guide/4.modules/4.module-dependencies.md": {
+    "hash": "88479c84a0a403e1804547efa76cccf48fbc0361811c5604afa029f5a16e33aa",
+    "blocks": 15,
+    "time": "2026-11-20 09:42"
+  },
+  "3.guide/4.modules/5.recipes-advanced.md": {
+    "hash": "57eb3e7f49eea8b4ba6f3529907826a55786782688d0a324f296652be23abc03",
+    "blocks": 37,
+    "time": "2026-11-20 13:21"
+  },
+  "3.guide/4.modules/6.testing.md": {
+    "hash": "e66903e3fcf37850f7a5c7ddc4132a8dd515974c845fd1472a142b0207fc1395",
+    "blocks": 20,
+    "time": "2026-11-20 09:42"
+  },
+  "3.guide/4.modules/7.best-practices.md": {
+    "hash": "0fff7a9db34cd79dbc563185f5d6c27e3e22a825ffa81d0306f920613542ae87",
+    "blocks": 41,
+    "time": "2026-11-20 09:42"
+  },
+  "3.guide/4.modules/8.ecosystem.md": {
+    "hash": "1a730929e64f397b17acebc2de0bf3e75fcb430751e481f087b53e57d1b2d3de",
+    "blocks": 16,
+    "time": "2026-11-20 09:43"
+  },
+  "3.guide/4.modules/9.server-compatibility.md": {
+    "hash": "a3adffdd79c2f0cad7885760e40eb90f7b4df170eeebd6a6b08bfffa8c34614f",
+    "blocks": 60,
+    "time": "2026-11-20 13:21"
+  },
+  "3.guide/4.modules/index.md": {
+    "hash": "2c93772a53393a670cac7404a085ea85dd9ce5d0998adc652e170d29fed56c81",
+    "blocks": 13,
+    "time": "2026-11-20 09:43"
+  },
+  "3.guide/5.recipes/1.custom-routing.md": {
+    "hash": "91eb7fa9dc00ba78e27a437f3442888feb1543c9340aab7cc2f3dd4150709671",
+    "blocks": 41,
+    "time": "2026-11-20 13:21"
+  },
+  "3.guide/5.recipes/2.vite-plugin.md": {
+    "hash": "8a2ecd8528dc79a40074b9314c294ec104ae92b1407b94fca63bd9c6a16831bc",
+    "blocks": 12,
+    "time": "2026-11-20 09:44"
+  },
+  "3.guide/5.recipes/3.custom-usefetch.md": {
+    "hash": "836102d8b8802dc8cf44d754e52807bc337f637a12e51f37a19248b33fa77a99",
+    "blocks": 13,
+    "time": "2026-11-20 13:21"
+  },
+  "3.guide/5.recipes/4.sessions-and-authentication.md": {
+    "hash": "fe0f6bafe4ef9ae3c8db186eb66b61c3935e104cc913d11552d366cc56cf6f99",
+    "blocks": 40,
+    "time": "2026-11-20 13:22"
+  },
+  "3.guide/5.recipes/5.mostly-static-sites.md": {
+    "hash": "ca93184ee3f49b6402b7d44e1d62c35ff42179e1e926a3f555c11b5253e9b343",
+    "blocks": 33,
+    "time": "2026-11-20 09:44"
+  },
+  "3.guide/6.going-further/1.events.md": {
+    "hash": "c52beeb1b6484b097d7e262119897d9cfd95fed865b81ec611ce82f875384c33",
+    "blocks": 10,
+    "time": "2026-11-20 09:44"
+  },
+  "3.guide/6.going-further/1.experimental-features.md": {
+    "hash": "87f59326d8ca15ca662a6216f1b96eeb60b4bdf3c37c47c525917b028b63ab9f",
+    "blocks": 348,
+    "time": "2026-11-20 13:24"
+  },
+  "3.guide/6.going-further/1.features.md": {
+    "hash": "db2cdac35da43ef5811c63c685e7c34930a485c172549df11e19b6674f148ac4",
+    "blocks": 45,
+    "time": "2026-11-20 13:24"
+  },
+  "3.guide/6.going-further/1.internals.md": {
+    "hash": "34906ac38b1435588328813a4d10ce3038a41c09477f205ae8cdba0c66a1bc9b",
+    "blocks": 27,
+    "time": "2026-11-20 09:47"
+  },
+  "3.guide/6.going-further/10.runtime-config.md": {
+    "hash": "681e8f3e765204d2f349c1884bf9448cade16845ec1c554ebb313b6eb25507c3",
+    "blocks": 45,
+    "time": "2026-11-20 13:24"
+  },
+  "3.guide/6.going-further/11.nightly-release-channel.md": {
+    "hash": "8e309386c4b230ef91902f850ce28360f89a5507fe13e6740987e41d6292334b",
+    "blocks": 17,
+    "time": "2026-11-20 09:47"
+  },
+  "3.guide/6.going-further/2.hooks.md": {
+    "hash": "ac1edc1ee608655ac54dff8723a07c50d32ed10fefd9868e094e876d413ffe16",
+    "blocks": 16,
+    "time": "2026-11-20 13:24"
+  },
+  "3.guide/6.going-further/4.kit.md": {
+    "hash": "6eadbf4135c65c35a2a18e4701bf44eccba31cb3ddc796d0adea45399eabfea1",
+    "blocks": 11,
+    "time": "2026-11-20 09:47"
+  },
+  "3.guide/6.going-further/5.server-imports.md": {
+    "hash": "ad4cfea91da76874b8a164445c4988d68d750ae24731a6be46261993201663cb",
+    "blocks": 78,
+    "time": "2026-11-20 13:25"
+  },
+  "3.guide/6.going-further/6.nuxt-app.md": {
+    "hash": "600a079a8863fed0311f58a14f1b7d2c316e83a1d93fc9ea2224b9601940af73",
+    "blocks": 18,
+    "time": "2026-11-20 09:48"
+  },
+  "3.guide/6.going-further/7.layers.md": {
+    "hash": "b875a560b87b31c5df7a7ec1d2b85d685184dc8d7de2d7692b84ffa3335be51d",
+    "blocks": 78,
+    "time": "2026-11-20 09:48"
+  },
+  "3.guide/6.going-further/8.builders.md": {
+    "hash": "c00a1b235f942fd856cd93246b7696e8ff745bf7a8fbaf121fde029b8b78d6ff",
+    "blocks": 72,
+    "time": "2026-11-20 13:25"
+  },
+  "3.guide/6.going-further/9.debugging.md": {
+    "hash": "e895e3d7416fa4aafe0080b9c6aefa271dab5aaedc6bfbf5b67880afe7cc5cc2",
+    "blocks": 19,
+    "time": "2026-11-20 09:49"
+  },
+  "3.guide/6.going-further/index.md": {
+    "hash": "202562b40b8af1308de3553b372f822f46e76dc9de5e8067b9c0107f7b63f31a",
+    "blocks": 0,
+    "time": "2026-11-20 09:49"
+  },
+  "4.api/1.components/1.client-only.md": {
+    "hash": "fa8071900fa30a22f39f9b0f72c22321d54f9b0297469bbff1cc6d2831132413",
+    "blocks": 12,
+    "time": "2026-11-20 09:49"
+  },
+  "4.api/1.components/1.dev-only.md": {
+    "hash": "1af4db986894a136a6f0ff1bd00d4ab4362d94e446e916051a7f7f73629f6ce4",
+    "blocks": 6,
+    "time": "2026-11-20 09:49"
+  },
+  "4.api/1.components/1.nuxt-client-fallback.md": {
+    "hash": "65b61fa03a2f265496c74c26c34cdf1a99774257c68a1a9932065f296efed157",
+    "blocks": 18,
+    "time": "2026-11-20 13:25"
+  },
+  "4.api/1.components/10.nuxt-picture.md": {
+    "hash": "f81a6763ecd54e6a45e04eb23a403c5256a4a3ba738f149282613741a8e2def6",
+    "blocks": 8,
+    "time": "2026-11-20 13:25"
+  },
+  "4.api/1.components/11.teleports.md": {
+    "hash": "4f1b85ae656ed626fc9e5a64f982ef497e5db5edafa7df0f77362f424fbe982f",
+    "blocks": 5,
+    "time": "2026-11-20 09:49"
+  },
+  "4.api/1.components/12.nuxt-route-announcer.md": {
+    "hash": "4f1df4b5270ac11d82cc0127a121a6a9e18c524c081fec85cc57d6ef7124eca4",
+    "blocks": 14,
+    "time": "2026-11-20 09:49"
+  },
+  "4.api/1.components/13.nuxt-time.md": {
+    "hash": "3d7b1cc721626c1922fb32642592534137975c115ef8cc2eab036d85b6d2c6f3",
+    "blocks": 36,
+    "time": "2026-11-20 09:50"
+  },
+  "4.api/1.components/14.nuxt-announcer.md": {
+    "hash": "246a3a97a5c61691fbc0e553f6917ac4bac356a409eb42974af61a30a3757b38",
+    "blocks": 20,
+    "time": "2026-11-20 09:50"
+  },
+  "4.api/1.components/2.nuxt-page.md": {
+    "hash": "7ba358a8b6d13d2a71ef213fc99563cf9608f004a7b1081e475bf63d78b89725",
+    "blocks": 33,
+    "time": "2026-11-20 09:50"
+  },
+  "4.api/1.components/3.nuxt-layout.md": {
+    "hash": "937754326013a9b6a1cafab680b28ff7514a1eddfff0ea6a4f129b26888a8131",
+    "blocks": 22,
+    "time": "2026-11-20 09:50"
+  },
+  "4.api/1.components/4.nuxt-link.md": {
+    "hash": "663bbfdb38afffc98afd6fd8fd6807a9be7d2425c84e56aa4f40b97914071c31",
+    "blocks": 80,
+    "time": "2026-11-20 09:50"
+  },
+  "4.api/1.components/5.nuxt-loading-indicator.md": {
+    "hash": "776e51189f8452a719857648afdb77ed8bea61c9535745fa926eb302abac810e",
+    "blocks": 17,
+    "time": "2026-11-20 13:25"
+  },
+  "4.api/1.components/6.nuxt-error-boundary.md": {
+    "hash": "d1c8f6ff1ed3e0547a728ddb35a828875eb5d5691aa7c860f35e97c615fd31d2",
+    "blocks": 10,
+    "time": "2026-11-20 13:25"
+  },
+  "4.api/1.components/7.nuxt-welcome.md": {
+    "hash": "87dcf60c457edb3de8805b78dae0f40178a80540aada7f093cf2a4a356af6786",
+    "blocks": 5,
+    "time": "2026-11-20 09:51"
+  },
+  "4.api/1.components/8.nuxt-island.md": {
+    "hash": "a3fe6f409fe8176bdbb86877758c16dc2ef9350b8ea1dd2cf7623e6e415f0715",
+    "blocks": 49,
+    "time": "2026-11-20 09:51"
+  },
+  "4.api/1.components/9.nuxt-img.md": {
+    "hash": "aa43fb625684e8938535d0c2227db36047fd8ad0e626cd8dd907b333c56dd9f8",
+    "blocks": 14,
+    "time": "2026-11-20 13:25"
+  },
+  "4.api/2.composables/create-use-async-data.md": {
+    "hash": "acb4120dd610a65c66a38952dfdd60affb65c91b86adaa0661c6aac30479bc47",
+    "blocks": 19,
+    "time": "2026-11-20 13:26"
+  },
+  "4.api/2.composables/create-use-fetch.md": {
+    "hash": "a84a4397a38aff3858188a6f586ca62d145527490fa3bbcb8cc8d88c1fb97374",
+    "blocks": 39,
+    "time": "2026-11-20 13:26"
+  },
+  "4.api/2.composables/on-prehydrate.md": {
+    "hash": "f30289ff6961b60546aeae251fd65ce0df0312acf448c88f849c740f7c6464a2",
+    "blocks": 18,
+    "time": "2026-11-20 13:26"
+  },
+  "4.api/2.composables/use-announcer.md": {
+    "hash": "87e5f456ceea0d6a635d853ceef20fb33ea7fbf1d1c46366aca2228386917efe",
+    "blocks": 29,
+    "time": "2026-11-20 09:51"
+  },
+  "4.api/2.composables/use-app-config.md": {
+    "hash": "94a57509da45b99976f2cdb7984eb7979aede6f595f118aed7cd8ac96dfb4635",
+    "blocks": 3,
+    "time": "2026-11-20 09:51"
+  },
+  "4.api/2.composables/use-async-data.md": {
+    "hash": "37f9979eaf2928c76f13a080bced05c7fa0b4c1424b01e13f3a3eac7e0363f28",
+    "blocks": 84,
+    "time": "2026-11-20 13:26"
+  },
+  "4.api/2.composables/use-cookie.md": {
+    "hash": "c1d0ac7a281526dfe1b098f2bf3c4f6036555a1511d25d60cbd605588f3d5d97",
+    "blocks": 38,
+    "time": "2026-11-20 13:27"
+  },
+  "4.api/2.composables/use-error.md": {
+    "hash": "c6b2e4d6f674481e7307e20508188f4ec0b83b48f25a4c09bca1f67a856e1ce7",
+    "blocks": 11,
+    "time": "2026-11-20 09:52"
+  },
+  "4.api/2.composables/use-fetch.md": {
+    "hash": "347a56c1ed03b65039953c46af23709d355f0b7713fe02aec2619d7330ac41b1",
+    "blocks": 71,
+    "time": "2026-11-20 13:27"
+  },
+  "4.api/2.composables/use-head-safe.md": {
+    "hash": "e633efdc41bd9032044371e6b2d5e7d308236aa467ccf0fd0ecb6436318561ca",
+    "blocks": 15,
+    "time": "2026-11-20 09:53"
+  },
+  "4.api/2.composables/use-head.md": {
+    "hash": "61bb71cff7f9e5201ec624467ef3d544ba15f63ca748debe90023c97a21ef569",
+    "blocks": 29,
+    "time": "2026-11-20 09:53"
+  },
+  "4.api/2.composables/use-hydration.md": {
+    "hash": "89a6242262c6edf5b1c74dee1ff858b94c2d103663e5ff178ea6682adbfc5560",
+    "blocks": 15,
+    "time": "2026-11-20 13:27"
+  },
+  "4.api/2.composables/use-layout.md": {
+    "hash": "50859200e6de9f6007ec0fa5d5fa314f13a459dcab124f861e29f2c8d4913b74",
+    "blocks": 9,
+    "time": "2026-11-20 09:53"
+  },
+  "4.api/2.composables/use-lazy-async-data.md": {
+    "hash": "35e7ad83ea562444a5824a71f7a81b9c8cba9afea962e78e846e48714dde5b3e",
+    "blocks": 14,
+    "time": "2026-11-20 09:53"
+  },
+  "4.api/2.composables/use-lazy-fetch.md": {
+    "hash": "c5bd6045dac2d3c993dda23367e421dff5220f5a1bf29a41f50b3a3b19e9dc79",
+    "blocks": 26,
+    "time": "2026-11-20 09:53"
+  },
+  "4.api/2.composables/use-loading-indicator.md": {
+    "hash": "83399685af0885a2439086c16cbff89290262a9db3381c788e7b0d8006aa806a",
+    "blocks": 29,
+    "time": "2026-11-20 09:53"
+  },
+  "4.api/2.composables/use-nuxt-app.md": {
+    "hash": "783be51d49b16f05e414adcf31fc8f3f3a5e389db51c79744a154a9aab5d1cfd",
+    "blocks": 73,
+    "time": "2026-11-20 09:54"
+  },
+  "4.api/2.composables/use-nuxt-data.md": {
+    "hash": "a908f96bb52fbca161bcf3e0cff43fe7afda7b36eda8cae0c82bc1c471780e32",
+    "blocks": 17,
+    "time": "2026-11-20 09:54"
+  },
+  "4.api/2.composables/use-preview-mode.md": {
+    "hash": "1c0d9267628324c2fb9032374c494b02c018407dc432973d183e121b8acf53b5",
+    "blocks": 20,
+    "time": "2026-11-20 09:54"
+  },
+  "4.api/2.composables/use-request-event.md": {
+    "hash": "8b0397590e7bfd9a336f7b401a93ee4e288d9aeb79f66a2a08c80cdddd500f01",
+    "blocks": 14,
+    "time": "2026-11-20 13:27"
+  },
+  "4.api/2.composables/use-request-fetch.md": {
+    "hash": "c16b8d57154c23e4b26befe8af8b66ff1c053fd4d2e3c91177f5e1e07b521dbb",
+    "blocks": 9,
+    "time": "2026-11-20 13:27"
+  },
+  "4.api/2.composables/use-request-header.md": {
+    "hash": "add460ec1de215d80624105ca81629656b7ea70c69ec3c9c5735b17a40c92f58",
+    "blocks": 7,
+    "time": "2026-11-20 09:54"
+  },
+  "4.api/2.composables/use-request-headers.md": {
+    "hash": "067e556b58e69e25245cd0a27d3858b3015520be8c5557f56890dae73c743a80",
+    "blocks": 7,
+    "time": "2026-11-20 09:54"
+  },
+  "4.api/2.composables/use-request-url.md": {
+    "hash": "8aa4e11d5838f361b7c88f562fdc4c975d668242b01582c5d3f9f4efdb9c57bb",
+    "blocks": 6,
+    "time": "2026-11-20 13:27"
+  },
+  "4.api/2.composables/use-response-header.md": {
+    "hash": "cd43b06da97cb149087dcf9f8c3207371d0ad980eb9ba87c6715fbdc12f03977",
+    "blocks": 7,
+    "time": "2026-11-20 09:54"
+  },
+  "4.api/2.composables/use-route-announcer.md": {
+    "hash": "c53af195a7bc2a6d7ec551094a6393d8404ebba212ae06e2b4e84ce1d63f7c5d",
+    "blocks": 24,
+    "time": "2026-11-20 09:54"
+  },
+  "4.api/2.composables/use-route.md": {
+    "hash": "89221e30aa205f11bd9b6d108e67ecf681d97056ea47baa762d20ade4c323898",
+    "blocks": 32,
+    "time": "2026-11-20 09:55"
+  },
+  "4.api/2.composables/use-router.md": {
+    "hash": "9051b66bab45fbf9b847e50eb190156194b117900abe3893675f70a2f234b6c2",
+    "blocks": 27,
+    "time": "2026-11-20 09:55"
+  },
+  "4.api/2.composables/use-runtime-config.md": {
+    "hash": "a16d0fb2517166f1ad62821035ae912e4d611281be355c904a9658e6d11c1e86",
+    "blocks": 27,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/2.composables/use-runtime-hook.md": {
+    "hash": "e8d6d5d1b97d7dbe6c550bc29d4307d06d69150fd26bfec1a51317b46fe091eb",
+    "blocks": 10,
+    "time": "2026-11-20 09:55"
+  },
+  "4.api/2.composables/use-seo-meta.md": {
+    "hash": "628b4bd1fdaf5ce5efe712f58ce016d8fdcc6fbb0fe92fe9fe719739f4861f81",
+    "blocks": 12,
+    "time": "2026-11-20 09:55"
+  },
+  "4.api/2.composables/use-server-seo-meta.md": {
+    "hash": "9308146a992f186e03f5f59a76375cd1c18988fcaed3fffd9acbaa666399a985",
+    "blocks": 6,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/2.composables/use-state.md": {
+    "hash": "d5dae400afa33edd9e972579cb22c6cd4c9add0fbaa872aa96e1f020bde60149",
+    "blocks": 15,
+    "time": "2026-11-20 09:55"
+  },
+  "4.api/3.utils/$fetch.md": {
+    "hash": "25e0f0d8bab20af1afe9105dd80a1e6c54db98d86a6bc6fa049af4715210c3fa",
+    "blocks": 15,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/3.utils/abort-navigation.md": {
+    "hash": "7732831b467b0300f71a8e7f5cfb1c011e85190ed69943dc6ecde832825105c3",
+    "blocks": 14,
+    "time": "2026-11-20 09:55"
+  },
+  "4.api/3.utils/add-route-middleware.md": {
+    "hash": "0d110e7560302503819f2bcd4fc44467c2a559a0e20cb390f9778d2af155f3a0",
+    "blocks": 23,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/3.utils/call-once.md": {
+    "hash": "cf81e214d1a4bac0c73fd1b0b8c9199bfa72f34c0f825a1149c142af18b693c5",
+    "blocks": 22,
+    "time": "2026-11-20 09:55"
+  },
+  "4.api/3.utils/clear-error.md": {
+    "hash": "5259b7783fc043896cb6f158f2bb7e685147ed6ee8518be3148efd51351b9348",
+    "blocks": 7,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/clear-nuxt-data.md": {
+    "hash": "e9474c4af97d4da585d263d6374cd01055e55c4f0fbf13351a06a9d5d5cd8479",
+    "blocks": 6,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/clear-nuxt-state.md": {
+    "hash": "35f8d55bcda73f96d955a683eb18e599be3ebe439aa0049412be300408662a2b",
+    "blocks": 8,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/3.utils/create-error.md": {
+    "hash": "197392d727c725f584c13ddbe0f06be00587c764384c06b3405e552441f3987c",
+    "blocks": 17,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/define-lazy-hydration-component.md": {
+    "hash": "356b603ca0917ca17e6af8f182708c03ac2a09355d31fde6b5b53b7768da7847",
+    "blocks": 47,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/define-nuxt-component.md": {
+    "hash": "94fb3a9ab612f40df104320c898e61f0b1831cae38e2094d91cc820e2e8cd3ac",
+    "blocks": 8,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/define-nuxt-plugin.md": {
+    "hash": "8314e15b62ca802649b250bed057dd282d91f65fb35a5d03460a749d8b34df89",
+    "blocks": 22,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/define-nuxt-route-middleware.md": {
+    "hash": "3d24f55e4768581c429152936fb52eb6deb900b3b3fb6d7c88b85ca1fdef4c8c",
+    "blocks": 16,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/define-page-meta.md": {
+    "hash": "cdaebd8dca727ac5bdc9c0f2ce5eac801a0e5ca9b0715097e1a9c10fa8d2c61d",
+    "blocks": 82,
+    "time": "2026-11-20 09:56"
+  },
+  "4.api/3.utils/define-route-rules.md": {
+    "hash": "56b1504ac65ea515affcdd3399d897d8b8728f7664b56fd4528ee1b48f45323b",
+    "blocks": 13,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/define-use-async-data-addon.md": {
+    "hash": "ac31d9c7d3f0aba5f6e80f48e8d3adeff29fc2de4c2be5e7275ea33602fd282e",
+    "blocks": 8,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/define-use-fetch-addon.md": {
+    "hash": "897b2824baef80567a2474d6c0f3499b27749184338688b4b1ff27f05651eed2",
+    "blocks": 24,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/3.utils/navigate-to.md": {
+    "hash": "2ff5ccfb3c13c57e798b3a89ccb5100d0f8f2ef802632af89ee89e27aea2d011",
+    "blocks": 66,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/3.utils/on-before-route-leave.md": {
+    "hash": "50c9776358d063ee145952bdc47961a545db70e6685ca02b7e9aa2a2cb62e268",
+    "blocks": 2,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/on-before-route-update.md": {
+    "hash": "936e71e2b2404228cf5f8fae7fec135727e14351ded089fec7808f0d861a4646",
+    "blocks": 2,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/on-nuxt-ready.md": {
+    "hash": "7892afd9246e52b769722d23a1a05a4319ba7641ff3ee457feff4afc3554c9cd",
+    "blocks": 5,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/3.utils/prefetch-components.md": {
+    "hash": "fc3ca3050e63bd600e06e6d3c767e03d97f73190f7fc4a7852ff588646fbf299",
+    "blocks": 6,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/preload-components.md": {
+    "hash": "306224b39fa2a2505ccbcef18910a21f8f47a83c06814d446eb0641377162389",
+    "blocks": 5,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/preload-route-components.md": {
+    "hash": "b1ec1da526507dd9b546fd683fba75eda77842a2c1da362d4d8f68e42430f7bd",
+    "blocks": 7,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/prerender-routes.md": {
+    "hash": "e0804db2ddd1e992659603ee904f89e8678262a7c68b90f538599149a7f89c58",
+    "blocks": 9,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/refresh-cookie.md": {
+    "hash": "698982b37db65891ac87a6f7776353febdfb58841135cea9b31ed2126b9ba3d2",
+    "blocks": 9,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/refresh-nuxt-data.md": {
+    "hash": "2d9c23bd1e68534865364c9e517def57992c1f3a5883177283db05dfe3f7741d",
+    "blocks": 15,
+    "time": "2026-11-20 09:57"
+  },
+  "4.api/3.utils/reload-nuxt-app.md": {
+    "hash": "966208aabdecec2125014956fcc65562f681696c3114232c4e56d122750dc235",
+    "blocks": 29,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/3.utils/set-page-layout.md": {
+    "hash": "01ccdc9178d4dfec7808f628723761a876313158df2d256d53524ddeca1d77c7",
+    "blocks": 7,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/3.utils/set-response-status.md": {
+    "hash": "5924bb576cf210533bb30572f8aba2fc5876852b41211f83d3c203b63c06b276",
+    "blocks": 6,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/3.utils/show-error.md": {
+    "hash": "d8c10ce66a2b02ffceaf890c321447b9f5824eb7b20a98131e3a9ae97ad5db9d",
+    "blocks": 7,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/3.utils/update-app-config.md": {
+    "hash": "e61134d71cdc7699fd058fe8573dd54c53c6963cc2ce899f665e88a9934709a5",
+    "blocks": 4,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/4.commands/README.md": {
+    "hash": "7693d0a0ad3e8c34fa966ea3a20e58008e78b111f27696af14b20e12996b2b7b",
+    "blocks": 3,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/5.kit/1.modules.md": {
+    "hash": "fa0db28f6ef2831c21deb03bc4c06477a6674498cd717269fa9bfe716d81c60b",
+    "blocks": 53,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/5.kit/10.runtime-config.md": {
+    "hash": "3303fe1ac0f5957ab93e3c0da75d950183445e4e74c5635d55a7a94092187548",
+    "blocks": 8,
+    "time": "2026-11-20 13:28"
+  },
+  "4.api/5.kit/10.templates.md": {
+    "hash": "2a3be74349de655a85dd9047ede91463dd706cbc4c7b9754fe0d0762f77be303",
+    "blocks": 70,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/5.kit/11.app-config.md": {
+    "hash": "680c2a8571e2bc4cb879e55712f1734524440db86720a77095bb863ee19a0ac3",
+    "blocks": 6,
+    "time": "2026-11-20 09:58"
+  },
+  "4.api/5.kit/12.nitro.md": {
+    "hash": "90504a765c022552cf819e82cfa148dbcf778ac4f30f561f669fe5e682f9a52e",
+    "blocks": 107,
+    "time": "2026-11-20 13:29"
+  },
+  "4.api/5.kit/13.resolving.md": {
+    "hash": "015c8d022df6ba8c297323a76df61338a947c5f939e86dcd781c9c8c36853282",
+    "blocks": 50,
+    "time": "2026-11-20 09:59"
+  },
+  "4.api/5.kit/14.logging.md": {
+    "hash": "6fba89b887a6c513a7dcdf7af82eede7100bc341cd12811db4982ce3eab969b9",
+    "blocks": 21,
+    "time": "2026-11-20 09:59"
+  },
+  "4.api/5.kit/15.builder.md": {
+    "hash": "9e11044ba0bb1c59500552334976fe1bb5a0c4e257bea42cb9621d2f3d499608",
+    "blocks": 83,
+    "time": "2026-11-20 13:29"
+  },
+  "4.api/5.kit/16.examples.md": {
+    "hash": "0d3e148f5783410b7d6b6dcb344b84854da84557e0f9e5b5faadbd4eb566596d",
+    "blocks": 9,
+    "time": "2026-11-20 10:00"
+  },
+  "4.api/5.kit/17.layers.md": {
+    "hash": "072438f1c4440649eef5b3431a503ae2ca4f8a07de16a87cf4f9ea2810e7ef10",
+    "blocks": 35,
+    "time": "2026-11-20 10:00"
+  },
+  "4.api/5.kit/18.dependencies.md": {
+    "hash": "20247531048c2a0b682e995e987a105cc4c9e736d50c21b8ae94cfa9688f1d99",
+    "blocks": 26,
+    "time": "2026-11-20 13:29"
+  },
+  "4.api/5.kit/2.programmatic.md": {
+    "hash": "81e56c50a9010b66c05f1e229e98e5479a750acac5086212350ec09f5ff2b69a",
+    "blocks": 61,
+    "time": "2026-11-20 10:00"
+  },
+  "4.api/5.kit/3.compatibility.md": {
+    "hash": "79540bd1e9d7d1e2dbe7e1e149d6422315382a9d56772359a6f507626f128f79",
+    "blocks": 49,
+    "time": "2026-11-20 13:29"
+  },
+  "4.api/5.kit/4.autoimports.md": {
+    "hash": "bd322fa47ad9fc9802bad4a0a6e7b58ef50e5501155d4ecee2c9344bd477de43",
+    "blocks": 44,
+    "time": "2026-11-20 10:01"
+  },
+  "4.api/5.kit/5.components.md": {
+    "hash": "7160c1208cbe2e05f60b5c5eadae8b68235ff0547217ad6b3dfd9bc063e1a998",
+    "blocks": 51,
+    "time": "2026-11-20 10:01"
+  },
+  "4.api/5.kit/6.context.md": {
+    "hash": "d899bb65e4ccb21c603e4b1b6b0b27f3624daf42d273a03387e4e5053f36f912",
+    "blocks": 25,
+    "time": "2026-11-20 10:01"
+  },
+  "4.api/5.kit/7.pages.md": {
+    "hash": "42f515afc665b6c2a3b798f10acb1c6ca830a7f49f97a006538fd9ef1f2a1a0b",
+    "blocks": 49,
+    "time": "2026-11-20 13:30"
+  },
+  "4.api/5.kit/8.layout.md": {
+    "hash": "67364417a7617e31ae6855c24cee8bde34e045fe8930e977205caa6781ce49e6",
+    "blocks": 22,
+    "time": "2026-11-20 10:02"
+  },
+  "4.api/5.kit/9.head.md": {
+    "hash": "372cfe2cf488fb42135716d8e49600dcc6783a37011dedd6e3017667aae2af5b",
+    "blocks": 27,
+    "time": "2026-11-20 10:02"
+  },
+  "4.api/5.kit/9.plugins.md": {
+    "hash": "b739f4cce7e6bf8dfc130076474e4cdf9cf77ce965a5fbcdd95600f0a0f10481",
+    "blocks": 43,
+    "time": "2026-11-20 10:02"
+  },
+  "4.api/6.advanced/1.hooks.md": {
+    "hash": "550c55239ac6a1eaf05fda14e4c3482d37f39c7ba3db03b56c06fffca6bd048e",
+    "blocks": 92,
+    "time": "2026-11-20 13:30"
+  },
+  "4.api/6.advanced/2.import-meta.md": {
+    "hash": "501de4673b565127cef53ab5c855877f4510109d69b1257e25d19775067fe4e6",
+    "blocks": 26,
+    "time": "2026-11-20 13:30"
+  },
+  "4.api/6.nuxt-config.md": {
+    "hash": "68e5e2c85e3e820538ec763e899a419a11ebcc9e0c225882657c7fd17a930073",
+    "blocks": 885,
+    "time": "2026-11-20 13:33"
+  },
+  "4.api/index.md": {
+    "hash": "001ed37e976a0782e31b6a6f7cf4b35c21b0fbaf16897b9464d861fd10c589bd",
+    "blocks": 9,
+    "time": "2026-11-20 13:33"
+  },
+  "5.community/2.getting-help.md": {
+    "hash": "9035ede2cdbc4a4b50e578bf14ce63c64089f470e2676f417ea3c4067cb705fa",
+    "blocks": 22,
+    "time": "2026-11-20 10:05"
+  },
+  "5.community/3.reporting-bugs.md": {
+    "hash": "619f4cd8e3e0112992bf5a516eb3669e51563b3a562cce84ab443ca238951622",
+    "blocks": 18,
+    "time": "2026-11-20 10:05"
+  },
+  "5.community/4.contribution.md": {
+    "hash": "4a5b14ea6feeb7d97820922f65bef80743430abd28d36fcddb2197d5228a7915",
+    "blocks": 147,
+    "time": "2026-11-20 10:06"
+  },
+  "5.community/5.framework-contribution.md": {
+    "hash": "fc6d13065a7623b68358b87094c86f8586f7b8b3116de63da9133d5bce8416a4",
+    "blocks": 53,
+    "time": "2026-11-20 13:33"
+  },
+  "5.community/6.roadmap.md": {
+    "hash": "725662349c72a72ddc531ffe73b22163128a026d45676a58a0ab78e43c3d0ffd",
+    "blocks": 42,
+    "time": "2026-11-20 10:07"
+  },
+  "5.community/7.changelog.md": {
+    "hash": "f92d95dfb5c2e5d9fffa6873dfc712fbf39c8de32e9d7a0c86dda4f2aceb1b24",
+    "blocks": 63,
+    "time": "2026-11-20 10:07"
+  },
+  "6.bridge/1.overview.md": {
+    "hash": "0d2e688a4176fc2106d5e81319c27f38a54879798e76a79f8aa820b1e053ce01",
+    "blocks": 33,
+    "time": "2026-11-20 10:07"
+  },
+  "6.bridge/10.configuration.md": {
+    "hash": "af436cea46cb8dc608ba18c557d05ba278f84f35ad277848f607ea050a0612ad",
+    "blocks": 8,
+    "time": "2026-11-20 10:07"
+  },
+  "6.bridge/2.typescript.md": {
+    "hash": "b7195ddae324f9126eb98c0ca110985dec2c89f98e98173a7cdac2797c7deb32",
+    "blocks": 13,
+    "time": "2026-11-20 10:07"
+  },
+  "6.bridge/3.bridge-composition-api.md": {
+    "hash": "ffd8cb92c97c1745189bd5710b344f62e19e51e44f24f74b280b5dba0b88568f",
+    "blocks": 35,
+    "time": "2026-11-20 10:08"
+  },
+  "6.bridge/4.plugins-and-middleware.md": {
+    "hash": "596b9312e2fd490550a3b8ba9fa71b5c235c15f2edcf8cae76d2c7c8aed8b968",
+    "blocks": 15,
+    "time": "2026-11-20 10:08"
+  },
+  "6.bridge/5.nuxt3-compatible-api.md": {
+    "hash": "368076e7ae414a14ccf82cb4a8b9284dd1c58a6a60b1fc8cc352bdbcd4f8a8f8",
+    "blocks": 38,
+    "time": "2026-11-20 10:08"
+  },
+  "6.bridge/6.meta.md": {
+    "hash": "8cf1bf43c4ff1d33c48a864ab86db7b8f2e212cd4656869cdbada0dab70abc72",
+    "blocks": 17,
+    "time": "2026-11-20 10:08"
+  },
+  "6.bridge/7.runtime-config.md": {
+    "hash": "2009e68861ae57c82b242fd675defca75e15f8c07d61cfb4dc7af585c5f530a4",
+    "blocks": 7,
+    "time": "2026-11-20 10:08"
+  },
+  "6.bridge/8.nitro.md": {
+    "hash": "15adcd0589e3a005e094544f70ad88c3546aeecab5f9b82ac17630c8261ef614",
+    "blocks": 20,
+    "time": "2026-11-20 10:08"
+  },
+  "6.bridge/9.vite.md": {
+    "hash": "a795d14701de9f57d875142cc99ca0406b00bcaa0d89a45d409806988b7dc38c",
+    "blocks": 7,
+    "time": "2026-11-20 10:08"
+  },
+  "7.migration/1.overview.md": {
+    "hash": "33ed996966eff768c586fd24d9cae9cf3281f1eabc9eed87f8f6a5d7e63ed865",
+    "blocks": 11,
+    "time": "2026-11-20 10:08"
+  },
+  "7.migration/10.bundling.md": {
+    "hash": "1593674dc9e3e2fbfe4a4fd14ac4db0d02376842548e3e935e58749304206f81",
+    "blocks": 15,
+    "time": "2026-11-20 10:08"
+  },
+  "7.migration/11.server.md": {
+    "hash": "973c4723486c6d79d1700395cf3717b277eef67967e1ccff2d54f8a2a737c59f",
+    "blocks": 7,
+    "time": "2026-11-20 10:08"
+  },
+  "7.migration/2.configuration.md": {
+    "hash": "8edb96efa031814775d20de9b6052cd0cdc471b90726ca1185f0ec7ad8a0780e",
+    "blocks": 48,
+    "time": "2026-11-20 10:08"
+  },
+  "7.migration/20.module-authors.md": {
+    "hash": "7f99657c24a0c55b7bf153490de2e4f34349a1b8b5e13aecc151a1e778be793b",
+    "blocks": 32,
+    "time": "2026-11-20 10:09"
+  },
+  "7.migration/3.auto-imports.md": {
+    "hash": "797ff5925aafc7d8091788ac24b1cbc4c4d2d1dedcc96eacf04739b59e2774ea",
+    "blocks": 7,
+    "time": "2026-11-20 10:09"
+  },
+  "7.migration/4.meta.md": {
+    "hash": "b4965a0c2712014273eadba910d97197e300c687fbb10997caab4c3f71e29a31",
+    "blocks": 18,
+    "time": "2026-11-20 10:09"
+  },
+  "7.migration/5.plugins-and-middleware.md": {
+    "hash": "c2fb9325db0f4b4b8410ed800a75d3e64cec44a33544610a3245e8585a3f2361",
+    "blocks": 15,
+    "time": "2026-11-20 10:09"
+  },
+  "7.migration/6.pages-and-layouts.md": {
+    "hash": "b6133dbc9e473aaae7dec347890e3149eeb7f27d1155b1d97aaebfa62c11c5f1",
+    "blocks": 40,
+    "time": "2026-11-20 10:09"
+  },
+  "7.migration/7.component-options.md": {
+    "hash": "e738fd807e80cf1a3306105bbb15fe503031cfb82cdc91ff783d02309a8fa7b9",
+    "blocks": 35,
+    "time": "2026-11-20 13:33"
+  },
+  "7.migration/8.runtime-config.md": {
+    "hash": "5a160cfc62aacfc0c5787cc9a863260d6ee3b73b46783e95b5b908c1fb708b4e",
+    "blocks": 8,
+    "time": "2026-11-20 13:33"
+  },
+  "errors/b5001.md": {
+    "hash": "825eddc006f147ba37c48bad8ce453657c20a6398b4c3b1381b2e35fe26228a6",
+    "blocks": 6,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/b5003.md": {
+    "hash": "7c37ee0ca056a57a999ef9f8cac5bdd9a901431788f6335220c5f525ea798961",
+    "blocks": 6,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/b5004.md": {
+    "hash": "5b0a2516d8991ae3eacd90fabdc41eb36dd716df62622d3eef9b87188a8c8de6",
+    "blocks": 11,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e1001.md": {
+    "hash": "1d6d7b100f7a9164873fd1e1813f6c3ce0ce63a072e1f977c0b0d9fcd0a51397",
+    "blocks": 6,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e1006.md": {
+    "hash": "735470ff801a63dfbd3d06ddad27dfbcd36a18b1f4289afe0ec81d7f4b48cc53",
+    "blocks": 6,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e1007.md": {
+    "hash": "2cc4d1fcbb0c88277748e0461a561106857c828468e26bda900c9fb88bad1362",
+    "blocks": 6,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e2001.md": {
+    "hash": "3ff80567d30c4d4baf298421984d82856f8e9ba0d1e00c9a020169219602e1b0",
+    "blocks": 5,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e2002.md": {
+    "hash": "9dc57ab0df16bda1505ec74b3aee711141031d3ec2ec1181c4c315724150e7d2",
+    "blocks": 5,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e2003.md": {
+    "hash": "325b42adc0890206b0fad748541efdae3d16cd51875ec7a7656a988326ad761d",
+    "blocks": 6,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e2004.md": {
+    "hash": "e87dd56e98cfe1deaf224cbb93970bdc86f82b12cda3ccad0b30105988b5bd94",
+    "blocks": 6,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e2005.md": {
+    "hash": "cee6276352d738828eceb8287852e6593c1974b011b09dc0aafff7c09df5103a",
+    "blocks": 5,
+    "time": "2026-11-20 10:10"
+  },
+  "errors/e2007.md": {
+    "hash": "682bc87f42320d15fd8ca3ca336813b8de86ce6a2bb27d7c43b2f3675d0eedd9",
+    "blocks": 6,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e3001.md": {
+    "hash": "d07ce0a00dfa9edc52dbfffe11255e7937b44054b5dea48e4aa4ce71fc18f391",
+    "blocks": 6,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e3008.md": {
+    "hash": "051ccaed6c194365319b01e7bf9efcbe359b65f105e42e6d13b481013eeb0326",
+    "blocks": 5,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e3009.md": {
+    "hash": "478e368662caf4d1ca6322f498b0c228eb2aeb8f929189e8a98a3b2e9f010469",
+    "blocks": 5,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e4012.md": {
+    "hash": "9e628055efd82a80127aed47c48d8678f4fd56d79e786e4e8e63386617671311",
+    "blocks": 6,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e4016.md": {
+    "hash": "3d4dfb6857236fe4b72e105dd037921b1e0ffe9d9527574737b3feedc2381324",
+    "blocks": 7,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e5001.md": {
+    "hash": "b05c8fa78e12b0b1bcbf1fadc3c6850f8a2f312f81dc6066a85a899c317d86df",
+    "blocks": 6,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e6001.md": {
+    "hash": "30d678ea3ab5720c7c87e40659db6d0ecc3b8a6a8172b01b712c23d561ea9062",
+    "blocks": 6,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e7001.md": {
+    "hash": "9aa578c347dc74ad99e2bfc86a6655bea0f97d2a9a862d17adcc612417eaefb3",
+    "blocks": 6,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e7007.md": {
+    "hash": "e11aab48f453a5e89c6851be91d83c717dea5ee1d8f5daeb1d3cbda983fb529c",
+    "blocks": 5,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e7008.md": {
+    "hash": "b25e4ebf953789f75a804ae1dfb25abc32b406772537deda20231172b80e2291",
+    "blocks": 5,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e7009.md": {
+    "hash": "6b2a4704d67d98f71ee2c7d2afbc1b038451fdfe8aaab004b11adade51ac0443",
+    "blocks": 5,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e7010.md": {
+    "hash": "d1e3e1c431fa05b2d13ee21ca8a9a956d2d8109f1d31b1cae3823190eefbd115",
+    "blocks": 5,
+    "time": "2026-11-20 10:11"
+  },
+  "errors/e8007.md": {
+    "hash": "5d6e23024318a0d699d10e68b0c253759df367828786df2542088b40ed9b985e",
+    "blocks": 8,
+    "time": "2026-11-20 10:11"
+  },
+  "README.md": {
+    "hash": "bfa06ab156237b7cebb843c572ca03bce90cbf508c9ed7b9c10be1d239c7f2d8",
+    "blocks": 4,
+    "time": "2026-11-20 10:11"
+  },
+  "1.getting-started/07.routing.md": {
+    "hash": "8eb27d9443613fbac2fa9eeff219ad50772b8cf8b593f7e9afbaf590f290a8bf",
+    "blocks": 26,
+    "time": "2026-11-20 13:11"
+  },
+  "1.getting-started/08.seo-meta.md": {
+    "hash": "43158df9d1681e56080ffba8c73a34169bee50ccc64a2c67b31f418c7f3e3d43",
+    "blocks": 53,
+    "time": "2026-11-20 13:11"
+  },
+  "1.getting-started/09.transitions.md": {
+    "hash": "5b28a9842036c1c4d7ccf3ef987c11620ecf0e1b53fe29cfc229021a59aca7f0",
+    "blocks": 67,
+    "time": "2026-11-20 13:11"
+  },
+  "1.getting-started/10.data-fetching.md": {
+    "hash": "b5bb8a3617d772b396486dbc1d404c51ea5dd74959aca3a11119197945def303",
+    "blocks": 156,
+    "time": "2026-11-20 13:12"
+  },
+  "1.getting-started/11.state-management.md": {
+    "hash": "a691e228df4d861de3e01a9360c6a77385d87a42d0689c0d931ea85219fd220f",
+    "blocks": 29,
+    "time": "2026-11-20 13:12"
+  },
+  "1.getting-started/12.error-handling.md": {
+    "hash": "aedaa6a5c15e8a5bc8bd19f9e8642f4a2487cd23049df91e54ff5a372771e8e6",
+    "blocks": 70,
+    "time": "2026-11-20 13:13"
+  },
+  "1.getting-started/13.server.md": {
+    "hash": "c4b1b58df8a7381048c96666bf63f5d49ee95febc8dcb35e7a02a9fc4bf0b131",
+    "blocks": 27,
+    "time": "2026-11-20 13:13"
+  },
+  "1.getting-started/14.layers.md": {
+    "hash": "c72d349c7cb03131758827fe5521fca139e16772463f81bc0606243caf6bff53",
+    "blocks": 52,
+    "time": "2026-11-20 13:13"
+  },
+  "1.getting-started/15.prerendering.md": {
+    "hash": "4ceda4fe5e69a0f127ae850a541d4d963fd1013f176f69a9999cd4a7f5b2d150",
+    "blocks": 46,
+    "time": "2026-11-20 13:13"
+  },
+  "1.getting-started/16.deployment.md": {
+    "hash": "82b847c0360b50211ee589c72e897034da48e224797673641a660bcf862074f5",
+    "blocks": 56,
+    "time": "2026-11-20 13:13"
+  },
+  "1.getting-started/17.testing.md": {
+    "hash": "41be61f57e22a471ec2cf7dbabfc28b24ed3efb10da3bca1b153a1c768c7b4fe",
+    "blocks": 213,
+    "time": "2026-11-20 13:15"
+  },
+  "1.getting-started/18.upgrade.md": {
+    "hash": "4bd03e9301eec53e3de6b9d67760ed307db8c94aa284916c4b34427a6142861d",
+    "blocks": 430,
+    "time": "2026-11-20 13:17"
+  }
+}

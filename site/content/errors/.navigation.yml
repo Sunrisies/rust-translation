@@ -1,0 +1,4 @@
+title: 错误
+titleTemplate: '%s · Nuxt 错误'
+icon: i-lucide-triangle-alert
+navigation: false
