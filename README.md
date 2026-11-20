@@ -115,3 +115,38 @@ bash update.sh
 - 译文由 8B 本地模型生成，措辞与官网（若有官方中文）不一致属正常，但语义与结构一一对应。
 - Nuxt 官方站没有中文文档，用户看到的中文是浏览器自动翻译；本项目提供的是本地可控、可离线保存的中文版。
 - 术语表持续维护中，发现不一致可改 `config.json` 的 `terms` 后用 `--force` 重翻相关文档。
+
+---
+
+## 仓库分支与扩展约定
+
+本仓库 `Sunrisies/rust-translation` 有两个分支，用途完全隔离：
+
+| 分支 | 内容 | 状态 |
+|---|---|---|
+| `main` | Rust 翻译工具（sunrise-translation） | 原有项目，未改动 |
+| `docs-translation` | 本文档翻译系统（本文件所在分支） | 当前使用 |
+
+**分支用于隔离不同技术栈/用途；目录用于区分同类多套文档。**
+
+### 后续新增第二套文档时
+
+当前分支是"单套文档"结构（根目录即 Nuxt 这一套）。当要翻译第二套文档（如 Vue）时，推荐重构成多文档目录结构：
+
+```
+docs-translation/
+├── _shared/translator.py    # 抽出通用翻译内核
+├── nuxt/                    # 现有内容整体移入
+│   ├── config.json
+│   ├── content/
+│   └── site/ + deploy/
+└── vue/                     # 新增：cp -r nuxt/ vue/ 后改配置
+```
+
+为什么不现在就重构：当前只有一套文档，重构会改动所有脚本路径，收益尚未兑现。等加第二套时一次到位。
+
+### 仓库地址与提交
+
+- 仓库：https://github.com/Sunrisies/rust-translation
+- 文档系统分支：`docs-translation`（孤儿分支，不含 main 的 Rust 文件）
+- 提交：`git checkout docs-translation` 后正常 commit/push 即可，不会影响 main
