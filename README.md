@@ -8,6 +8,7 @@
 |---|---|---|---|
 | **Nuxt** | v4.6.4 | 253 篇 markdown | https://nuxt.sunrise1024.top/ |
 | **Cesium** | v1.147.0 | 985 个 JSDoc 源 / 357 页 API | https://cesium.sunrise1024.top/ |
+| **Leaflet** | v1.9.4 稳定版 | 83 个 Leafdoc 源 + 65 篇教程 / 23 页 | https://leaflet.sunrise1024.top/ |
 
 另有 WorkBuddy 托管镜像：https://nuxt-docs-zh.app.workbuddy.host/?sharecode=AYJMZQT7S7
 
@@ -19,7 +20,7 @@
 2. **结构保留**：markdown / JSDoc 的代码、链接、类型、参数名、组件标记全部原样保留，只翻译自然语言。
 3. **术语统一**：术语表强制一致（composable→组合式函数、widget→控件…）。
 4. **断点续传**：每翻完一个文件立即写缓存，中断可重跑。
-5. **官网同款站点**：Nuxt 用 Docus 主题（顶部章节 tab + 侧边栏）；Cesium 用 JSDoc（API 参考标准布局）。
+5. **官网同款站点**：Nuxt 用 Docus 主题（顶部章节 tab + 侧边栏）；Cesium 用 JSDoc（API 参考标准布局）；Leaflet 复用官网 HTML 外壳（含可交互地图）。
 6. **多目标部署**：WorkBuddy 托管 + 自有服务器（Caddy / nginx），各自独立的 Umami 统计 id。
 
 ---
@@ -36,14 +37,21 @@
 ├── site/                    # Nuxt Docus 站点（site/content/ 是 253 篇译文）
 ├── deploy/                  # Nuxt WorkBuddy 托管版部署配置
 │
-└── cesium/                  # Cesium 项目（第二套文档）
-    ├── 部署说明.md           # Cesium 完整构建+部署手册（先看这个）
-    ├── config.json          # Cesium 配置（版本/服务器/统计id）
-    ├── translated/          # 985 个改了 JSDoc 注释的 js（译文）
-    └── scripts/             # 拉取/翻译/修复/生成/统计 6 个脚本
+├── cesium/                  # Cesium 项目（第二套文档）
+│   ├── 部署说明.md           # Cesium 完整构建+部署手册（先看这个）
+│   ├── config.json          # Cesium 配置（版本/服务器/统计id）
+│   ├── translated/          # 985 个改了 JSDoc 注释的 js（译文）
+│   └── scripts/             # 拉取/翻译/修复/生成/统计 6 个脚本
+│
+└── leaflet/                 # Leaflet 项目（第三套文档）
+    ├── 部署说明.md           # Leaflet 完整构建+部署手册（先看这个）
+    ├── translated/          # 83 个改了 Leafdoc 注释的 js + 65 篇教程 md
+    ├── nav-translated/      # 导航页译文（首页/教程索引/安装）
+    ├── scripts/             # 拉取/翻译/生成脚本
+    └── *.py                 # 翻译器（leafdoc/tutorial/html/nav）
 ```
 
-> Cesium 工作目录在 `D:/hy-mt2-bench/cesium-docs/`（含英文源 repo/、构建产物），但**只有上面的 cesium/ 内容会上传 GitHub**，英文源码和构建产物不传。
+> Cesium 工作目录在 `D:/hy-mt2-bench/cesium-docs/`、Leaflet 在 `D:/hy-mt2-bench/leaflet-docs/`（含英文源 repo/、构建产物），但**只有上面的 cesium/ 和 leaflet/ 内容会上传 GitHub**，英文源码和构建产物不传。
 
 ---
 
@@ -54,7 +62,7 @@
    llama-server -m Hy-MT2-1.8B-Q4_K_M.gguf --port 8999 -ngl 99 -fa on
    ```
    模型文件不入库，需自行下载。
-2. **Node 22 + pnpm**（Nuxt 站点）/ **jsdoc**（Cesium 站点）。
+2. **Node 22 + pnpm**（Nuxt 站点）/ **jsdoc**（Cesium 站点）/ **leafdoc**（Leaflet 站点，`npm install leafdoc@2.4.0`）。
 3. **Python 3**：翻译脚本只用标准库。
 
 ---
@@ -75,6 +83,16 @@ python fetch_sources.py                   # 拉最新版源文件
 python jsdoc_translator.py --all          # 增量翻译
 python fix_links.py && python fix_types.py  # 质量修复
 # 生成 + 后处理 + 部署见部署说明.md 第 4-6 步
+```
+
+**Leaflet：** 详见 `leaflet/部署说明.md`，简要：
+```bash
+cd D:/hy-mt2-bench/leaflet-docs
+python fetch_sources.py                   # 拉 v1.9.4 源文件
+python leafdoc_translator.py --all        # API 注释增量翻译
+python tutorial_translator.py --all       # 教程 markdown 翻译
+python build_site_official.py             # 组站（23 HTML，官网外壳）
+# 生成 API 页 + 部署见部署说明.md 第 3、7 步
 ```
 
 ---
