@@ -1,0 +1,262 @@
+{
+  "quick-start/index.md": {
+    "hash": "7901eb2bb87763c20ac888a9464bc073895cce70ad7103250b3f56d7e5ba48f1",
+    "segments": 32
+  },
+  "accessibility/example.md": {
+    "hash": "910a319e08d148af16f5992826822963708edc3fbe4ae3d4bc19ebd6fbe6d1cf",
+    "segments": 1
+  },
+  "accessibility/index.md": {
+    "hash": "9b5873658d14ae09ac76245c9a5308b8e25235966c4dfd9b063b896ea97520d9",
+    "segments": 72
+  },
+  "choropleth/example-basic.md": {
+    "hash": "cc26c40f3eb8acf17b1de624ea14ab8643080182b22438bc4b7f035d3198d1e7",
+    "segments": 1
+  },
+  "choropleth/example-color.md": {
+    "hash": "a75993184e19ec378a4008904a3de6f9eddf9f34f1608e4fc3f63d752aa11f88",
+    "segments": 1
+  },
+  "choropleth/example.md": {
+    "hash": "7bdd65cbae6575f30c7baa5a580682b8dd0e0b8d2ae4aa48a86ecf596d6889ee",
+    "segments": 1
+  },
+  "choropleth/index.md": {
+    "hash": "755cf580a12a50c142305adf412d1ada629bb7d6ed95ef9dbf42d57fb2adb264",
+    "segments": 31
+  },
+  "choropleth-example.md": {
+    "hash": "39c05c53185eae6d20e0a7d6703ff38b0c0e3423544bd3b38b715c388dc91ae0",
+    "segments": 0
+  },
+  "choropleth.md": {
+    "hash": "c1909df3bce80e423c5eea609e98d7840ce33dfe02b75ca86dc6aef03ca9badc",
+    "segments": 0
+  },
+  "crs-simple/crs-simple-example1.md": {
+    "hash": "4d65dc5de4e82bed7cb300f47669cd1a440b3160f259125586d7efdb9d52d695",
+    "segments": 1
+  },
+  "crs-simple/crs-simple-example2.md": {
+    "hash": "1e967f47a27d32b3644afe4ef4f3ae7176e14fdbe7469687b16d66ce881d0189",
+    "segments": 1
+  },
+  "crs-simple/crs-simple-example3.md": {
+    "hash": "1da0e77c9e60f6f2cc81d04b0b4dd506b4f1edf40c2367133fe213e4640dda15",
+    "segments": 1
+  },
+  "crs-simple/crs-simple.md": {
+    "hash": "3efdaf9e7e339ab9ccb35664e7efb07fa551af4b86e6832393b352251a5412e6",
+    "segments": 24
+  },
+  "custom-icons/example-one-icon.md": {
+    "hash": "2d6b6041441a721e784869f854334ca8381632d9449e600731b06820d7ba3128",
+    "segments": 1
+  },
+  "custom-icons/example.md": {
+    "hash": "ee155a1c686f17cc8d41091ec30e9f6d05b1153d7d1b525ceb4cb3ef989cf355",
+    "segments": 1
+  },
+  "custom-icons/index.md": {
+    "hash": "2e71de7267abb5ea02282f3470aa0db02b64eea840b771cd6ed924608ef43bdd",
+    "segments": 15
+  },
+  "custom-icons-example.md": {
+    "hash": "77d010691a71e1972b6ac9cb74094c17dba2e3c2ea02e4c52f9846fc13e902bd",
+    "segments": 0
+  },
+  "custom-icons.md": {
+    "hash": "2fe2f8f1957e3fea785d5dbae282c23bb40901543c8ae7b7885443c4fd71cf5c",
+    "segments": 0
+  },
+  "extending/canvascircles.md": {
+    "hash": "681d2ff60028c4ed86c601713b1cc50809909ae6b0735713155a240fae1cface",
+    "segments": 0
+  },
+  "extending/class-diagram.md": {
+    "hash": "8859102504acd4da69b359aad002f734aa6900caeae8978662d4e5bd90bd6619",
+    "segments": 1
+  },
+  "extending/extending-1-classes.md": {
+    "hash": "9bd7d0433903de2b55e427032b2dbdb057753984e45ab688cdd26f15b6f1b0eb",
+    "segments": 42
+  },
+  "extending/extending-2-layers.md": {
+    "hash": "7787fdb911b67b505b9dff74098a0e399976cc0e1b44a037fd31d96dd21bdd33",
+    "segments": 33
+  },
+  "extending/extending-3-controls.md": {
+    "hash": "5c1ae5d469ceeff50d1c4b81729f63a0be9f97a1b3831ccb5930c983b6a830a0",
+    "segments": 18
+  },
+  "extending/gridcoords.md": {
+    "hash": "e32fba58597212ba8946d024b4ba0389f569b8050e6b36e4787cf5bf7d34cc26",
+    "segments": 1
+  },
+  "extending/kittenlayer.md": {
+    "hash": "f5b9f478873907536895df58217e7b83720abae2a44de633de675cd012c77df7",
+    "segments": 0
+  },
+  "extending/pixelorigin.md": {
+    "hash": "0d09efc816e8666762658c6c5d7cc46ebe64a2f6f6e437d7561e494b16bb975c",
+    "segments": 1
+  },
+  "extending/tilt.md": {
+    "hash": "4bc4cc625791211b695fc483604594f738c39601559556313c68aa84247c27e8",
+    "segments": 1
+  },
+  "extending/watermark.md": {
+    "hash": "721613eb5868bab1a8962d13531f9b4f637beabe1b660b259c0c335ab8fc511d",
+    "segments": 1
+  },
+  "geojson/example.md": {
+    "hash": "11f8b4471f84cb805bf9af0d9697672d26ed43b10985f81d85a83c6e55c9a01f",
+    "segments": 1
+  },
+  "geojson/index.md": {
+    "hash": "9b5ff5020cad465e8ce19f3758f2da97d986362288fd5634fbbb01f6aa92ef02",
+    "segments": 14
+  },
+  "geojson-example.md": {
+    "hash": "ffd560e88b3795f1747c6753aaa5776ccb4b7ecf29c8fc2143e1e6d83c69623b",
+    "segments": 0
+  },
+  "geojson.md": {
+    "hash": "e3dd4ff2f62d3403e4b5f78afb7cd6ec4497e8d988e4c0b26a276ca820ea0a3e",
+    "segments": 0
+  },
+  "layers-control/example.md": {
+    "hash": "91538012c0fe5f1843072a14b9613e69022fbd26cb2bb2c15472854c9d0fae0b",
+    "segments": 1
+  },
+  "layers-control/index.md": {
+    "hash": "270df8744a59ccf0fdea56c982dbf18b78b886c4e4a039f2842230cb0d8cff98",
+    "segments": 25
+  },
+  "layers-control-example.md": {
+    "hash": "f16d056e74f8afe71ab05eb210c3bd359734e087671c18849e472918b26618f9",
+    "segments": 0
+  },
+  "layers-control.md": {
+    "hash": "d724746511dc0c0e043d77665ec1efc128180cbc9e7d16a079d9a7c82d272c04",
+    "segments": 0
+  },
+  "map-panes/example.md": {
+    "hash": "c04e1db2bb17e4b3d491a9d28fb0cc5570fe8ee46a61de63954dd513f22697f1",
+    "segments": 1
+  },
+  "map-panes/index.md": {
+    "hash": "d6464c178e5a861d9d2db3bd92d233a7a60550636db3a93d761094b2075c8105",
+    "segments": 25
+  },
+  "map-panes-example.md": {
+    "hash": "43d84c1d4c912e6c1b6cc56b5f147a833804fb1f723017e4a93051c3b0daa544",
+    "segments": 0
+  },
+  "map-panes.md": {
+    "hash": "86ca751a0daf755882d216dbd337a56674790c856e6b144c24bba25926979736",
+    "segments": 0
+  },
+  "mobile/example.md": {
+    "hash": "1a88ca1b4cf1a96ac4e6dca88f7b8a2fba864accfb85b58795505382ac7401db",
+    "segments": 1
+  },
+  "mobile/index.md": {
+    "hash": "f0361fac84b960a2a739a2f2af3daeffcd626cecd422ee822ac7545c50660e6b",
+    "segments": 16
+  },
+  "mobile-example.md": {
+    "hash": "dda965b0b12eaad058b7caff5333dd0da4952c593d0f9344bbe945506f10fcd4",
+    "segments": 0
+  },
+  "mobile.md": {
+    "hash": "79843ef809bc9a1d4e3998a7e4e0b8d325c0197f4d3f3a38823f7c2c1ee85197",
+    "segments": 0
+  },
+  "overlays/example-image.md": {
+    "hash": "2ceb773f994a31252e41fe86afa67becec2e2ac9b9916c1faf0fe551b99351f3",
+    "segments": 1
+  },
+  "overlays/example-nocontrols.md": {
+    "hash": "d909275a9af086a4aea271a84bf1fca2d87573852576cb813590ef56c9cf26ae",
+    "segments": 1
+  },
+  "overlays/example-svg.md": {
+    "hash": "34c21e7c188e5075b98c416e361840abf747c0fc0d6a174d204e86adb6fe3df2",
+    "segments": 1
+  },
+  "overlays/example-video.md": {
+    "hash": "5878e84b08df1a02eb108a10497386103beab44bd46c240903e137ff0db54353",
+    "segments": 1
+  },
+  "overlays/index.md": {
+    "hash": "57c647635265bcfa4be9b3506fec69ab90e3ba6044fd06cec980852e0e3a7ef7",
+    "segments": 48
+  },
+  "quick-start/example-basic.md": {
+    "hash": "78eb6bde998ae49a6b66409ffc3c5f9c158e4c47b1e9f77113f25ee2fb3bae1d",
+    "segments": 1
+  },
+  "quick-start/example-overlays.md": {
+    "hash": "25544fe21e302cf9e79243a36cbcea2a972e1746abdf64059372435a1a21501b",
+    "segments": 1
+  },
+  "quick-start/example.md": {
+    "hash": "2c5d43d8c1b6a8ac4e7c7bcc8706d21b07b26580307c57030b0b0c3befb9554e",
+    "segments": 1
+  },
+  "quick-start-example.md": {
+    "hash": "6e870847bb4eebc1396bb5497e4be287168aa89a99b306f295ddc619f037f344",
+    "segments": 0
+  },
+  "quick-start.md": {
+    "hash": "6b60bd742f061e04757e86b935cc628171d8887e2f047a08db9b1a06e7abdf7a",
+    "segments": 0
+  },
+  "wms/wms-example-crs.md": {
+    "hash": "da557ee424d53ddd0ce5f9dc10db90f4deca2da8eaa7d77f6ce906614074a3cb",
+    "segments": 1
+  },
+  "wms/wms-example1.md": {
+    "hash": "9a0174d10c4c05bad320fc6fa7a7366297aa1a6040fd5371951352208e788f06",
+    "segments": 1
+  },
+  "wms/wms-example2.md": {
+    "hash": "ed42892fe49e083c0e54a2fa2388396fe6e2df98dca7ab40b5a22982e8f7b14d",
+    "segments": 1
+  },
+  "wms/wms-example3.md": {
+    "hash": "6bddd09bdafb186dc1684f8f0f07920c8b55f5e857db362e19725433e7674720",
+    "segments": 1
+  },
+  "wms/wms.md": {
+    "hash": "e68c627b586ac5c1cd9c0a700f00b86dd8f0fc7a6e0c556441dda7b578e0a730",
+    "segments": 31
+  },
+  "zoom-levels/example-delta.md": {
+    "hash": "a3fcf37250bc3fdabdd2d2bc5e07be38e0707a5a4489047dad62e0c3582c7201",
+    "segments": 1
+  },
+  "zoom-levels/example-fractional.md": {
+    "hash": "03ec099d6d3eebf017467940bca53d81268c32571cd7df53804270d8e1373c28",
+    "segments": 1
+  },
+  "zoom-levels/example-scale.md": {
+    "hash": "d979dbbe064955edb4ec1d9d17bf43b5efde74755e564ed2524fc2e6fbff47d3",
+    "segments": 1
+  },
+  "zoom-levels/example-setzoom.md": {
+    "hash": "f2083c6bfca6f3825d96814713affc4ee6758949d64100558a5b1a8b8aa6d9c4",
+    "segments": 1
+  },
+  "zoom-levels/example-zero.md": {
+    "hash": "15eb490d17cc98c615b53106b5b6c0840565c0813dbb0f79853cc7e35916e388",
+    "segments": 1
+  },
+  "zoom-levels/index.md": {
+    "hash": "a6747f523eb25026eda0d64a04162c0f0f46684c5e203816a750b7f8418b2a9c",
+    "segments": 82
+  }
+}

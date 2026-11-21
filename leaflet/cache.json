@@ -1,0 +1,334 @@
+{
+  "geo/LatLng.js": {
+    "hash": "e2d0662c79ded43cf525b713a3dff2dea9a2f87169c542ec9fa87593e6767741",
+    "segments": 12
+  },
+  "control/Control.Attribution.js": {
+    "hash": "40ed703e49798005eebf291194df2620ca3621145512ab7880b38c3af3c1555a",
+    "segments": 8
+  },
+  "control/Control.js": {
+    "hash": "b5ea181152af6604659750b7288678de55bd6dad9243505ca2bc2cb9e42f6bcf",
+    "segments": 15
+  },
+  "control/Control.Layers.js": {
+    "hash": "eb3a3f12761588dd31ce274f06c9b419ef6884de3439334cea42f1f63cc3a5e9",
+    "segments": 29
+  },
+  "control/Control.Scale.js": {
+    "hash": "69d04cd8e6aa60b77f83b7e3aa78e576135b346a0512d8b5c20c054a2bd3d787",
+    "segments": 6
+  },
+  "control/Control.Zoom.js": {
+    "hash": "5aa1c0245b6fb56a7b75f8804655514035c37c6e422886e27235db7f58c2133d",
+    "segments": 9
+  },
+  "control/index.js": {
+    "hash": "e388fd9fea69948d3609e5d58185cfc868df1b75ae6a526098026b2df490c25a",
+    "segments": 0
+  },
+  "core/Browser.js": {
+    "hash": "c32d9670f8bc7f5cac319c5a19d4e729bb22138d0012682dc105584d7af51cec",
+    "segments": 22
+  },
+  "core/Class.js": {
+    "hash": "9e4c589c3b08fb3c4b4091777425b4b522cf5fb50e3aff4eddfb5ff9ce9150c8",
+    "segments": 12
+  },
+  "core/Events.js": {
+    "hash": "7446c56f3456d9f3d4855964a48cef10a687268a783eba997d6e07df5de3a70d",
+    "segments": 45
+  },
+  "core/Handler.js": {
+    "hash": "e9db3b0ae1ee9b66877ccf0bce493c930272f1df6c1d3af1e739fb30d25e06ba",
+    "segments": 8
+  },
+  "core/index.js": {
+    "hash": "107a756b3132e0b8f43cac57b1f604376be6383b17cd89bd4e9b591c3511b00f",
+    "segments": 0
+  },
+  "core/Util.js": {
+    "hash": "bd207eb8f878168fb15f5b445264524b72bcd91b825c5b72921e537a2fbd0d83",
+    "segments": 46
+  },
+  "dom/DomEvent.DoubleTap.js": {
+    "hash": "d0516730430a4b63deef5f4e51b1943ddcc6b2ad4444bd2da38201174c9582cb",
+    "segments": 12
+  },
+  "dom/DomEvent.js": {
+    "hash": "f747393f597a9fb3105fd73f4c090ac3732d70fae3820571bd25753c7fa163a9",
+    "segments": 40
+  },
+  "dom/DomEvent.Pointer.js": {
+    "hash": "ac85c385c1216a8d5c5474ab109a90c1e229014d9d5f29480a47a823b0c8e4c3",
+    "segments": 6
+  },
+  "dom/DomUtil.js": {
+    "hash": "6d00f5b4ddde484392555ba8fb2c2d9e8a345fe6d60fb34afaf13c2ab3ddb7f4",
+    "segments": 63
+  },
+  "dom/Draggable.js": {
+    "hash": "d5d16f5afd2de4211d20332e222c169da41ff090799d8499b5dded26ed464cbb",
+    "segments": 29
+  },
+  "dom/index.js": {
+    "hash": "e3e91a79d6110673c57e4d26ae52684f579abc402f4c1c2691d49c696f52d501",
+    "segments": 0
+  },
+  "dom/PosAnimation.js": {
+    "hash": "cfb2d6a9607b7f76d26f750329f1c90b36ca7267bef830edf002773a68eff082",
+    "segments": 11
+  },
+  "geo/crs/CRS.Earth.js": {
+    "hash": "e5b6d78b8ecc15c59e818a05182b974fb4041643d01b4e04dadea12200997e07",
+    "segments": 7
+  },
+  "geo/crs/CRS.EPSG3395.js": {
+    "hash": "b9aababedad0b1d319c51a3e544f1177ed9f3cea91c00eac2f63b636b57d32de",
+    "segments": 1
+  },
+  "geo/crs/CRS.EPSG3857.js": {
+    "hash": "b12b4e06460c6d841ba104b5ae99a75f182d1f645131502b02164815eebc3ce9",
+    "segments": 3
+  },
+  "geo/crs/CRS.EPSG4326.js": {
+    "hash": "b2ebd5cebb8b1dafc08ed201acaf27b08a229d0928183864c26e56aa5e263659",
+    "segments": 6
+  },
+  "geo/crs/CRS.js": {
+    "hash": "67cc3215126f45f5b4f4cc21a34522a020e53f8487a627dc02d5bb73b7ebc460",
+    "segments": 35
+  },
+  "geo/crs/CRS.Simple.js": {
+    "hash": "1a712403071f4f4131f341f468d90913133879818bc5f7be536d6922d931e002",
+    "segments": 4
+  },
+  "geo/crs/index.js": {
+    "hash": "e896b7d2eccea909d5fe3b1dcca8bb2a07925d457f70331891bee1f440fa4462",
+    "segments": 0
+  },
+  "geo/index.js": {
+    "hash": "fe55c4f9d000fb796495e05b3578ba92fe619de04f8bacd17688f919a7cb0c49",
+    "segments": 0
+  },
+  "geo/LatLngBounds.js": {
+    "hash": "3d8e3d78b5c906a77fdabd8fcfc6137c7595fd65b201de8b436e23abeeb71d9b",
+    "segments": 25
+  },
+  "geo/projection/index.js": {
+    "hash": "de68ebc5abb2b70340864256ae81d07d435e7bf79493cf31f1f09e07d8ed72e9",
+    "segments": 10
+  },
+  "geo/projection/Projection.LonLat.js": {
+    "hash": "c942d097e358769d35f85b811a46eae7cb1e3081c99983211398f28aeb93f073",
+    "segments": 5
+  },
+  "geo/projection/Projection.Mercator.js": {
+    "hash": "8e6274d976ace6d97fa0d9d0cf0ad49ced81d9206af7c8f20f010931db0f7509",
+    "segments": 1
+  },
+  "geo/projection/Projection.SphericalMercator.js": {
+    "hash": "38ee8f9a19804259ea3fefe4a82b9be54b1c1458981bc29d7bc3f7380bc1e191",
+    "segments": 3
+  },
+  "geometry/Bounds.js": {
+    "hash": "2db4a0e39f3123f98d4ef2370225a6137643021784b5d7543e59b4ecf68014c1",
+    "segments": 24
+  },
+  "geometry/index.js": {
+    "hash": "cd013dd2f5cea2e6cb3ea6266ce664b45b864617e0afe31b3c7fc3dfa082e7e9",
+    "segments": 0
+  },
+  "geometry/LineUtil.js": {
+    "hash": "cd71d291b57e9a597b54d590d05a2207873a874791092f08ec2b3f014ef29a7a",
+    "segments": 28
+  },
+  "geometry/Point.js": {
+    "hash": "59316974f4ab2f65f12593baebe94dbed70b22839763aa5ad6e579756c8a0553",
+    "segments": 24
+  },
+  "geometry/PolyUtil.js": {
+    "hash": "ed00323ff126f5a6d7beadc90b8b10a58c335782b8024cab27b27d528cf95114",
+    "segments": 15
+  },
+  "geometry/Transformation.js": {
+    "hash": "a8dc5f99bc47b6b0b0a6485d417589594a466bfa86d4b4678040cbeec53393a4",
+    "segments": 15
+  },
+  "layer/DivOverlay.js": {
+    "hash": "d75b24a0fe3cd995936102fd95d28ceffa01bcd137885fdf36b77b873f938d72",
+    "segments": 31
+  },
+  "layer/FeatureGroup.js": {
+    "hash": "d61c0acd6bbe77ea30e4613f0dd10bf553b5756f241514c282089400db698d6b",
+    "segments": 13
+  },
+  "layer/GeoJSON.js": {
+    "hash": "a3a4b8f4be3b1d68aefed3c4b64a155f7ddc8a12e63d8bba8d71cf58923aad63",
+    "segments": 54
+  },
+  "layer/ImageOverlay.js": {
+    "hash": "8398bfc3f5fcbe016ee7b6838cabdf66c971d844b94e85225f954b3af5decbef",
+    "segments": 24
+  },
+  "layer/index.js": {
+    "hash": "f1a6bcc9d4aacfa3a04f7122c90245525537fe2d9f6f6b87d18e709e75c5c5bc",
+    "segments": 0
+  },
+  "layer/Layer.js": {
+    "hash": "028d00720ab65de73460e868afca0a20231df77ff1cca4df45a8d760c676a2a8",
+    "segments": 31
+  },
+  "layer/LayerGroup.js": {
+    "hash": "cd8f7932793e3f6d19588d5f6562a4c554f2b7f3684470cf6cbaacb3a51c17b0",
+    "segments": 20
+  },
+  "layer/marker/DivIcon.js": {
+    "hash": "7c2b599fe7a3fdfcf9fc9c9517ae062cfdc66278f58810409aa736df58d7f19f",
+    "segments": 8
+  },
+  "layer/marker/Icon.Default.js": {
+    "hash": "b3cc323461a08e1b0ca27ac1eae5cf0fc7141667c375d5fbe12f1302cb2db915",
+    "segments": 9
+  },
+  "layer/marker/Icon.js": {
+    "hash": "021a1a9b8725ae1b642516c94fb8cd7de560492d46907671c84777f37d517da6",
+    "segments": 22
+  },
+  "layer/marker/index.js": {
+    "hash": "1e066ebbcae193a4a75420e8673cd413e63f9556e46b0bdc0bd2c1f768405aef",
+    "segments": 0
+  },
+  "layer/marker/Marker.Drag.js": {
+    "hash": "d13b70523b7aff737a368c19790752f59a82d213a6e587dc1069e7d23de61de9",
+    "segments": 11
+  },
+  "layer/marker/Marker.js": {
+    "hash": "8b391673d72cd759ba3fe418db11eb9ba055594332bb9b544940d457c0f6c66f",
+    "segments": 34
+  },
+  "layer/Popup.js": {
+    "hash": "405afded866e62b2bcaeb7a729061a5d43228bb835d47e48308e04c966e29502",
+    "segments": 65
+  },
+  "layer/SVGOverlay.js": {
+    "hash": "3f9e5cf9b5123ec764a117b9bbccc47cc35bd4d8d6c37c902da6e33faa262ff5",
+    "segments": 6
+  },
+  "layer/tile/GridLayer.js": {
+    "hash": "c66cb1da29d894db83836bec0f57e3a1bffb44cdcb27ee8534629adb5b2b9d9f",
+    "segments": 72
+  },
+  "layer/tile/index.js": {
+    "hash": "ea01cb9cbba43ccbd2900985c8ac4188446a74e86488a8773adddfbb1f3d6bf8",
+    "segments": 0
+  },
+  "layer/tile/TileLayer.js": {
+    "hash": "73d72ab59479054f0eff10c1c2e8bdb8e5c8866fd32132e6dbb71ddfdebfa14f",
+    "segments": 40
+  },
+  "layer/tile/TileLayer.WMS.js": {
+    "hash": "69528717a0b5f0c11f35ec184abddccb924efa9b7803f9ab14afc66b82924f2f",
+    "segments": 14
+  },
+  "layer/Tooltip.js": {
+    "hash": "6f99f4e5656ade3e9f61c1bc6f94928c36b623e32b5e40bfad2da189ab3b9ba4",
+    "segments": 35
+  },
+  "layer/vector/Canvas.js": {
+    "hash": "28d1f5b649daf172cc734149fcce09d0f84610b1c5ead044038196f9ae7651b9",
+    "segments": 28
+  },
+  "layer/vector/Circle.js": {
+    "hash": "65b305046f89bc858979debc192b88c2013b8203b141ca38da00dceed1ffe3ab",
+    "segments": 10
+  },
+  "layer/vector/CircleMarker.js": {
+    "hash": "223443f7c8bb2c1b1cb2820fa3a13817223329e9fa2c1a154bf19a23e2bf35da",
+    "segments": 9
+  },
+  "layer/vector/index.js": {
+    "hash": "9e544db1bad41006f41828cd69e87c36867bf7b34f1fbdc0554b537651d768e7",
+    "segments": 0
+  },
+  "layer/vector/Path.js": {
+    "hash": "7ea71dabc64a4fc4e487f9a6d4f0ad0b73f518ffd192cb7f5cfa445e78b65dad",
+    "segments": 25
+  },
+  "layer/vector/Polygon.js": {
+    "hash": "5ba0eeb1d32e2a6944637d0da662c2c0682b21d0c12f878d1984467f4b166168",
+    "segments": 10
+  },
+  "layer/vector/Polyline.js": {
+    "hash": "c0558e7f2d0982cd9b1e3a39d44568ec15b3be69756c37f63aa21be4f084c095",
+    "segments": 26
+  },
+  "layer/vector/Rectangle.js": {
+    "hash": "efabef215bc4aafebf089023eb2ab3c9d86d3c8d103cf0ef29724188e8df8258",
+    "segments": 2
+  },
+  "layer/vector/Renderer.getRenderer.js": {
+    "hash": "160962c2fe862c97d4fb0bc462a2c8338821c6d2d9bf36dff0ec01d0d1a92796",
+    "segments": 7
+  },
+  "layer/vector/Renderer.js": {
+    "hash": "868557d0db3942ac78aabdd060e9c86830c61caa18e4ea3ffd00beabee8d63b2",
+    "segments": 14
+  },
+  "layer/vector/SVG.js": {
+    "hash": "599158095cce9b1304c9758d1f7447412db3732830ccd6e7d4d0e494f0581390",
+    "segments": 15
+  },
+  "layer/vector/SVG.Util.js": {
+    "hash": "09bab8d8a466e7b7655940ccea3459f0afa2e9ecc06faacb86d3d46d98e87eec",
+    "segments": 8
+  },
+  "layer/vector/SVG.VML.js": {
+    "hash": "0a822e2a2c3612a6d3a6587208e7792f85f86989a457c34939c7c9a04c513540",
+    "segments": 6
+  },
+  "layer/VideoOverlay.js": {
+    "hash": "effbd573577fedfb577670811f56b909f9d9f8228eff7a58f77b3dc0cb885b2c",
+    "segments": 15
+  },
+  "Leaflet.js": {
+    "hash": "dca519e34bfc89cc51cb0be75bc9d8e9d17c327846c2d7e2c7fbd8f51f7f5e9f",
+    "segments": 0
+  },
+  "map/handler/Map.BoxZoom.js": {
+    "hash": "a56445a02707c75c0ae770abc10697b0abc2e1693a424da4df44d782cbaa8004",
+    "segments": 8
+  },
+  "map/handler/Map.DoubleClickZoom.js": {
+    "hash": "2cc2f3d9e83a9a906a5b5db83efcef0e37dab4ba8537cd60abf7148871bb5644",
+    "segments": 9
+  },
+  "map/handler/Map.Drag.js": {
+    "hash": "c188ef148f566030dbd199fdf3643ffdb1dea229c964c8f79a262948e8779acb",
+    "segments": 18
+  },
+  "map/handler/Map.Keyboard.js": {
+    "hash": "34edd81a276b0f58a40df4d19913972646bd3b2d430d1993b3f97685a08bf87a",
+    "segments": 5
+  },
+  "map/handler/Map.ScrollWheelZoom.js": {
+    "hash": "b25f17ad4e2ecc62cab231f5391ead5ee24f968d957b4142edf562df3d4e42fb",
+    "segments": 9
+  },
+  "map/handler/Map.TapHold.js": {
+    "hash": "995f74b86463a01370cc1da6a25f65ba0ec1de2345d1ab4d9b6598cf64f1ca41",
+    "segments": 6
+  },
+  "map/handler/Map.TouchZoom.js": {
+    "hash": "eaea02f17c1c088a61a2c833459a952d7958435b2c0673e6d4155d1e385476ff",
+    "segments": 8
+  },
+  "map/index.js": {
+    "hash": "dfe338874852734728561fbff0c5b8b8599fb4f0e6947a57581e6aa8e2bda306",
+    "segments": 0
+  },
+  "map/Map.js": {
+    "hash": "13848a47cbd99031148c50af50bbd6e7de71b5b634958d53e688a8a0c81ccaf1",
+    "segments": 254
+  }
+}

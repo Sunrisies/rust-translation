@@ -1,0 +1,39 @@
+<p>Leaflet 是用于构建强大交互地图的领先开源 JavaScript 库。其 JS 文件仅约 40 KB，具备大多数开发者所需的所有地图功能。</p>
+<p>Leaflet 的设计注重简洁性、性能与易用性。它在所有主要桌面和移动平台上都能高效运行，可通过大量插件进行扩展，拥有美观、易于使用且文档完善的 API，以及简单易读的源代码，非常适合贡献者参与开发。它支撑着数百万个网站中的地图功能，每周有超过 1000 万次 npm 下载量。</p>
+<p>在这里，我们在 “map” div 中创建地图，添加自己选择的瓦片，然后在弹出框中添加带有文字的标记：</p>
+<p>import {LeafletMap, TileLayer, Marker} from 'leaflet'; const map = new LeafletMap('map').setView([51.505, -0.159], 15); new TileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; &lt;a href="https://www.openstreetmap.org/copyright&gt;OpenStreetMap&lt;/a&gt;' }).addTo(map); new Marker([51.504, -0.159]).addTo(map) .bindPopup('A pretty CSS popup.&lt;br&gt;Easily customizable.') .openPopup();Learn more with the quick start guide, check out other tutorials, or head straight to the API documentation. If you have any questions, take a look at the FAQ first.</p>
+<p>Leaflet 不会试图为所有人完成所有事情，而是专注于让核心功能运行得非常好。</p>
+<li>瓦片层和 WMS</li>
+<li>标记、弹出框和工具提示</li>
+<li>多线、多边形、圆形</li>
+<li>图像、视频和 SVG 覆盖层</li>
+<li>具有惯性效果的平滑平移</li>
+<li>使用滚轮、捏合、双击或 Shift-Drag 进行缩放</li>
+<li>支持鼠标、触摸和笔操作</li>
+<li>可拖动的标记</li>
+<li>缩放、图层、比例、全屏显示和归属信息控制</li>
+<li>由 GPU 加速的缩放和平移</li>
+<li>SVG 或 Canvas 矢量图，可即时裁剪和简化</li>
+<li>在高 DPI 屏幕上清晰可见</li>
+<li>分数级缩放级别</li>
+<li>与其容器一起调整大小</li>
+<li>使用纯 CSS 进行样式设计</li>
+<li>图像和 HTML 标记</li>
+<li>超出内置 EPSG:3857/4326/3395 的自定义投影</li>
+<li>用于平面图、游戏或图像的非地理地图</li>
+<li>地图、标记和控制项的键盘导航</li>
+<li>带有标签的控制项和替代文本</li>
+<li>适合屏幕阅读器的弹出框和工具提示</li>
+<li>可翻译的内置文本</li>
+<h3>面向开发者</h3>
+<li>可树效移除的 ES 模块</li>
+<li>包含 TypeScript 类型</li>
+<li>无需依赖</li>
+<li>可通过纯 JavaScript 类进行扩展</li>
+<li>所有地图和图层都支持事件机制</li>
+<li>兼容所有现代浏览器</li>
+<p>如果您发现 Leaflet 存在某些缺失功能，请先检查是否有相关插件，以及是否在 GitHub 问题列表中已有讨论。如果没有，请提交新的 GitHub 问题。</p>
+<h2>参与贡献</h2>
+<p>让我们共同打造世界上最好的地图库！Leaflet 最初由 Volodymyr Agafonkin 创建，但现在由庞大的贡献者社区开发。欢迎提交 Pull Request。不过，还有多种方式可以参与 Leaflet 的开发工作。</p>
+<p>您可以通过发现并报告错误、改进文档、在 GitHub Discussions、GIS Stack Exchange 和 GitHub 问题区帮助他人、在 Mastodon 或 X 上关注 Leaflet，以及向同事和朋友推广 Leaflet 来为项目做出巨大贡献。</p>
+<p>请查看贡献指南以了解更多参与 Leaflet 开发的信息。</p>

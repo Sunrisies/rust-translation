@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	
+
+	
+	<title>Leaflet - a JavaScript library for interactive maps</title>
+	<meta property="og:title" content="Leaflet — an open-source JavaScript library for interactive maps" />
+	<meta property="og:description" content="Leaflet is a modern, lightweight open-source JavaScript library for building powerful interactive maps." />
+	<meta property="og:image" content="https://leafletjs.com/docs/images/logo.png" />
+	<meta property="og:image:alt" content="Leaflet">
+	
+
+	
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Leaflet is a modern, lightweight open-source JavaScript library for building powerful interactive maps." />
+
+	
+
+	<link rel="icon" href="docs/images/favicon.svg" type="image/svg+xml" />
+
+	<link href="https://leafletjs.com/atom.xml" type="application/atom+xml" rel="alternate" title="Leaflet Dev Blog Atom Feed" />
+
+	<link rel="stylesheet" href="docs/css/main.css" />
+
+	<!-- Leaflet -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@2.0.0-beta.5/dist/leaflet.css" integrity="sha256-LJzbbQFquR1Trwrwy++9x2Pl6ipfBZUR8Da0GGJ8Wfo=" crossorigin=""/>
+	<script type="importmap">
+		{
+			"imports": {
+				"leaflet": "https://cdn.jsdelivr.net/npm/leaflet@2.0.0-beta.5/dist/leaflet.js"
+			},
+			"integrity": {
+				"https://cdn.jsdelivr.net/npm/leaflet@2.0.0-beta.5/dist/leaflet.js": "sha256-wtAeAyJwpxq8jkj3LfBxdh3sPS3xw9kViJv+AtdXLDE="
+			}
+		}
+	</script>
+
+	
+</head>
+<body>
+<svg width="0" height="0" style="position: absolute">
+	<symbol id="icon-github" viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol>
+	<symbol id="icon-x" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></symbol>
+	<symbol id="icon-mastodon" viewBox="0 0 74 79"><path fill-rule="evenodd" d="M73.8 17.5C72.7 9 65.3 2.3 56.5 1C55 0.8 49.4 0 36.5 0H36.4C23.4 0 20.6 0.8 19.1 1C10.6 2.3 2.8 8.3 0.9 16.9C-0 21.1 -0.1 25.8 0.1 30.1C0.3 36.3 0.4 42.4 0.9 48.6C1.3 52.6 2 56.7 2.9 60.7C4.7 68 12 74.2 19.1 76.7C26.7 79.3 34.9 79.7 42.8 77.9C43.7 77.7 44.5 77.5 45.4 77.2C47.3 76.6 49.5 75.9 51.2 74.7C51.2 74.7 51.2 74.7 51.2 74.7C51.2 74.7 51.2 74.6 51.2 74.6V68.6C51.2 68.6 51.2 68.6 51.2 68.6C51.2 68.5 51.2 68.5 51.2 68.5C51.1 68.5 51.1 68.5 51.1 68.5C51.1 68.5 51 68.5 51 68.5C46 69.7 40.8 70.3 35.7 70.3C26.7 70.3 24.3 66 23.7 64.3C23.1 62.8 22.8 61.2 22.6 59.6C22.6 59.5 22.6 59.5 22.6 59.5C22.6 59.5 22.7 59.4 22.7 59.4C22.7 59.4 22.7 59.4 22.8 59.4C22.8 59.4 22.8 59.4 22.8 59.4C27.8 60.6 32.9 61.2 38 61.2C39.2 61.2 40.4 61.2 41.6 61.2C46.7 61 52.1 60.7 57.2 59.8C57.3 59.7 57.4 59.7 57.5 59.7C65.5 58.2 73 53.4 73.8 41.2C73.8 40.8 73.9 36.2 73.9 35.7C73.9 34.1 74.5 23.8 73.8 17.5ZM61.2 27V48.1H52.9V27.6C52.9 23.3 51.1 21.1 47.4 21.1C43.4 21.1 41.4 23.7 41.4 28.9V40.1H33.1V28.9C33.1 23.7 31.1 21.1 27.1 21.1C23.5 21.1 21.6 23.3 21.6 27.6V48.1H13.3V27C13.3 22.7 14.4 19.3 16.6 16.8C18.9 14.2 21.8 12.9 25.5 12.9C29.8 12.9 33 14.6 35.2 17.9L37.3 21.3L39.4 17.9C41.5 14.6 44.7 12.9 49 12.9C52.7 12.9 55.7 14.2 58 16.8C60.2 19.3 61.3 22.7 61.2 27Z"/></symbol>
+	<symbol id="icon-discussions" viewBox="0 0 16 16"><path d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1ZM1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25Zm13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"/></symbol>
+</svg>
+
+<header>
+	<h1><a href="/"><img src="docs/images/logo.svg" alt="Leaflet" width="300" height="80" /></a></h1>
+</header>
+
+<nav>
+	<ul class="nav">
+		<li>
+			
+				<span>Overview</span>
+			
+		</li>
+		<li>
+			
+				<a href="examples.html">Tutorials</a>
+			
+		</li>
+		<li>
+			
+				<a href="reference.html">Docs</a>
+			
+		</li>
+		<li>
+			
+				<a href="install.html">Install</a>
+			
+		</li>
+		<li>
+			
+				<a href="plugins.html">Plugins</a>
+			
+		</li>
+		<li>
+			<a href="https://github.com/Leaflet/Leaflet">GitHub</a>
+		</li>
+		<li class="nav-social">
+			<a class="nav-social-github" href="https://github.com/Leaflet/Leaflet" title="Leaflet on GitHub"><svg><use href="#icon-github"/></svg></a>
+			<a href="https://twitter.com/LeafletJS" title="Follow @LeafletJS on X"><svg><use href="#icon-x"/></svg></a>
+			<a href="https://mapstodon.space/@leaflet" title="Follow @leaflet@mapstodon.space on Mastodon"><svg><use href="#icon-mastodon"/></svg></a>
+			<a href="https://github.com/Leaflet/Leaflet/discussions" title="Ask for help in GitHub Discussions"><svg><use href="#icon-discussions"/></svg></a>
+		</li>
+	</ul>
+</nav>
+
+<main>
+	<div class="container">
+		<div class="announcement">2026年11月19日 — Leaflet 2.0 beta 5已发布！查看 <a href="https://github.com/Leaflet/Leaflet/releases">2.0 beta 版本的新功能</a>，以及<a href="https://github.com/Leaflet/Leaflet/blob/main/MIGRATION.md">如何从1.x迁移</a>.</div><p>Leaflet是用于构建强大交互地图的领先开源JavaScript库。尽管它仅包含 <abbr title="40 KB gzipped &mdash; that's 140 KB minified, with 9 KB of CSS (2.4 KB gzipped).">40 KB of JS</abbr>，但它具备大多数开发者所需的所有映射功能 <a href="#features">features</a> 。</p>
+<p>Leaflet的设计考虑到了 <em>simplicity</em>, <em>performance</em> and <em>usability</em> 。它在所有主要的桌面和移动平台上都高效运行，
+可以通过大量 <a href="plugins.html">plugins</a>进行扩展，拥有美观、易用的 <a href="reference.html" title="Leaflet API reference">且文档完善的API</a>
+以及简单易读的<a href="https://github.com/Leaflet/Leaflet" title="Leaflet source code repository on GitHub">源代码</a> ，令人愉悦。
+它为数百万网站上的地图提供支持，每周有超过1000万次npm下载量。
+<a href="https://github.com/Leaflet/Leaflet/blob/main/CONTRIBUTING.md" title="A guide to contributing to Leaflet">contribute</a></p>
+<div id="map" class="map map-home"></div><p>在这里我们在`div`中创建地图，添加 <abbr title="Here we use OpenStreetMap tiles, but Leaflet doesn't force you to &mdash; use whatever works for you, it's open source!">我们选择的瓦片</abbr>，然后在弹出窗口中添加带有文本的标记：</p>
+<pre class="basic-code javascript"><code><span style="color:#cf222e">import</span> {<span style="color:#953800">LeafletMap</span>, <span style="color:#953800">TileLayer</span>, <span style="color:#953800">Marker</span>} <span style="color:#cf222e">from</span> <span style="color:#0a3069">'leaflet'</span>;
+
+<span style="color:#cf222e">const</span> map <span style="color:#0550ae">=</span> <span style="color:#cf222e">new</span> <span style="color:#953800">LeafletMap</span>(<span style="color:#0a3069">'map'</span>).<span style="color:#6639ba">setView</span>([<span style="color:#0550ae">51.505</span>, <span style="color:#0550ae">-0.159</span>], <span style="color:#0550ae">15</span>);
+
+<span style="color:#cf222e">new</span> <span style="color:#953800">TileLayer</span>(<span style="color:#0a3069">'https://tile.openstreetmap.org/{z}/{x}/{y}.png'</span>, {
+    <span style="color:#0550ae">attribution</span>: <span style="color:#0a3069">'&amp;copy; &lt;a href="https://www.openstreetmap.org/copyright"&gt;OpenStreetMap&lt;/a&gt;'</span>
+}).<span style="color:#6639ba">addTo</span>(map);
+
+<span style="color:#cf222e">new</span> <span style="color:#953800">Marker</span>([<span style="color:#0550ae">51.504</span>, <span style="color:#0550ae">-0.159</span>]).<span style="color:#6639ba">addTo</span>(map)
+    .<span style="color:#6639ba">bindPopup</span>(<span style="color:#0a3069">'A pretty CSS popup.&lt;br&gt;Easily customizable.'</span>)
+    .<span style="color:#6639ba">openPopup</span>();</code></pre><p>通过 <a href="examples/quick-start/">快速入门指南了解更多信息</a>，查看 <a href="examples.html">其他教程</a>，或者直接访问 <a href="reference.html">API文档</a>。如果您有任何问题，请查阅 <a href="https://github.com/Leaflet/Leaflet/blob/main/FAQ.md">FAQ</a> first.</p>
+<h2 id="features">Features</h2>
+<p>Leaflet不会试图为所有人做所有事情。相反，它专注于让核心功能表现良好 <em>。
+瓦片层和WMS</em>.</p>
+<div class="features clearfix">
+<div class="no-break"><h3 id="layers">Layers</h3>
+<ul>
+<li>标记、弹出窗口和工具提示</li>
+<li>多线、多边形、圆形</li>
+<li>图像、视频和SVG覆盖层</li>
+<li>GeoJSON</li>
+<li>具有惯性效果的平滑平移</li>
+</ul>
+</div>
+<div class="no-break"><h3 id="interaction">Interaction</h3>
+<ul>
+<li>使用滚轮、捏合、双击或Shift拖拽进行缩放</li>
+<li>支持鼠标、触摸和笔操作</li>
+<li>可拖动标记</li>
+<li>缩放、图层、比例、全屏和来源控制</li>
+<li>GPU加速的缩放和平移</li>
+</ul>
+</div>
+<div class="no-break"><h3 id="rendering">Rendering</h3>
+<ul>
+<li>SVG或Canvas向量，可即时裁剪和简化</li>
+<li>在高DPI屏幕上清晰显示</li>
+<li>分数级缩放级别</li>
+<li>与其容器一起调整大小</li>
+<li>使用纯JS类进行扩展</li>
+</ul>
+</div>
+<div class="no-break"><h3 id="customization">Customization</h3>
+<ul>
+<li>每个地图和图层都有事件</li>
+<li>适用于所有现代浏览器</li>
+<li>除了内置EPSG:3857/4326/3395之外，还支持自定义投影</li>
+<li>用于平面图、游戏或图像的非地理地图</li>
+</ul>
+</div>
+<div class="no-break"><h3 id="accessibility">Accessibility</h3>
+<ul>
+<li>地图、标记和控制器的键盘导航</li>
+<li>带有标签的控制和替代文本</li>
+<li>适合屏幕阅读器的弹出窗口和工具提示</li>
+<li>可翻译的内置文本</li>
+</ul>
+</div>
+<div class="no-break"><h3 id="for-developers">对于开发者</h3>
+<ul>
+<li>可树剔除的ES模块</li>
+<li>包含TypeScript类型</li>
+<li>无需依赖</li>
+<li>可通过纯JS类进行扩展</li>
+<li>每个地图和图层都有事件</li>
+<li>适用于所有现代浏览器</li>
+</ul>
+</div>
+</div><p>如果您发现Leaflet缺少某些功能，首先检查是否有 <a href="plugins.html">相关插件</a>
+以及之前是否已有讨论 <a href="https://github.com/Leaflet/Leaflet/issues">GitHub 问题报告</a>.
+如果没有，请打开一个新的 GitHub 问题报告。</p>
+<h2 id="getting-involved">参与开发</h2>
+<p>让我们打造世界上最好的地图绘制库吧！
+Leaflet 最初是由 <a href="https://agafonkin.com">Volodymyr Agafonkin</a>开发的，
+但现在由庞大的社区共同开发。 <a href="https://github.com/Leaflet/Leaflet/graphs/contributors">contributors</a>.
+<a href="https://github.com/Leaflet/Leaflet">Pull requests</a> 随时欢迎提交。
+不过，还有更多方式可以参与 Leaflet 的开发工作。</p>
+<p>通过发现并 <a href="https://github.com/Leaflet/Leaflet/blob/main/CONTRIBUTING.md#reporting-bugs">报告错误</a>, <a href="https://github.com/Leaflet/Leaflet/blob/main/CONTRIBUTING.md#improving-documentation">改进文档</a>可以帮助其他人， <a href="https://github.com/Leaflet/Leaflet/discussions">在 GitHub 讨论区</a>, <a href="https://gis.stackexchange.com/questions/tagged/leaflet">GIS Stack Exchange</a>
+and <a href="https://github.com/Leaflet/Leaflet/issues">GitHub 问题报告</a>，在 <a href="https://mapstodon.space/@leaflet">Mastodon</a> or <a href="https://twitter.com/LeafletJS">X</a>
+上关注 Leaflet，并在同事和朋友中传播关于 Leaflet 的信息。</p>
+<p>请查看 <a href="https://github.com/Leaflet/Leaflet/blob/main/CONTRIBUTING.md">贡献指南</a> 以了解更多关于参与 Leaflet 开发的信息。</p>
+<script type="module">
+import {LeafletMap, TileLayer, Marker} from 'leaflet';
+
+const map = new LeafletMap('map').setView([51.505, -0.159], 15);
+
+new TileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+new Marker([51.504, -0.159]).addTo(map)
+    .bindPopup('A pretty CSS popup.<br>Easily customizable.')
+    .openPopup();
+</script>
+
+	</div>
+</main>
+
+<footer class="container">
+	<div class="footer">
+		<p>&copy; 2010–2026 <a href="https://agafonkin.com">Volodymyr Agafonkin</a>. Maps &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. <a href="blog.html">Blog archive</a>.</p>
+	</div>
+
+	<button id="back-to-top" title="Scroll back to top">
+		<svg viewBox="0 0 16 16">
+			<path d="M7.3,3.3c0.4-0.4,1-0.4,1.4,0l6,6c0.4,0.4,0.4,1,0,1.4s-1,0.4-1.4,0L8,5.4l-5.3,5.3c-0.4,0.4-1,0.4-1.4,0s-0.4-1,0-1.4L7.3,3.3L7.3,3.3z"/>
+		</svg>
+	</button>
+</footer>
+
+<template id="dialog-template"><dialog id="dialog" tabindex="-1" aria-label="Leaflet stands with Ukraine">
+	<div class="container">
+		<form method="dialog"><button class="close-dialog" aria-label="Close">&times;</button></form>
+
+		<h1><img src="docs/images/logo-ua.svg" alt="Leaflet" width="300" height="80" /></h1>
+
+		<p>Leaflet was created in 2010 by <a href="https://agafonkin.com">Volodymyr Agafonkin</a>, a Ukrainian living in Kyiv.</p>
+
+		<p>Russia’s full-scale invasion of Ukraine began in February 2022 and is still going. Russian troops have killed tens of thousands of civilians and committed mass war crimes. Missiles and drones hit Kyiv and other Ukrainian cities day and night.</p>
+
+		<p>Leaflet is used for <a href="https://ukraine.bellingcat.com/">documenting Russia’s war crimes</a>, <a href="https://deepstatemap.live/">tracking the front line</a> and <a href="https://ukraine.servicesadvisor.net/">finding humanitarian aid</a>. The future of Ukraine is the future of Leaflet.</p>
+
+		<p>If you’d like to help, donate to <a href="https://savelife.in.ua/en/">Come Back Alive</a> or another charity listed on <a href="https://stand-with-ukraine.pp.ua">StandWithUkraine</a>, and keep asking your government to support Ukraine and pressure Russia. Just don’t be silent.</p>
+
+		<p>Yours truly,<br>
+		Leaflet maintainers</p>
+
+		<form method="dialog"><button class="continue-dialog">Continue</button></form>
+	</div>
+</dialog>
+</template>
+<script src="docs/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<h2>安装 Leaflet</h2>
+<p>Leaflet 2.0.0-beta.5 是 Leaflet 2.0 的测试版本，该版本采用 ES 模块和类结构进行重构。请查看更新日志了解新功能，若从 1.x 升级，请参考迁移指南。例如，如果您的应用依赖尚未支持 2.0 的插件，仍应使用 Leaflet 1.9.4 版本以保持在 1.x 版本上运行。</p>
+<h3>使用 npm</h3>
+<p>如果您使用 Vite 等 bundler 构建应用，可通过 npm 安装 Leaflet：</p>
+<p>npm install leaflet@beta 然后导入所需的类以及 Leaflet CSS：</p>
+<p>import {LeafletMap, TileLayer} from 'leaflet'; import 'leaflet/styles.css'; const map = new LeafletMap('map').setView([51.505, -0.09], 13); new TileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/copyright"&gt;OpenStreetMap&lt;/a&gt;' }).addTo(map); 该包包含 TypeScript 类型，因此无需单独安装 @types 包。</p>
+<h3>使用 CDN</h3>
+<p>无需构建步骤，可通过带有 import map 的 CDN 加载 Leaflet，该 map 指示浏览器“leaflet”导入的来源。将其放在页面的 head 中：</p>
+<p>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@2.0.0-beta.5/dist/leaflet.css" integrity="sha256-LJzbbQFquR1Trwrwy++9x2Pl6ipfBZUR8Da0GGJ8Wfo=" crossorigin="anonymous"&gt; &lt;script type="importmap"&gt; { "imports": { "leaflet": "https://cdn.jsdelivr.net/npm/leaflet@2.0.0-beta.5/dist/leaflet.js" }, "integrity": { "https://cdn.jsdelivr.net/npm/leaflet@2.0.0-beta.5/dist/leaflet.js": "sha256-wtAeAyJwpxq8jkj3LfBxdh3sPS3xw9kViJv+AtdXLDE=" } } &lt;/script&gt; 然后像使用 npm 一样在模块脚本中导入 Leaflet：</p>
+<p>&lt;script type="module"&gt; import {LeafletMap, TileLayer} from 'leaflet'; const map = new LeafletMap('map').setView([51.505, -0.09], 13); &lt;/script&gt; 完整性哈希确保从 CDN 获取的文件与我们发布的版本一致，因此在复制代码片段时请保留它们。Leaflet 也存在于 unpkg 和 cdnjs 中。</p>
+<p>这些服务是 Leaflet 之外的外部资源；如有疑问或支持需求，请直接联系它们。</p>
+<p>如果您无法使用模块方式，leaflet-global.js 是一个经典脚本，它将所有 Leaflet 代码放入全局 L 变量中（new L.LeafletMap(...）：</p>
+<p><script src="https://cdn.jsdelivr.net/npm/leaflet@2.0.0-beta.5/dist/leaflet-global.js" integrity="sha256-nl7XkKmiNbIIlFaAzV6sKcwMkspAqOxnm90ogLJ7Duo=" crossorigin="anonymous"></script> 自行将 Leaflet 部署到服务器时，请从发布页面下载 leaflet.zip 文件。该文件中包含：</p>
+<li>leaflet.js：经过压缩的 Leaflet ES 模块版本。</li>
+<li>leaflet-global.js：与经典脚本相同，用于定义全局 L 变量。</li>
+<li>leaflet.css：样式表文件。无需复制任何图片。</li>
+<li>两个脚本都包含源映射，因此浏览器开发者工具在调试时可显示原始源码。</li>
+<p>将文件部署到您的网站中，并指定导入映射指向这些文件：</p>
+<p><link rel="stylesheet" href="/path/to/leaflet.css"></link> <script type="importmap"> { "imports": { "leaflet": "/path/to/leaflet.js" } </script> 此外，还有从主分支构建的开发快照，其中可能包含未发布且会破坏功能的变更。</p>
+<p>Leaflet 1.9.4 是 1.x 版本的最后一次发布，npm install leaflet 可安装该版本直至 2.0.0 推出。适用于编写于 1.x 版本的代码以及尚未支持 2.0 的插件。下载 leaflet.zip 文件，或从 CDN 加载：</p>
+<p><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous"></link> <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script> 其文档可参考 1.9.4 API 参考手册。</p>
+<h3>从源代码构建</h3>
+<p>若需自行构建 Leaflet，请克隆仓库后安装 Node.js 并运行：</p>
+<p>npm install npm run build 构建后的文件将保存到 dist 文件夹中。</p>
