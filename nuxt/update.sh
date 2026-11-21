@@ -7,11 +7,13 @@
 # 所以重新生成前必须先停掉占用 .output 的静态服务器，再把 .output 改名。
 
 set -e
-ROOT="D:/hy-mt2-bench/nuxt-docs"
+BASE="D:/hy-mt2-bench/nuxt-docs"          # 仓库根
+ROOT="$BASE/nuxt"                          # Nuxt 项目目录（本次整理后）
 SITE="$ROOT/site"
+REPO="$BASE/repo"                          # 英文源仓库（共享源材料，仍在仓库根）
 
 echo "===== 1/5 拉取官方最新文档 ====="
-cd "$ROOT/repo"
+cd "$REPO"
 git pull --depth 1 origin main 2>&1 | tail -5 || echo "（pull 失败，继续用本地现有内容）"
 
 echo ""
@@ -27,7 +29,7 @@ fi
 python -c "
 from pathlib import Path
 import shutil
-src=Path('$ROOT/repo/docs'); dst=Path('$ROOT/site/content')
+src=Path('$REPO/docs'); dst=Path('$SITE/content')
 for f in src.rglob('.navigation.yml'):
     t=dst/f.relative_to(src)
     if not t.exists(): t.parent.mkdir(parents=True,exist_ok=True); shutil.copy(f,t)

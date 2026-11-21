@@ -9,8 +9,8 @@ Only translates natural-language prose.
 import sys, json, re, urllib.request, hashlib
 from pathlib import Path
 
-BASE = Path("D:/hy-mt2-bench/nuxt-docs/repo/docs")
-OUT = Path("D:/hy-mt2-bench/nuxt-docs/output")
+BASE = Path("D:/hy-mt2-bench/nuxt-docs/repo/docs")   # 英文源（仓库根）
+OUT = Path("D:/hy-mt2-bench/nuxt-docs/nuxt/site/content")  # 译文输出
 API = "http://127.0.0.1:8999/v1/chat/completions"
 
 SYS = (

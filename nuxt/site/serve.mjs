@@ -3,7 +3,7 @@ import http from 'node:http'
 import { createReadStream, existsSync, statSync } from 'node:fs'
 import { join, extname, resolve } from 'node:path'
 
-const root = resolve('D:/hy-mt2-bench/nuxt-docs/site/.output/public')
+const root = resolve('D:/hy-mt2-bench/nuxt-docs/nuxt/site/.output/public')
 const port = 3200
 
 const MIME = {

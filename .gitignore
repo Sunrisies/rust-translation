@@ -3,16 +3,18 @@ node_modules/
 .pnpm-store/
 
 # ============ 构建产物 ============
-site/.output/
-site/.output_*/
-site/.nuxt/
-site/.data/
-site/dist/
-deploy/public/
-deploy/public_*/
-deploy-server/public/
-deploy-server/public_*/
-output/
+# 用 **/ 前缀同时匹配仓库根与 nuxt/ 子目录（三套文档统一目录结构后）
+**/site/.output/
+**/site/.output_*/
+**/site/.nuxt/
+**/site/.data/
+**/site/dist/
+**/deploy/public/
+**/deploy/public_*/
+**/deploy-server/public/
+**/deploy-server/public_*/
+**/output/
+nuxt/serve.log
 
 # ============ 上游英文源仓库（靠 update.sh 的 git pull 重新获取，不提交） ============
 repo/

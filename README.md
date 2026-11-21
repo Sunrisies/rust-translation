@@ -29,13 +29,20 @@
 
 ```
 .
-├── README.md                # 本文件
-├── config.json              # Nuxt 项目配置
-├── incremental.py           # Nuxt markdown 增量翻译引擎
-├── translate_nav.py         # Nuxt 导航配置翻译
-├── update.sh                # Nuxt 一键更新
-├── site/                    # Nuxt Docus 站点（site/content/ 是 253 篇译文）
-├── deploy/                  # Nuxt WorkBuddy 托管版部署配置
+├── README.md                # 本文件（总说明）
+├── .gitignore               # 全局排除规则
+│
+├── nuxt/                    # Nuxt 项目（第一套文档）
+│   ├── 部署说明.md           # Nuxt 完整构建+部署手册
+│   ├── config.json          # Nuxt 项目配置
+│   ├── cache.json           # 增量翻译缓存
+│   ├── incremental.py       # markdown 增量翻译引擎
+│   ├── translate.py         # 早期翻译脚本（参考）
+│   ├── translate_nav.py     # 导航配置翻译
+│   ├── update.sh            # 一键更新流程
+│   ├── site/                # Docus 站点（site/content/ 是 253 篇译文）
+│   ├── deploy/              # WorkBuddy 托管版部署配置
+│   └── scripts/             # 后处理脚本（图标内联等）
 │
 ├── cesium/                  # Cesium 项目（第二套文档）
 │   ├── 部署说明.md           # Cesium 完整构建+部署手册（先看这个）
@@ -51,7 +58,7 @@
     └── *.py                 # 翻译器（leafdoc/tutorial/html/nav）
 ```
 
-> Cesium 工作目录在 `D:/hy-mt2-bench/cesium-docs/`、Leaflet 在 `D:/hy-mt2-bench/leaflet-docs/`（含英文源 repo/、构建产物），但**只有上面的 cesium/ 和 leaflet/ 内容会上传 GitHub**，英文源码和构建产物不传。
+> 三套文档统一放在 `nuxt/`、`cesium/`、`leaflet/` 三个同级目录，只上传译文、脚本、配置、文档；英文源码（repo/）、node_modules、构建产物（.output/）都不传。Nuxt 的英文源仓库在 `D:/hy-mt2-bench/nuxt-docs/repo/`（共享源材料，仍在仓库根，被 .gitignore 排除）。
 
 ---
 
@@ -69,8 +76,9 @@
 
 ## 日常使用
 
-**Nuxt：**
+**Nuxt：** 详见 `nuxt/deploy/部署说明.md`，简要：
 ```bash
+cd D:/hy-mt2-bench/nuxt-docs/nuxt
 python incremental.py --stats             # 进度
 python incremental.py --all               # 增量翻译全部
 bash update.sh                            # 一键：pull → 翻译 → 生成 → 打包

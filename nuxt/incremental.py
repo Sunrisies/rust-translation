@@ -18,8 +18,9 @@
 import sys, json, re, urllib.request, hashlib, argparse, time
 from pathlib import Path
 
-ROOT     = Path("D:/hy-mt2-bench/nuxt-docs")
-SRC_BASE = ROOT / "repo/docs"                       # 英文源（git 仓库）
+BASE     = Path("D:/hy-mt2-bench/nuxt-docs")       # 仓库根
+ROOT     = BASE / "nuxt"                            # Nuxt 项目目录（整理后）
+SRC_BASE = BASE / "repo/docs"                       # 英文源（git 仓库，共享源材料仍在仓库根）
 DST_BASE = ROOT / "site/content"                    # 译文输出（Docus content）
 CACHE    = ROOT / "cache.json"                      # 哈希缓存
 PUBLIC   = ROOT / "site/public"                     # 静态资源

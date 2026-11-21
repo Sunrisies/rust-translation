@@ -4,7 +4,7 @@
 from pathlib import Path
 import re
 
-DST = Path("D:/hy-mt2-bench/nuxt-docs/site/content")
+DST = Path("D:/hy-mt2-bench/nuxt-docs/nuxt/site/content")
 
 # 精确映射（title 值 -> 中文）
 TITLE = {
