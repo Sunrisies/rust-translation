@@ -1,0 +1,142 @@
+import {
+  Check,
+  RuntimeError,
+  deprecationWarning,
+  getJsonFromTypedArray,
+} from "@cesium/core";
+
+/**
+ * 处理实例化 3D 模型的解析工作。
+ *
+ * @namespace I3dmParser
+ * @private
+ */
+const I3dmParser = {};
+I3dmParser._deprecationWarning = deprecationWarning;
+
+const sizeOfUint32 = Uint32Array.BYTES_PER_ELEMENT;
+
+/**
+ * 解析 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/Instanced3DModel|实例化 3D 模型} 的内容。
+ *
+ * @private
+ *
+ * @param {ArrayBuffer} arrayBuffer 包含 i3dm 的数组缓冲区。
+ * @param {number} [byteOffset=0] i3dm 在数组缓冲区中的起始字节偏移量。
+ * @returns {object} Returns 包含 i3dm 的 glTF 格式、特征表（二进制和 JSON）、批次表（二进制和 JSON）以及 glTF 部分的数据对象。
+ */
+I3dmParser.parse = function (arrayBuffer, byteOffset) {
+  //>>includeStart('debug', pragmas.debug);
+  Check.defined("arrayBuffer", arrayBuffer);
+  //>>includeEnd('debug');
+
+  const byteStart = byteOffset ?? 0;
+  byteOffset = byteStart;
+
+  const uint8Array = new Uint8Array(arrayBuffer);
+  const view = new DataView(arrayBuffer);
+  byteOffset += sizeOfUint32; // Skip magic
+
+  const version = view.getUint32(byteOffset, true);
+  if (version !== 1) {
+    throw new RuntimeError(
+      `Only Instanced 3D Model version 1 is supported. Version ${version} is not.`,
+    );
+  }
+  byteOffset += sizeOfUint32;
+
+  const byteLength = view.getUint32(byteOffset, true);
+  byteOffset += sizeOfUint32;
+
+  const featureTableJsonByteLength = view.getUint32(byteOffset, true);
+  if (featureTableJsonByteLength === 0) {
+    throw new RuntimeError(
+      "featureTableJsonByteLength is zero, the feature table must be defined.",
+    );
+  }
+  byteOffset += sizeOfUint32;
+
+  const featureTableBinaryByteLength = view.getUint32(byteOffset, true);
+  byteOffset += sizeOfUint32;
+
+  const batchTableJsonByteLength = view.getUint32(byteOffset, true);
+  byteOffset += sizeOfUint32;
+
+  const batchTableBinaryByteLength = view.getUint32(byteOffset, true);
+  byteOffset += sizeOfUint32;
+
+  const gltfFormat = view.getUint32(byteOffset, true);
+  if (gltfFormat !== 1 && gltfFormat !== 0) {
+    throw new RuntimeError(
+      `Only glTF format 0 (uri) or 1 (embedded) are supported. Format ${gltfFormat} is not.`,
+    );
+  }
+  byteOffset += sizeOfUint32;
+
+  const featureTableJson = getJsonFromTypedArray(
+    uint8Array,
+    byteOffset,
+    featureTableJsonByteLength,
+  );
+  byteOffset += featureTableJsonByteLength;
+
+  const featureTableBinary = new Uint8Array(
+    arrayBuffer,
+    byteOffset,
+    featureTableBinaryByteLength,
+  );
+  byteOffset += featureTableBinaryByteLength;
+
+  let batchTableJson;
+  let batchTableBinary;
+  if (batchTableJsonByteLength > 0) {
+    batchTableJson = getJsonFromTypedArray(
+      uint8Array,
+      byteOffset,
+      batchTableJsonByteLength,
+    );
+    byteOffset += batchTableJsonByteLength;
+
+    if (batchTableBinaryByteLength > 0) {
+      // Has a batch table binary
+      batchTableBinary = new Uint8Array(
+        arrayBuffer,
+        byteOffset,
+        batchTableBinaryByteLength,
+      );
+      // Copy the batchTableBinary section and let the underlying ArrayBuffer be freed
+      batchTableBinary = new Uint8Array(batchTableBinary);
+      byteOffset += batchTableBinaryByteLength;
+    }
+  }
+
+  const gltfByteLength = byteStart + byteLength - byteOffset;
+  if (gltfByteLength === 0) {
+    throw new RuntimeError("glTF byte length must be greater than 0.");
+  }
+
+  let gltfView;
+  if (byteOffset % 4 === 0) {
+    gltfView = new Uint8Array(arrayBuffer, byteOffset, gltfByteLength);
+  } else {
+    // Create a copy of the glb so that it is 4-byte aligned
+    I3dmParser._deprecationWarning(
+      "i3dm-glb-unaligned",
+      "The embedded glb is not aligned to a 4-byte boundary.",
+    );
+    gltfView = new Uint8Array(
+      uint8Array.subarray(byteOffset, byteOffset + gltfByteLength),
+    );
+  }
+
+  return {
+    gltfFormat: gltfFormat,
+    featureTableJson: featureTableJson,
+    featureTableBinary: featureTableBinary,
+    batchTableJson: batchTableJson,
+    batchTableBinary: batchTableBinary,
+    gltf: gltfView,
+  };
+};
+
+export default I3dmParser;

@@ -1,0 +1,11 @@
+import { DistanceDisplayConditionGeometryInstanceAttribute } from "@cesium/core";
+import deprecatedCoreExport from "./_deprecatedCoreExport.js";
+
+/**
+ * @deprecated DistanceDisplayConditionGeometryInstanceAttribute 在 CesiumJS 1.146 版本中已被废弃，将在 1.150 版本中移除。
+ * 请改用 @cesium/core 中的 Import DistanceDisplayConditionGeometryInstanceAttribute 方法。
+ */
+export default deprecatedCoreExport(
+  "DistanceDisplayConditionGeometryInstanceAttribute",
+  DistanceDisplayConditionGeometryInstanceAttribute,
+);

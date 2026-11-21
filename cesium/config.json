@@ -1,0 +1,46 @@
+{
+  "name": "cesium",
+  "displayName": "Cesium 中文 API 文档",
+  "description": "使用本地 Hy-MT2-1.8B 翻译的 CesiumJS 最新版 API 参考文档（JSDoc 注释）",
+
+  "source": {
+    "type": "git",
+    "url": "https://github.com/CesiumGS/cesium.git",
+    "ref": "main",
+    "commit": "f5128d6",
+    "commitDate": "2026-11-19",
+    "docsDirs": [
+      "packages/engine/Source",
+      "packages/widgets/Source"
+    ],
+    "exclude": ["ThirdParty", "Workers"],
+    "sourceFiles": 985,
+    "fetchMethod": "gh API（git clone 因网络失败，见 fetch_sources.py）"
+  },
+
+  "translation": {
+    "model": "Hy-MT2-1.8B-Q4_K_M.gguf",
+    "api": "http://127.0.0.1:8999/v1/chat/completions",
+    "target": "JSDoc 注释描述（代码/类型/标签原样保留）",
+    "jsdocBlocks": 10226,
+    "descriptionLines": 49300
+  },
+
+  "deploy": {
+    "domain": "cesium.sunrise1024.top",
+    "server": "175.27.135.250",
+    "ssh": "zhuzhongqian@175.27.135.250:19002",
+    "replaceOldVersion": "旧站是 Cesium 3.6.11（2021），用最新版替换",
+    "umami": {
+      "script": "https://umami.sunrise1024.top/script.js",
+      "websiteId": "252ee09e-9fd1-4687-9498-62fab5b83dd5"
+    }
+  },
+
+  "github": {
+    "repo": "https://github.com/Sunrisies/rust-translation",
+    "branch": "docs-translation",
+    "path": "cesium/",
+    "upload": "只传 translated/ 的 985 个改了注释的 js，不传英文原文 repo/"
+  }
+}

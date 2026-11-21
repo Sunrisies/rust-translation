@@ -1,0 +1,108 @@
+import { Color, DeveloperError, JulianDate, defined } from "@cesium/core";
+import Material from "../Scene/Material.js";
+
+/**
+ * 用于所有表示 {@link Material} 统一值的 {@link Property} 对象的接口。
+ * 此类型定义了一个接口，无法直接实例化。
+ *
+ * @alias MaterialProperty
+ * @constructor
+ * @abstract
+ *
+ * @see ColorMaterialProperty
+ * @see CompositeMaterialProperty
+ * @see GridMaterialProperty
+ * @see ImageMaterialProperty
+ * @see PolylineGlowMaterialProperty
+ * @see PolylineOutlineMaterialProperty
+ * @see StripeMaterialProperty
+ */
+function MaterialProperty() {
+  DeveloperError.throwInstantiationError();
+}
+
+Object.defineProperties(MaterialProperty.prototype, {
+  /**
+   * 获取一个值以指示该属性是否为常量。如果`getValue` 始终返回相同的结果，则该属性被视为
+   * 常量。
+   * @memberof MaterialProperty.prototype
+   *
+   * @type {boolean}
+   * @readonly
+   */
+  isConstant: {
+    get: DeveloperError.throwInstantiationError,
+  },
+  /**
+   * 获取当该属性的定义发生变化时引发的事件。
+   * 如果调用`getValue` 会返回不同结果，则认为定义已改变。
+   * 在给定时间获取提供的 {@link Material} 类型。
+   * @memberof MaterialProperty.prototype
+   *
+   * @type {Event}
+   * @readonly
+   */
+  definitionChanged: {
+    get: DeveloperError.throwInstantiationError,
+  },
+});
+
+/**
+ * 用于检索类型的时长。
+ * @function
+ *
+ * @param {JulianDate} time 检索类型所持续的时间。
+ * @returns {string} The 材料的类型。
+ */
+MaterialProperty.prototype.getType = DeveloperError.throwInstantiationError;
+
+/**
+ * 在给定时间获取该属性的值。
+ * @function
+ *
+ * @param {JulianDate} [time=JulianDate.now()] 检索值所持续的时长。如果省略，则使用当前系统时间。
+ * @param {object} [result] 存储值的对象。如果省略，将创建并返回新实例。
+ * @returns {object} The 修改后的结果参数或如果未提供结果参数则新建实例。
+ */
+MaterialProperty.prototype.getValue = DeveloperError.throwInstantiationError;
+
+/**
+ * 比较此属性与提供的属性，如果相等则返回
+ * <code>true</code>，否则返回 <code>false</code>。
+ * @function
+ *
+ * @param {Property} [other] 另一个属性。
+ * @returns {boolean} <code>true</code> 如果左右值相等，返回 <code>false</code>，否则返回 <code>false</code>。
+ */
+MaterialProperty.prototype.equals = DeveloperError.throwInstantiationError;
+
+const timeScratch = new JulianDate();
+
+/**
+ * @private
+ */
+MaterialProperty.getValue = function (time, materialProperty, material) {
+  let type;
+  if (!defined(time)) {
+    time = JulianDate.now(timeScratch);
+  }
+
+  if (defined(materialProperty)) {
+    type = materialProperty.getType(time);
+    if (defined(type)) {
+      if (!defined(material) || material.type !== type) {
+        material = Material.fromType(type);
+      }
+      materialProperty.getValue(time, material.uniforms);
+      return material;
+    }
+  }
+
+  if (!defined(material) || material.type !== Material.ColorType) {
+    material = Material.fromType(Material.ColorType);
+  }
+  Color.clone(Color.WHITE, material.uniforms.color);
+
+  return material;
+};
+export default MaterialProperty;

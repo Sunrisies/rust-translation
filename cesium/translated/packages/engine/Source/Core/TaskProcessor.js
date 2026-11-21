@@ -1,0 +1,405 @@
+import {
+  DeveloperError,
+  Event,
+  RuntimeError,
+  defined,
+  destroyObject,
+} from "@cesium/core";
+import Uri from "urijs";
+import buildModuleUrl from "./buildModuleUrl.js";
+import FeatureDetection from "./FeatureDetection.js";
+import isCrossOriginUrl from "./isCrossOriginUrl.js";
+import Resource from "./Resource.js";
+
+function canTransferArrayBuffer() {
+  if (!defined(TaskProcessor._canTransferArrayBuffer)) {
+    const worker = createWorker("transferTypedArrayTest");
+    worker.postMessage = worker.webkitPostMessage ?? worker.postMessage;
+
+    const value = 99;
+    const array = new Int8Array([value]);
+
+    try {
+      // postMessage might fail with a DataCloneError
+      // if transferring array buffers is not supported.
+      worker.postMessage(
+        {
+          array: array,
+        },
+        [array.buffer],
+      );
+    } catch (e) {
+      TaskProcessor._canTransferArrayBuffer = false;
+      return TaskProcessor._canTransferArrayBuffer;
+    }
+
+    TaskProcessor._canTransferArrayBuffer = new Promise((resolve) => {
+      worker.onmessage = function (event) {
+        const array = event.data.array;
+
+        // some versions of Firefox silently fail to transfer typed arrays.
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=841904
+        // Check to make sure the value round-trips successfully.
+        const result = defined(array) && array[0] === value;
+        resolve(result);
+
+        worker.terminate();
+
+        TaskProcessor._canTransferArrayBuffer = result;
+      };
+    });
+  }
+
+  return TaskProcessor._canTransferArrayBuffer;
+}
+
+const taskCompletedEvent = new Event();
+
+function urlFromScript(script) {
+  let blob;
+  try {
+    blob = new Blob([script], {
+      type: "application/javascript",
+    });
+  } catch (e) {
+    const BlobBuilder =
+      window.BlobBuilder ||
+      window.WebKitBlobBuilder ||
+      window.MozBlobBuilder ||
+      window.MSBlobBuilder;
+    const blobBuilder = new BlobBuilder();
+    blobBuilder.append(script);
+    blob = blobBuilder.getBlob("application/javascript");
+  }
+
+  const URL = window.URL || window.webkitURL;
+  return URL.createObjectURL(blob);
+}
+
+function createWorker(url) {
+  const uri = new Uri(url);
+  const isUri = uri.scheme().length !== 0 && uri.fragment().length === 0;
+  const moduleID = url.replace(/\.js$/, "");
+
+  const options = {};
+  let workerPath;
+  let crossOriginUrl;
+
+  // If we are provided a fully resolved URL, check it is cross-origin
+  // Or if provided a module ID, check the full absolute URL instead.
+  if (isCrossOriginUrl(url)) {
+    crossOriginUrl = url;
+  } else if (!isUri) {
+    const moduleAbsoluteUrl = buildModuleUrl(
+      `${TaskProcessor._workerModulePrefix}/${moduleID}.js`,
+    );
+
+    if (isCrossOriginUrl(moduleAbsoluteUrl)) {
+      crossOriginUrl = moduleAbsoluteUrl;
+    }
+  }
+
+  if (crossOriginUrl) {
+    // To load cross-origin, create a shim worker from a blob URL
+    const script = `import "${crossOriginUrl}";`;
+    workerPath = urlFromScript(script);
+    options.type = "module";
+    return new Worker(workerPath, options);
+  }
+
+  /* global CESIUM_WORKERS */
+  if (!isUri && typeof CESIUM_WORKERS !== "undefined") {
+    // If the workers are embedded, create a shim worker from the embedded script data
+    const script = `
+      importScripts("${urlFromScript(CESIUM_WORKERS)}");
+      CesiumWorkers["${moduleID}"]();
+    `;
+    workerPath = urlFromScript(script);
+    return new Worker(workerPath, options);
+  }
+
+  workerPath = url;
+
+  if (!isUri) {
+    workerPath = buildModuleUrl(
+      `${TaskProcessor._workerModulePrefix + moduleID}.js`,
+    );
+  }
+
+  if (!FeatureDetection.supportsEsmWebWorkers()) {
+    throw new RuntimeError(
+      "This browser is not supported. Please update your browser to continue.",
+    );
+  }
+
+  options.type = "module";
+
+  return new Worker(workerPath, options);
+}
+
+async function getWebAssemblyLoaderConfig(processor, wasmOptions) {
+  const config = {
+    modulePath: undefined,
+    wasmBinaryFile: undefined,
+    wasmBinary: undefined,
+  };
+
+  // Web assembly not supported, use fallback js module if provided
+  if (!FeatureDetection.supportsWebAssembly()) {
+    if (!defined(wasmOptions.fallbackModulePath)) {
+      throw new RuntimeError(
+        `This browser does not support Web Assembly, and no backup module was provided for ${processor._workerPath}`,
+      );
+    }
+
+    config.modulePath = buildModuleUrl(wasmOptions.fallbackModulePath);
+    return config;
+  }
+
+  config.wasmBinaryFile = buildModuleUrl(wasmOptions.wasmBinaryFile);
+
+  const arrayBuffer = await Resource.fetchArrayBuffer({
+    url: config.wasmBinaryFile,
+  });
+
+  config.wasmBinary = arrayBuffer;
+  return config;
+}
+
+/**
+ * 一个围绕 Web Worker 的包装器，用于为特定 Worker 安排任务，
+ * 通过 Promise 异步返回结果。
+ *
+ * 直到任务被安排后，Worker 才会被创建。
+ *
+ * @alias TaskProcessor
+ * @constructor
+ *
+ * @param {string} workerPath 指向 Worker 的 URL。可以是绝对路径，也可以相对于 Cesium Workers 文件夹。
+ * @param {number} [maximumActiveTasks=Number.POSITIVE_INFINITY] 活跃任务的最大数量。一旦超过此数量，
+ * scheduleTask 将不再排队更多任务，从而允许
+ * 在后续帧中重新安排工作。
+ */
+function TaskProcessor(workerPath, maximumActiveTasks) {
+  this._workerPath = workerPath;
+  this._maximumActiveTasks = maximumActiveTasks ?? Number.POSITIVE_INFINITY;
+  this._activeTasks = 0;
+  this._nextID = 0;
+  this._webAssemblyPromise = undefined;
+}
+
+const createOnmessageHandler = (worker, id, resolve, reject) => {
+  const listener = ({ data }) => {
+    if (data.id !== id) {
+      return;
+    }
+
+    if (defined(data.error)) {
+      let error = data.error;
+      if (error.name === "RuntimeError") {
+        error = new RuntimeError(data.error.message);
+        error.stack = data.error.stack;
+      } else if (error.name === "DeveloperError") {
+        error = new DeveloperError(data.error.message);
+        error.stack = data.error.stack;
+      } else if (error.name === "Error") {
+        error = new Error(data.error.message);
+        error.stack = data.error.stack;
+      }
+      taskCompletedEvent.raiseEvent(error);
+      reject(error);
+    } else {
+      taskCompletedEvent.raiseEvent();
+      resolve(data.result);
+    }
+
+    worker.removeEventListener("message", listener);
+  };
+
+  return listener;
+};
+
+const emptyTransferableObjectArray = [];
+async function runTask(processor, parameters, transferableObjects) {
+  const canTransfer = await Promise.resolve(canTransferArrayBuffer());
+  if (!defined(transferableObjects)) {
+    transferableObjects = emptyTransferableObjectArray;
+  } else if (!canTransfer) {
+    transferableObjects.length = 0;
+  }
+
+  const id = processor._nextID++;
+  const promise = new Promise((resolve, reject) => {
+    processor._worker.addEventListener(
+      "message",
+      createOnmessageHandler(processor._worker, id, resolve, reject),
+    );
+  });
+
+  processor._worker.postMessage(
+    {
+      id: id,
+      baseUrl: buildModuleUrl.getCesiumBaseUrl().url,
+      parameters: parameters,
+      canTransferArrayBuffer: canTransfer,
+    },
+    transferableObjects,
+  );
+
+  return promise;
+}
+
+async function scheduleTask(processor, parameters, transferableObjects) {
+  ++processor._activeTasks;
+
+  try {
+    const result = await runTask(processor, parameters, transferableObjects);
+    --processor._activeTasks;
+    return result;
+  } catch (error) {
+    --processor._activeTasks;
+    throw error;
+  }
+}
+
+/**
+ * 异步地安排一个任务由 Web Worker 处理。如果当前活跃的
+ * 任务数量超过构造函数设置的最大值，将立即返回 undefined。
+ * 否则，返回一个 Promise，当
+ * 任务完成时会解析为 Worker 返回的结果。
+ *
+ * @param {object} parameters 任何将提交给 Worker 的输入数据。
+ * @param {object[]} [transferableObjects] 参数中包含的对象数组，这些对象应该被
+ * 传输给 Worker，而不是复制。
+ * @returns {Promise<object>|undefined} Either 一个 Promise，当可用时解析为结果，否则为 undefined。
+ * 如果活跃任务过多，
+ *
+ * @example
+ * const taskProcessor = new Cesium.TaskProcessor('myWorkerPath');
+ * const promise = taskProcessor.scheduleTask({
+ * someParameter : true,
+ * another : 'hello'
+ * });
+ * if (!Cesium.defined(promise)) {
+ * // 活跃任务过多 - 稍后重试
+ * } else {
+ * promise.then(function(result) {
+ * // 使用任务的结果
+ *     });
+ * }
+ */
+TaskProcessor.prototype.scheduleTask = function (
+  parameters,
+  transferableObjects,
+) {
+  if (!defined(this._worker)) {
+    this._worker = createWorker(this._workerPath);
+  }
+
+  if (this._activeTasks >= this._maximumActiveTasks) {
+    return undefined;
+  }
+
+  return scheduleTask(this, parameters, transferableObjects);
+};
+
+/**
+ * 向 Web Worker 发布消息以配置加载和异步编译 Web Assembly 模块，以及可选的
+ * 备用 JavaScript 模块，如果 Web Assembly 不受支持则使用此模块。
+ * 具有以下属性的对象：
+ *
+ * @param {object} [webAssemblyOptions] Web Assembly JavaScript 包装器模块的路径。
+ * @param {string} [webAssemblyOptions.modulePath] Web Assembly 二进制文件的路径。
+ * @param {string} [webAssemblyOptions.wasmBinaryFile] 备用 JavaScript 模块的路径，如果 Web Assembly 不受支持则使用此模块。
+ * @param {string} [webAssemblyOptions.fallbackModulePath] 当 Web Worker 加载并编译了 Web Assembly 模块并准备好处理任务时，解析为结果的 Promise。
+ * @returns {Promise<*>} A 浏览器不支持 Web Assembly，且未提供备用模块
+ *
+ * @exception {RuntimeError} This 如果此对象被销毁，则返回 true；否则返回 false。
+ */
+TaskProcessor.prototype.initWebAssemblyModule = async function (
+  webAssemblyOptions,
+) {
+  if (defined(this._webAssemblyPromise)) {
+    return this._webAssemblyPromise;
+  }
+
+  const init = async () => {
+    const worker = (this._worker = createWorker(this._workerPath));
+    const wasmConfig = await getWebAssemblyLoaderConfig(
+      this,
+      webAssemblyOptions,
+    );
+    const canTransfer = await Promise.resolve(canTransferArrayBuffer());
+    let transferableObjects;
+    const binary = wasmConfig.wasmBinary;
+    if (defined(binary) && canTransfer) {
+      transferableObjects = [binary];
+    }
+
+    const promise = new Promise((resolve, reject) => {
+      worker.onmessage = function ({ data }) {
+        if (defined(data)) {
+          resolve(data.result);
+        } else {
+          reject(new RuntimeError("Could not configure wasm module"));
+        }
+      };
+    });
+
+    worker.postMessage(
+      {
+        canTransferArrayBuffer: canTransfer,
+        parameters: { webAssemblyConfig: wasmConfig },
+      },
+      transferableObjects,
+    );
+
+    return promise;
+  };
+
+  this._webAssemblyPromise = init();
+  return this._webAssemblyPromise;
+};
+
+/**
+ * 如果此对象被销毁，则不应使用它；调用任何非
+ * <br /><br />
+ * <code>isDestroyed</code> 的函数将导致 {@link DeveloperError} 异常。
+ * 如果此对象被销毁；否则，返回 false。
+ *
+ * @returns {boolean} True 销毁此对象。这将立即终止 Worker。
+ *
+ * @see TaskProcessor#destroy
+ */
+TaskProcessor.prototype.isDestroyed = function () {
+  return false;
+};
+
+/**
+ * Destroys this object.  This will immediately terminate the Worker.
+ * <br /><br />
+ * 一旦对象被销毁，就不应再使用它；调用除
+ * <code>isDestroyed</code>之外的任何函数都会引发 {@link DeveloperError} 异常。
+ */
+TaskProcessor.prototype.destroy = function () {
+  if (defined(this._worker)) {
+    this._worker.terminate();
+  }
+  return destroyObject(this);
+};
+
+/**
+ * 当任务成功完成时触发的事件。事件处理器会被传递
+ * 错误对象表示任务失败。
+ *
+ * @type {Event}
+ *
+ * @private
+ */
+TaskProcessor.taskCompletedEvent = taskCompletedEvent;
+
+// exposed for testing purposes
+TaskProcessor._defaultWorkerModulePrefix = "Workers/";
+TaskProcessor._workerModulePrefix = TaskProcessor._defaultWorkerModulePrefix;
+TaskProcessor._canTransferArrayBuffer = undefined;
+export default TaskProcessor;

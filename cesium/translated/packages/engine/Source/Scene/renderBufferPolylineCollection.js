@@ -1,0 +1,676 @@
+// @ts-check
+
+import {
+  AttributeCompression,
+  Cartesian3,
+  Color,
+  ComponentDatatype,
+  EncodedCartesian3,
+  IndexDatatype,
+  PrimitiveType,
+  defined,
+} from "@cesium/core";
+import BufferPolyline from "./BufferPolyline.js";
+import Buffer from "../Renderer/Buffer.js";
+import BufferUsage from "../Renderer/BufferUsage.js";
+import VertexArray from "../Renderer/VertexArray.js";
+import RenderState from "../Renderer/RenderState.js";
+import BlendingState from "./BlendingState.js";
+import ShaderSource from "../Renderer/ShaderSource.js";
+import ShaderProgram from "../Renderer/ShaderProgram.js";
+import DrawCommand from "../Renderer/DrawCommand.js";
+import Pass from "../Renderer/Pass.js";
+import BufferPolylineMaterialVS from "../Shaders/BufferPolylineMaterialVS.js";
+import BufferPolylineMaterialFS from "../Shaders/BufferPolylineMaterialFS.js";
+import PolylineCommon from "../Shaders/PolylineCommon.js";
+import BufferPolylineMaterial from "./BufferPolylineMaterial.js";
+import BlendOption from "./BlendOption.js";
+import BufferPrimitiveCollection from "./BufferPrimitiveCollection.js";
+
+/** @import FrameState from "./FrameState.js"; */
+/** @import BufferPolylineCollection from "./BufferPolylineCollection.js"; */
+/** @import { BufferPrimitiveChangeTracker } from "./BufferPrimitiveCollection.js"; */
+/** @import {TypedArray} from "@cesium/core"; */
+
+const { DirtyFlags } = BufferPrimitiveCollection;
+
+/**
+ * TODO(PR#13211): 需要使用 'keyof' 语法以避免属性名称重复。
+ * @typedef {'position' | 'positionHigh' | 'positionLow' | 'prevPosition' | 'prevPositionHigh' | 'prevPositionLow' | 'nextPosition' | 'nextPositionHigh' | 'nextPositionLow' | 'pickColor' | 'showColorWidthAndTexCoord' | 'alpha'} BufferPolylineAttribute
+ * @ignore
+ */
+
+/**
+ * 使用 64 位位置精度时的属性位置。
+ * @type {Partial<Record<BufferPolylineAttribute, number>>}
+ * @ignore
+ */
+const BufferPolylineAttributeLocationsFloat64 = {
+  positionHigh: 0,
+  positionLow: 1,
+  prevPositionHigh: 2,
+  prevPositionLow: 3,
+  nextPositionHigh: 4,
+  nextPositionLow: 5,
+  pickColor: 6,
+  showColorWidthAndTexCoord: 7,
+  alpha: 8,
+};
+
+/**
+ * 使用 <= 32 位位置精度时的属性位置。
+ * @type {Partial<Record<BufferPolylineAttribute, number>>}
+ * @ignore
+ */
+const BufferPolylineAttributeLocations = {
+  position: 0,
+  prevPosition: 1,
+  nextPosition: 2,
+  pickColor: 3,
+  showColorWidthAndTexCoord: 4,
+  alpha: 5,
+};
+
+/**
+ * @typedef {object} BufferPolylineRenderContext
+ * @property {VertexArray} [vertexArray]
+ * @property {Record<string, TypedArray>} [attributeArrays]
+ * @property {TypedArray} [indexArray]
+ * @property {RenderState} [renderState]
+ * @property {ShaderProgram} [shaderProgram]
+ * @property {DrawCommand} [command]
+ * @property {BufferPolylineCollection} [collection]
+ * @property {BufferPrimitiveChangeTracker} [changeTracker]
+ * @property {Function} destroy
+ * @ignore
+ */
+
+// Scratch variables.
+const polyline = new BufferPolyline();
+const material = new BufferPolylineMaterial();
+const pickColor = new Color();
+const cartesian = new Cartesian3();
+const prevCartesian = new Cartesian3();
+const nextCartesian = new Cartesian3();
+const encodedC = new EncodedCartesian3();
+const encodedP = new EncodedCartesian3();
+const encodedN = new EncodedCartesian3();
+
+/**
+ * 将线段渲染为四边形，每个四边形由两个三角形组成。每个顶点会被绘制两次，以向外部方向拉伸这对点。
+ * ...
+ *
+ * 提示：
+ * - 多线 primitive 中的 # segments = 顶点数 - 1
+ * - 集合中的 # segments = 顶点数 - 原始形状数量
+ * - 渲染的 # vertices = 顶点数 * 2
+ * - # indices = 线段数量 * 6
+ *
+ * 0 - 2 - 4 - 6 - 8
+ * | \ | \ | \ | \ | ...
+ * 1 - 3 - 5 - 7 - 9
+ *
+ * @param {BufferPolylineCollection} collection
+ * @param {FrameState} frameState
+ * @param {BufferPolylineRenderContext} [renderContext]
+ * @returns {BufferPolylineRenderContext}
+ * @ignore
+ */
+function renderBufferPolylineCollection(collection, frameState, renderContext) {
+  const context = frameState.context;
+  renderContext = renderContext || {
+    destroy: destroyRenderContext,
+    collection,
+    changeTracker: collection._addChangeTracker(),
+  };
+  const tracker = renderContext.changeTracker;
+  const useFloat64 = collection._positionDatatype === ComponentDatatype.DOUBLE;
+  const attributeLocations = useFloat64
+    ? BufferPolylineAttributeLocationsFloat64
+    : BufferPolylineAttributeLocations;
+
+  if (
+    !defined(renderContext.attributeArrays) ||
+    !defined(renderContext.indexArray)
+  ) {
+    // Number of primitives can only increase, which _decreases_ remaining
+    // segment capacity: use `primitiveCount` here, not `primitiveCountMax`.
+    const segmentCountMax =
+      collection.vertexCountMax - collection.primitiveCount;
+    const vertexCountMax = collection.vertexCountMax * 2;
+
+    // @ts-expect-error https://github.com/CesiumGS/cesium/issues/13420
+    renderContext.indexArray = IndexDatatype.createTypedArray(
+      vertexCountMax,
+      segmentCountMax * 6,
+    );
+
+    renderContext.attributeArrays = {
+      ...(!useFloat64
+        ? {
+            // @ts-expect-error https://github.com/CesiumGS/cesium/issues/13420
+            position: ComponentDatatype.createTypedArray(
+              collection._positionDatatype,
+              vertexCountMax * 3,
+            ),
+            // @ts-expect-error https://github.com/CesiumGS/cesium/issues/13420
+            prevPosition: ComponentDatatype.createTypedArray(
+              collection._positionDatatype,
+              vertexCountMax * 3,
+            ),
+            // @ts-expect-error https://github.com/CesiumGS/cesium/issues/13420
+            nextPosition: ComponentDatatype.createTypedArray(
+              collection._positionDatatype,
+              vertexCountMax * 3,
+            ),
+          }
+        : {
+            positionHigh: new Float32Array(vertexCountMax * 3),
+            positionLow: new Float32Array(vertexCountMax * 3),
+            prevPositionHigh: new Float32Array(vertexCountMax * 3),
+            prevPositionLow: new Float32Array(vertexCountMax * 3),
+            nextPositionHigh: new Float32Array(vertexCountMax * 3),
+            nextPositionLow: new Float32Array(vertexCountMax * 3),
+          }),
+      pickColor: new Uint8Array(vertexCountMax * 4),
+      showColorWidthAndTexCoord: new Float32Array(vertexCountMax * 4),
+      alpha: new Uint8Array(vertexCountMax),
+    };
+  }
+
+  if (tracker.count > 0 && tracker.flags & DirtyFlags.PROPERTIES) {
+    const { offset, count, full } = tracker;
+
+    const widthInMeters = collection.widthUnits === "meters";
+
+    const {
+      pickColor: pickColorArray,
+      showColorWidthAndTexCoord: showColorWidthAndTexCoordArray,
+      alpha: alphaArray,
+    } = renderContext.attributeArrays;
+
+    for (let i = offset, il = offset + count; i < il; i++) {
+      collection.get(i, polyline);
+
+      if (!full && !polyline._dirty) {
+        continue;
+      }
+
+      polyline.getMaterial(material);
+      const encodedColor = AttributeCompression.encodeRGB8(material.color);
+      const colorAlpha = material.color.alpha;
+      // A negative width marks a width in meters, which the shader converts to pixels.
+      const signedWidth = widthInMeters ? -material.width : material.width;
+      Color.fromRgba(polyline._pickId, pickColor);
+      const show = polyline.show;
+
+      let vOffset = polyline.vertexOffset * 2; // vertex offset
+
+      for (let j = 0, jl = polyline.vertexCount; j < jl; j++) {
+        // Write each vertex twice for the quad.
+        for (let k = 0; k < 2; k++) {
+          pickColorArray[vOffset * 4] = Color.floatToByte(pickColor.red);
+          pickColorArray[vOffset * 4 + 1] = Color.floatToByte(pickColor.green);
+          pickColorArray[vOffset * 4 + 2] = Color.floatToByte(pickColor.blue);
+          pickColorArray[vOffset * 4 + 3] = Color.floatToByte(pickColor.alpha);
+
+          showColorWidthAndTexCoordArray[vOffset * 4] = show ? 1 : 0;
+          showColorWidthAndTexCoordArray[vOffset * 4 + 1] = encodedColor;
+          showColorWidthAndTexCoordArray[vOffset * 4 + 2] = signedWidth;
+          showColorWidthAndTexCoordArray[vOffset * 4 + 3] = j / (jl - 1);
+
+          alphaArray[vOffset] = colorAlpha * 255.0;
+
+          vOffset++;
+        }
+      }
+    }
+  }
+
+  // Fast path for position-only updates.
+  if (tracker.count > 0 && tracker.flags & DirtyFlags.GEOMETRY) {
+    const { indexArray } = renderContext;
+
+    const {
+      // 8-32 bit.
+      position,
+      prevPosition,
+      nextPosition,
+
+      // 64 bit.
+      positionHigh,
+      positionLow,
+      prevPositionHigh,
+      prevPositionLow,
+      nextPositionHigh,
+      nextPositionLow,
+    } = renderContext.attributeArrays;
+
+    const { offset, count, full } = tracker;
+
+    for (let i = offset, il = offset + count; i < il; i++) {
+      collection.get(i, polyline);
+
+      if (!full && !polyline._dirty) {
+        continue;
+      }
+
+      let vOffset = polyline.vertexOffset * 2; // vertex offset
+      let iOffset = (polyline.vertexOffset - i) * 6; // index offset
+
+      const posView = collection._positionView;
+      const posStart = polyline.vertexOffset * 3;
+
+      for (let j = 0, jl = polyline.vertexCount; j < jl; j++) {
+        const isFirstSegment = j === 0;
+        const isLastSegment = j === jl - 1;
+
+        // c=current, p=previous, n=next
+
+        const cx = posView[posStart + j * 3];
+        const cy = posView[posStart + j * 3 + 1];
+        const cz = posView[posStart + j * 3 + 2];
+
+        let px, py, pz, nx, ny, nz;
+
+        if (isFirstSegment) {
+          nx = posView[posStart + 1 * 3];
+          ny = posView[posStart + 1 * 3 + 1];
+          nz = posView[posStart + 1 * 3 + 2];
+          // Mirror current over next to get synthetic prev.
+          px = 2 * cx - nx;
+          py = 2 * cy - ny;
+          pz = 2 * cz - nz;
+        } else if (isLastSegment) {
+          px = posView[posStart + (j - 1) * 3];
+          py = posView[posStart + (j - 1) * 3 + 1];
+          pz = posView[posStart + (j - 1) * 3 + 2];
+          // Mirror current over prev to get synthetic next.
+          nx = 2 * cx - px;
+          ny = 2 * cy - py;
+          nz = 2 * cz - pz;
+        } else {
+          px = posView[posStart + (j - 1) * 3];
+          py = posView[posStart + (j - 1) * 3 + 1];
+          pz = posView[posStart + (j - 1) * 3 + 2];
+          nx = posView[posStart + (j + 1) * 3];
+          ny = posView[posStart + (j + 1) * 3 + 1];
+          nz = posView[posStart + (j + 1) * 3 + 2];
+        }
+
+        if (!isLastSegment) {
+          indexArray[iOffset] = vOffset;
+          indexArray[iOffset + 1] = vOffset + 1;
+          indexArray[iOffset + 2] = vOffset + 2;
+          indexArray[iOffset + 3] = vOffset + 2;
+          indexArray[iOffset + 4] = vOffset + 1;
+          indexArray[iOffset + 5] = vOffset + 3;
+          iOffset += 6;
+        }
+
+        if (useFloat64) {
+          Cartesian3.fromElements(cx, cy, cz, cartesian);
+          Cartesian3.fromElements(px, py, pz, prevCartesian);
+          Cartesian3.fromElements(nx, ny, nz, nextCartesian);
+          EncodedCartesian3.fromCartesian(cartesian, encodedC);
+          EncodedCartesian3.fromCartesian(prevCartesian, encodedP);
+          EncodedCartesian3.fromCartesian(nextCartesian, encodedN);
+        }
+
+        // Write each vertex twice for the quad.
+        for (let k = 0; k < 2; k++) {
+          if (!useFloat64) {
+            position[vOffset * 3] = cx;
+            position[vOffset * 3 + 1] = cy;
+            position[vOffset * 3 + 2] = cz;
+
+            prevPosition[vOffset * 3] = px;
+            prevPosition[vOffset * 3 + 1] = py;
+            prevPosition[vOffset * 3 + 2] = pz;
+
+            nextPosition[vOffset * 3] = nx;
+            nextPosition[vOffset * 3 + 1] = ny;
+            nextPosition[vOffset * 3 + 2] = nz;
+          } else {
+            // @ts-expect-error https://github.com/CesiumGS/cesium/pull/13302
+            Cartesian3.pack(encodedC.high, positionHigh, vOffset * 3);
+            // @ts-expect-error https://github.com/CesiumGS/cesium/pull/13302
+            Cartesian3.pack(encodedC.low, positionLow, vOffset * 3);
+
+            // @ts-expect-error https://github.com/CesiumGS/cesium/pull/13302
+            Cartesian3.pack(encodedP.high, prevPositionHigh, vOffset * 3);
+            // @ts-expect-error https://github.com/CesiumGS/cesium/pull/13302
+            Cartesian3.pack(encodedP.low, prevPositionLow, vOffset * 3);
+
+            // @ts-expect-error https://github.com/CesiumGS/cesium/pull/13302
+            Cartesian3.pack(encodedN.high, nextPositionHigh, vOffset * 3);
+            // @ts-expect-error https://github.com/CesiumGS/cesium/pull/13302
+            Cartesian3.pack(encodedN.low, nextPositionLow, vOffset * 3);
+          }
+
+          vOffset++;
+        }
+      }
+    }
+  }
+
+  if (!defined(renderContext.vertexArray)) {
+    const attributeArrays = renderContext.attributeArrays;
+
+    renderContext.vertexArray = new VertexArray({
+      context,
+
+      indexBuffer: Buffer.createIndexBuffer({
+        context,
+        typedArray: renderContext.indexArray,
+        usage: BufferUsage.STATIC_DRAW,
+        // @ts-expect-error https://github.com/CesiumGS/cesium/issues/13420
+        indexDatatype: IndexDatatype.fromTypedArray(renderContext.indexArray),
+      }),
+
+      attributes: [
+        ...(!useFloat64
+          ? [
+              {
+                index: BufferPolylineAttributeLocations.position,
+                componentDatatype: collection._positionDatatype,
+                componentsPerAttribute: 3,
+                normalize: collection._positionNormalized,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.position,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+              {
+                index: BufferPolylineAttributeLocations.prevPosition,
+                componentDatatype: collection._positionDatatype,
+                componentsPerAttribute: 3,
+                normalize: collection._positionNormalized,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.prevPosition,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+              {
+                index: BufferPolylineAttributeLocations.nextPosition,
+                componentDatatype: collection._positionDatatype,
+                componentsPerAttribute: 3,
+                normalize: collection._positionNormalized,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.nextPosition,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+            ]
+          : [
+              {
+                index: BufferPolylineAttributeLocationsFloat64.positionHigh,
+                componentDatatype: ComponentDatatype.FLOAT,
+                componentsPerAttribute: 3,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.positionHigh,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+              {
+                index: BufferPolylineAttributeLocationsFloat64.positionLow,
+                componentDatatype: ComponentDatatype.FLOAT,
+                componentsPerAttribute: 3,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.positionLow,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+              {
+                index: BufferPolylineAttributeLocationsFloat64.prevPositionHigh,
+                componentDatatype: ComponentDatatype.FLOAT,
+                componentsPerAttribute: 3,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.prevPositionHigh,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+              {
+                index: BufferPolylineAttributeLocationsFloat64.prevPositionLow,
+                componentDatatype: ComponentDatatype.FLOAT,
+                componentsPerAttribute: 3,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.prevPositionLow,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+              {
+                index: BufferPolylineAttributeLocationsFloat64.nextPositionHigh,
+                componentDatatype: ComponentDatatype.FLOAT,
+                componentsPerAttribute: 3,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.nextPositionHigh,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+              {
+                index: BufferPolylineAttributeLocationsFloat64.nextPositionLow,
+                componentDatatype: ComponentDatatype.FLOAT,
+                componentsPerAttribute: 3,
+                vertexBuffer: Buffer.createVertexBuffer({
+                  typedArray: attributeArrays.nextPositionLow,
+                  context,
+                  usage: BufferUsage.STATIC_DRAW,
+                }),
+              },
+            ]),
+        {
+          index: attributeLocations.pickColor,
+          componentDatatype: ComponentDatatype.UNSIGNED_BYTE,
+          componentsPerAttribute: 4,
+          vertexBuffer: Buffer.createVertexBuffer({
+            typedArray: attributeArrays.pickColor,
+            context,
+            usage: BufferUsage.STATIC_DRAW,
+          }),
+        },
+        {
+          index: attributeLocations.showColorWidthAndTexCoord,
+          componentDatatype: ComponentDatatype.FLOAT,
+          componentsPerAttribute: 4,
+          vertexBuffer: Buffer.createVertexBuffer({
+            typedArray: attributeArrays.showColorWidthAndTexCoord,
+            context,
+            usage: BufferUsage.STATIC_DRAW,
+          }),
+        },
+        {
+          index: attributeLocations.alpha,
+          componentDatatype: ComponentDatatype.UNSIGNED_BYTE,
+          componentsPerAttribute: 1,
+          vertexBuffer: Buffer.createVertexBuffer({
+            typedArray: attributeArrays.alpha,
+            context,
+            usage: BufferUsage.STATIC_DRAW,
+          }),
+        },
+      ],
+    });
+  } else if (tracker.count > 0) {
+    const { indexOffset, indexCount, vertexOffset, vertexCount } =
+      getPolylineDirtyRanges(collection, tracker);
+
+    renderContext.vertexArray.copyIndexFromRange(
+      renderContext.indexArray,
+      indexOffset,
+      indexCount,
+    );
+
+    if (tracker.flags & DirtyFlags.PROPERTIES) {
+      // Update all vertex attributes.
+      for (const key in attributeLocations) {
+        if (Object.hasOwn(attributeLocations, key)) {
+          const attribute = /** @type {BufferPolylineAttribute} */ (key);
+          renderContext.vertexArray.copyAttributeFromRange(
+            attributeLocations[attribute],
+            renderContext.attributeArrays[attribute],
+            vertexOffset,
+            vertexCount,
+          );
+        }
+      }
+    } else if (tracker.flags & DirtyFlags.GEOMETRY) {
+      // Fast path for geometry-only updates.
+
+      /** @type {BufferPolylineAttribute[]} */
+      const positionAttributeLocations = useFloat64
+        ? [
+            "positionHigh",
+            "positionLow",
+            "prevPositionHigh",
+            "prevPositionLow",
+            "nextPositionHigh",
+            "nextPositionLow",
+          ]
+        : ["position", "prevPosition", "nextPosition"];
+
+      for (const attribute of positionAttributeLocations) {
+        renderContext.vertexArray.copyAttributeFromRange(
+          attributeLocations[attribute],
+          renderContext.attributeArrays[attribute],
+          vertexOffset,
+          vertexCount,
+        );
+      }
+    }
+  }
+
+  const pass =
+    collection._blendOption === BlendOption.OPAQUE
+      ? Pass.OPAQUE
+      : Pass.TRANSLUCENT;
+
+  if (defined(renderContext.command) && renderContext.command.pass !== pass) {
+    RenderState.removeFromCache(renderContext.renderState);
+    renderContext.renderState = undefined;
+    renderContext.command = undefined;
+  }
+
+  if (!defined(renderContext.renderState)) {
+    renderContext.renderState = RenderState.fromCache({
+      blending:
+        pass === Pass.OPAQUE
+          ? BlendingState.DISABLED
+          : BlendingState.ALPHA_BLEND,
+      depthTest: { enabled: true },
+    });
+  }
+
+  if (!defined(renderContext.shaderProgram)) {
+    renderContext.shaderProgram = ShaderProgram.fromCache({
+      context,
+      vertexShaderSource: new ShaderSource({
+        sources: [PolylineCommon, BufferPolylineMaterialVS],
+        defines: useFloat64 ? ["USE_FLOAT64"] : [],
+      }),
+      fragmentShaderSource: new ShaderSource({
+        sources: [BufferPolylineMaterialFS],
+      }),
+      attributeLocations,
+    });
+  }
+
+  const drawCount = getDrawIndexCount(collection);
+
+  if (!defined(renderContext.command)) {
+    renderContext.command = new DrawCommand({
+      vertexArray: renderContext.vertexArray,
+      renderState: renderContext.renderState,
+      shaderProgram: renderContext.shaderProgram,
+      primitiveType: PrimitiveType.TRIANGLES,
+      pass,
+      pickId: collection._allowPicking ? "v_pickColor" : undefined,
+      owner: collection,
+      count: drawCount,
+      modelMatrix: collection.modelMatrix, // shared reference
+      boundingVolume: collection.boundingVolume, // shared reference
+      debugShowBoundingVolume: collection.debugShowBoundingVolume,
+    });
+  }
+
+  const command = renderContext.command;
+
+  if (command.count !== drawCount) {
+    command.count = drawCount;
+  }
+
+  if (command.debugShowBoundingVolume !== collection.debugShowBoundingVolume) {
+    command.debugShowBoundingVolume = collection.debugShowBoundingVolume;
+  }
+
+  frameState.commandList.push(command);
+
+  collection._makeClean(tracker);
+
+  return renderContext;
+}
+
+/**
+ * 返回给定集合中已绘制（未分配）的索引数量。
+ * @param {BufferPolylineCollection} collection
+ * @ignore
+ */
+function getDrawIndexCount(collection) {
+  return (collection.vertexCount - collection.primitiveCount) * 6;
+}
+
+/**
+ * 计算集合中属性和索引缓冲区的脏范围。
+ * @param {BufferPolylineCollection} collection
+ * @param {BufferPrimitiveChangeTracker} tracker
+ * @ignore
+ */
+function getPolylineDirtyRanges(collection, tracker) {
+  const { offset, count } = tracker;
+
+  collection.get(offset, polyline);
+  const vertexOffset = polyline.vertexOffset * 2;
+  const segmentOffset = polyline.vertexOffset - offset;
+  const indexOffset = segmentOffset * 6;
+
+  collection.get(offset + count - 1, polyline);
+  const vertexCount =
+    (polyline.vertexOffset + polyline.vertexCount) * 2 - vertexOffset;
+  const segmentCount = vertexCount / 2 - count;
+  const indexCount = segmentCount * 6;
+
+  return { indexOffset, indexCount, vertexOffset, vertexCount };
+}
+
+/**
+ * 销毁渲染上下文资源。删除上下文中的属性
+ * 对象并非必需，因为集合的.destroy() 方法会丢弃该对象。
+ * @ignore
+ */
+function destroyRenderContext() {
+  const context = /** @type {BufferPolylineRenderContext} */ (this);
+
+  context.collection._removeChangeTracker(context.changeTracker);
+
+  if (defined(context.vertexArray)) {
+    context.vertexArray.destroy();
+  }
+
+  if (defined(context.shaderProgram)) {
+    context.shaderProgram.destroy();
+  }
+
+  if (defined(context.renderState)) {
+    RenderState.removeFromCache(context.renderState);
+  }
+}
+
+export default renderBufferPolylineCollection;
