@@ -201,7 +201,7 @@ Object.defineProperties(PostProcessStage.prototype, {
     },
   },
   /**
-   * 着色器必须包含用于 <code>colorTexture</code>、<code>depthTexture</code> 的 sampler uniform 声明，
+   * The unique name of this post-process stage for reference by other stages in a {@link PostProcessStageComposite}.
    *
    * @memberof PostProcessStage.prototype
    * @type {string}

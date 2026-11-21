@@ -87,7 +87,7 @@ function setRuntime(expression, defines) {
  * 原始类型。如果结果为 <code>RegExp</code>，将返回 Javascript <code>RegExp</code>
  * 对象。如果结果为 <code>Cartesian2</code>、<code>Cartesian3</code> 或 <code>Cartesian4</code>，
  * 将返回 {@link Cartesian2}、{@link Cartesian3} 或 {@link Cartesian4} 对象。如果 <code>result</code> 参数为
- * {@link Color}，则 <code>Cartesian4</code> 值将被转换为 <code>Color</code> 后返回。
+ * a {@link Color}, the {@link Cartesian4} value is converted to a {@link Color} and then returned.
  *
  * @param {Cesium3DTileFeature} feature 可作为表达式变量使用的特征属性。
  * @param {object} [result] 存储结果的对象。

@@ -388,7 +388,7 @@ Object.defineProperties(GoogleEarthEnterpriseMapsProvider.prototype, {
   /**
    * 获取指示该影像提供器提供的图像是否包含 alpha 通道的值。如果此属性为 false，则存在的 alpha 通道将被忽略。如果此属性为 true，则没有 alpha 通道的任何图像将被视为其 alpha 为 1.0。当此属性为 false 时，内存使用和纹理上传时间都会减少。
    * 使用 Google Earth 影像 API 创建镶嵌影像提供器。
-   * 托管影像的 Google Earth 服务器 URL。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof GoogleEarthEnterpriseMapsProvider.prototype
    * @type {Event}
    * @readonly

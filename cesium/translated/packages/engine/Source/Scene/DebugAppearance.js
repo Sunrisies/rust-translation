@@ -108,8 +108,8 @@ function DebugAppearance(options) {
     `}`;
 
   /**
-   * 该属性属于 {@link Appearance} 接口，但由 {@link DebugAppearance} 使用，因为使用了完全自定义的片段着色器。
-   * 当 <code>true</code> 时，几何图形预计会呈现半透明效果。
+   * This property is part of the {@link Appearance} interface, but is not
+   * used by {@link DebugAppearance} since a fully custom fragment shader is used.
    *
    * @type Material
    *
@@ -158,8 +158,8 @@ Object.defineProperties(DebugAppearance.prototype, {
 
   /**
    * 使用 {@link DebugAppearance#getFragmentShaderSource} 获取完整源代码。
-   * 渲染几何图形时使用的 WebGL 固定函数状态。
-   * 当 <code>true</code> 时，几何图形预计是闭合的。
+   * source is built procedurally taking into account the {@link DebugAppearance#material}.
+   * Use {@link DebugAppearance#getFragmentShaderSource} to get the full source.
    *
    * @memberof DebugAppearance.prototype
    *
@@ -232,7 +232,7 @@ Object.defineProperties(DebugAppearance.prototype, {
 });
 
 /**
- * 完整的 GLSL 片段着色器源代码。
+ * Returns the full GLSL fragment shader source, which for {@link DebugAppearance} is just
  * 根据 {@link DebugAppearance#translucent} 确定几何图形是否为半透明。
  *
  * @function
@@ -243,7 +243,7 @@ DebugAppearance.prototype.getFragmentShaderSource =
   Appearance.prototype.getFragmentShaderSource;
 
 /**
- * 创建渲染状态。这不是最终的渲染状态实例；相反，它可以包含与上下文中的渲染状态相同的部分渲染状态属性。
+ * Determines if the geometry is translucent based on {@link DebugAppearance#translucent}.
  *
  * @function
  *

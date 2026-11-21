@@ -1,7 +1,7 @@
 /**
  * 支持 {@link IonSnapService#snap} 的吸附模式。这些模式遵循
  * MicroStation 的吸附模式语义；详见
- * {@link https://docs.bentley.com/LiveContent/web/MicroStation%20Help-v27/en/GUID-77D54C0B-D6FF-13DA-5EC8-3196330F5244.html|MicroStation 文档}
+ * {@link https://docs.bentley.com/LiveContent/web/MicroStation%20Help-v27/en/GUID-77D54C0B-D6FF-13DA-5EC8-3196330F5244.html|MicroStation documentation}
  * 作为参考。
  *
  * @experimental This 该功能尚未定稿，可能根据 Cesium 的标准弃用政策进行更改。

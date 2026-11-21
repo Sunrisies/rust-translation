@@ -459,7 +459,7 @@ const scratchPrimitivePositionMax = new Cartesian3();
 
 /**
  * 为模型中的每个基元生成 {@link ModelDrawCommand}。
- * 如果模型用于分类，则为每个基元生成
+ * If the model is used for classification, a {@link ClassificationModelDrawCommand}
  * 一个 {@link ClassificationModelDrawCommand}。
  *
  * @param {FrameState} frameState 当前帧状态。这是为了

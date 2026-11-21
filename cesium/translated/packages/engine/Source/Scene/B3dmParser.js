@@ -17,7 +17,7 @@ B3dmParser._deprecationWarning = deprecationWarning;
 const sizeOfUint32 = Uint32Array.BYTES_PER_ELEMENT;
 
 /**
- * 解析 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/Batched3DModel|批量 3D 模型} 的内容。
+ * Parses the contents of a {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/Batched3DModel|Batched 3D Model}.
  *
  * @private
  *

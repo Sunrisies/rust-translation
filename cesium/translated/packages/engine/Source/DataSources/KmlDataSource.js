@@ -3636,7 +3636,7 @@ class KmlDataSource {
   }
 
   /**
-   * 获取指示数据源是否正在加载数据的值。
+   * Gets the collection of {@link Entity} instances.
    * @type {EntityCollection}
    */
   get entities() {

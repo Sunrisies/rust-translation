@@ -108,9 +108,9 @@ TileBoundingSphere.prototype.distanceToCamera = function (frameState) {
  * 确定该球体位于平面的哪一侧。
  *
  * @param {Plane} plane 需要检测的平面。
- * @returns {Intersect} {@link 如果整个球体位于平面的同一侧，则执行 Intersect.INSIDE；
- * 如果整个球体位于平面的相反侧，则执行 Intersect.OUTSIDE；
- * 如果球体与平面相交，则执行 Intersect.INTERSECTING。
+ * @returns {Intersect} {@link Intersect.INSIDE} if the entire sphere is on the side of the plane
+ *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire sphere is
+ *                      on the opposite side, and {@link Intersect.INTERSECTING} if the sphere
  * 如果球体与平面相交。
  */
 TileBoundingSphere.prototype.intersectPlane = function (plane) {

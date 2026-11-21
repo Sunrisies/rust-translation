@@ -150,7 +150,7 @@ Object.defineProperties(TileCoordinatesImageryProvider.prototype, {
   /**
    * 获取影像提供器遇到异步错误时引发的事件。通过订阅该事件，您将收到错误通知并可能从中恢复。事件监听器
    * 接收 {@link TileProviderError} 的实例。
-   * 获取当该影像提供器处于活动状态时要显示的致谢信息。通常用于显示影像来源的致谢。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof TileCoordinatesImageryProvider.prototype
    * @type {Event}
    * @readonly

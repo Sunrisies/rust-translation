@@ -149,7 +149,7 @@ Object.defineProperties(CubeMapPanorama.prototype, {
 });
 
 /**
- * 需要此对象，并且必须具有 positiveX、negativeX、positiveY、negativeY、positiveZ 和 negativeZ 属性。
+ * Called when {@link Viewer} or {@link CesiumWidget} render the scene to
  * 所有属性必须属于同一类型。
  * <p>
  * 如果此对象被销毁，则返回 true；否则返回 false。
@@ -330,7 +330,7 @@ CubeMapPanorama.prototype.isDestroyed = function () {
  * 一旦对象被销毁，就不应再使用它；调用除 <code>isDestroyed</code> 之外的任何函数都会引发
  * <br /><br />
  * Once an object is destroyed, it should not be used; calling any function other than
- * 异常。因此，
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 应将返回值 (<code>undefined</code>) 赋给该对象，如示例中所示。
  *
  * @exception {DeveloperError} This 表明对象已被销毁，即调用了 destroy() 方法。

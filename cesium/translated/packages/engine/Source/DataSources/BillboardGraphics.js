@@ -270,9 +270,9 @@ Object.defineProperties(BillboardGraphics.prototype, {
 
   /**
    * 获取或设置指定基于与相机距离的缩放比例的 {@link NearFarScalar} 属性。
-   * 广告牌的缩放比例将在
+   * A billboard's scale will interpolate between the {@link NearFarScalar#nearValue} and
    * {@link NearFarScalar#farValue} 和
-   * <code>NearFarScalar#near</code> 及 <code>NearFarScalar#far</code> 的边界范围内插值。
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 超出这些范围时，广告牌的缩放比例被限制在最近的边界值。
    * @memberof BillboardGraphics.prototype
    * @type {Property|undefined}
@@ -281,9 +281,9 @@ Object.defineProperties(BillboardGraphics.prototype, {
 
   /**
    * 获取或设置指定基于与相机距离的广告牌半透明度的 {@link NearFarScalar} 属性。
-   * 广告牌的半透明度将在
-   * 当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的上下范围内时，其值为 <code>...</code>、{@link ...}、反引号 `...` 内的内容、英文参数名、函数名、类名、类型名（Cesium/Viewer/Camera/Entity/Cartesian3 等）、数字、单位、布尔值 true/false。
-   * 影像图层在这些范围之外时，其半透明效果会被限制在最近的边界。
+   * A billboard's translucency will interpolate between the {@link NearFarScalar#nearValue} and
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 在这些范围之外，广告牌的半透明效果会被限制在最近的边界。
    * @memberof BillboardGraphics.prototype
    * @type {Property|undefined}
@@ -294,7 +294,7 @@ Object.defineProperties(BillboardGraphics.prototype, {
    * 获取或设置 {@link NearFarScalar} 属性，该属性指定了基于相机距离的广告牌像素偏移量。
    * 广告牌的像素偏移量将在 {@link NearFarScalar#nearValue} 和
    * {@link NearFarScalar#farValue} 之间插值。
-   * 当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的上下范围内时，其值为 <code>...</code>、{@link ...}、反引号 `...` 内的内容、英文参数名、函数名、类名、类型名（Cesium/Viewer/Camera/Entity/Cartesian3 等）、数字、单位、布尔值 true/false。
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 在这些范围之外，广告牌的像素偏移量会被限制在最近的边界。
    * @memberof BillboardGraphics.prototype
    * @type {Property|undefined}
@@ -332,7 +332,7 @@ Object.defineProperties(BillboardGraphics.prototype, {
   ),
 
   /**
-   * 复制此实例。
+   * Gets or sets the Property specifying the {@link SplitDirection} of this billboard.
    * @memberof BillboardGraphics.prototype
    * @type {Property|undefined}
    * @default SplitDirection.NONE

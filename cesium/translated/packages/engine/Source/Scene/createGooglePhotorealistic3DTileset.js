@@ -16,7 +16,7 @@ import Resource from "../Core/Resource.js";
  * @function
  *
  * @param {object} [apiOptions]
- * @param {string} [apiOptions.key=GoogleMaps.defaultApiKey] 确认此瓦片集只能与 Google geocoder 一起使用。
+ * @param {string} [apiOptions.key=GoogleMaps.defaultApiKey] Your API key to access Google Photorealistic 3D Tiles. See {@link https://developers.google.com/maps/documentation/javascript/get-api-key} for instructions on how to create your own key.
  * @param {true} [apiOptions.onlyUsingWithGoogleGeocoder] 描述初始化选项的对象。
  * @param {Cesium3DTileset.ConstructorOptions} [tilesetOptions] const viewer = new Cesium.Viewer("cesiumContainer", {
  * @returns {Promise<Cesium3DTileset>}

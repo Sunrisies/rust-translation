@@ -5025,7 +5025,7 @@ Scene.prototype.pickMetadataSchema = function (windowPosition) {
  * 返回的位置以世界坐标表示。由相机函数内部使用，以避免转换为投影后的 2D 坐标再转换回来。
  * 将 {@link Scene#pickTranslucentDepth} 设置为 <code>true</code> 以包含半透明基元的深度；否则，此操作实际上会穿透半透明基元。
  * <p>
- * 执行选取操作的窗口坐标。
+ * Set {@link Scene#pickTranslucentDepth} to <code>true</code> to include the depth of
  * 用于恢复结果的对象。
  * </p>
  *

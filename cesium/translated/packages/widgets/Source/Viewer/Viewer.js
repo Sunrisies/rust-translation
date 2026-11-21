@@ -347,7 +347,7 @@ function enableVRUI(viewer, enabled) {
  * @property {Globe|false} [globe=new Globe(options.ellipsoid)] 场景中使用的地球仪。如果设置为 <code>false</code>，则不会添加地球仪，且天空氛围默认会被隐藏。
  * @property {boolean} [orderIndependentTranslucency=true] 如果为 true 且配置支持，将使用顺序独立的半透明效果。
  * @property {Element|string} [creditContainer] 将包含 {@link CreditDisplay} 的 DOM 元素或 ID。如果没有指定，徽标将添加到控件本身的底部。
- * @property {Element|string} [creditViewport] 将包含由 {@linkCreditDisplay} 创建的徽标弹出窗口的 DOM 元素或 ID。如果没有指定，该窗口将出现在控件本身之上。
+ * @property {Element|string} [creditViewport] The DOM element or ID that will contain the credit pop up created by the {@link CreditDisplay}.  If not specified, it will appear over the widget itself.
  * @property {DataSourceCollection} [dataSources=new DataSourceCollection()] 控件所可视化的数据源集合。如果提供此参数，
  * 则假设实例由调用者拥有，并且在查看器被销毁时不会被销毁。
  * @property {boolean} [shadows=false] 确定光源是否产生阴影。
@@ -1385,7 +1385,7 @@ Object.defineProperties(Viewer.prototype, {
    * 执行控件的渲染和缩放操作，以及驱动
    * 模拟时钟。如果设置为 false，则必须手动调用
    * `resize` 和 `render` 方法作为自定义渲染循环的一部分。如果在渲染过程中发生错误，{@link Scene} 的
-   * `renderError` 事件将被触发，此属性将设置为 false。必须在出现错误后将其重新设置为 true 才能继续渲染。
+   * as part of a custom render loop.  If an error occurs during rendering, {@link Scene}'s
    * 用于获取或设置渲染分辨率的缩放因子。小于 1.0 的值可以在较弱设备上提升性能，而大于 1.0 的值将以更高
    * 分辨率进行渲染，然后缩小，从而提升视觉保真度。
    * 例如，如果控件的大小为 640x480，将此值设置为 0.5 会导致场景以 320x240 分辨率渲染，然后放大；而设置为 2.0 则会导致场景以 1280x960 分辨率渲染，然后缩小。

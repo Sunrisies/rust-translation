@@ -256,7 +256,7 @@ class GlobeSurfaceTileProvider {
   }
 
   /**
-   * 获取或设置提供此提供器用于生成瓦片的
+   * Gets or sets the {@link QuadtreePrimitive} for which this provider is
    * {@link QuadtreePrimitive}。如果提供器尚未与
    * {@link QuadtreePrimitive} 关联，则此属性可能未定义。
    * @type {QuadtreePrimitive}
@@ -332,7 +332,7 @@ class GlobeSurfaceTileProvider {
   }
 
   /**
-   * 用于选择性地禁用渲染的
+   * The {@link ClippingPlaneCollection} used to selectively disable rendering.
    *
    * @type {ClippingPlaneCollection}
    *
@@ -397,7 +397,7 @@ class GlobeSurfaceTileProvider {
   }
 
   /**
-   * 在每次渲染帧开始时调用，在
+   * Called at the beginning of each render frame, before {@link QuadtreeTileProvider#showTileThisFrame}
    * @param {FrameState} frameState {@link QuadtreeTileProvider#showTileThisFrame} 之前。
    */
   initialize(frameState) {
@@ -465,7 +465,7 @@ class GlobeSurfaceTileProvider {
   }
 
   /**
-   * 更新每个渲染帧前的更新周期开始时调用。
+   * Called at the beginning of the update cycle for each render frame, before {@link QuadtreeTileProvider#showTileThisFrame}
    * 或任何其他函数。
    *
    * @param {FrameState} frameState 帧状态。
@@ -1201,7 +1201,7 @@ class GlobeSurfaceTileProvider {
    * 一旦对象被销毁，则不应使用它；调用除
    * <br /><br />
    * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
-   * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
+   * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
    * 表明对象已被销毁，即调用了 destroy() 方法。
    *
    * @exception {DeveloperError} This provider = provider && provider.destroy();

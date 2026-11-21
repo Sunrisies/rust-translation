@@ -14,8 +14,8 @@ import { Check } from "@cesium/core";
  * 不要直接创建此类图层。应通过
  * <p>
  * {@link Cesium3DTileset#featureLayers} 或 {@link FeatureLayerProvider} 来访问图层，例如
- * {@link GeoJsonFeatureLayerProvider#featureLayers}。
- * 该特征并非最终定稿，且可能根据 Cesium 的标准弃用政策发生变化。
+ * {@link Cesium3DTileset#featureLayers} or a {@link FeatureLayerProvider}, such as
+ * {@link GeoJsonFeatureLayerProvider#featureLayers}.
  * </p>
  *
  * @internalConstructor
@@ -35,7 +35,7 @@ class FeatureLayer {
   /**
    * 图层是否显示。在 {@link Cesium3DTileset} 中，隐藏的图层不会被请求或渲染。包含多内容的 tiles 不受影响。
    * 在 {@link MVTDataProvider} 中，每个 tiles 都包含所有图层，因此 tiles 仍然会被请求，只有隐藏层的特征不会渲染。
-   * 图层名称。对于 3D Tiles 组，默认采用其具有 <code>NAME</code> 语义的属性，然后是其 <code>name</code> 属性，否则为 <code>undefined</code>。
+   * In an {@link MVTDataProvider}, each tile holds every layer, so tiles are still
    * requested and only the hidden layer's features are not rendered.
    *
    * @type {boolean}

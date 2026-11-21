@@ -555,7 +555,7 @@ Object.defineProperties(Texture3D.prototype, {
   },
   /**
    * 通过调用 {@link Sampler} 创建采样器。如果未指定此参数，则使用默认采样器。默认采样器在两个方向上限制 3D 纹理的坐标，对放大和缩小均使用线性过滤，并且最大各向异性为 1.0。
-   * 为 3D 纹理设置用于使用的采样器。
+   * Create a sampler by calling {@link Sampler}.  If this
    * 此采样器将采样的 3D 纹理。
    * 关于如何采样 3D 纹理的信息。
    * 可选参数。

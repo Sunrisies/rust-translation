@@ -142,7 +142,7 @@ async function requestMetadata(terrainProviderBuilder, resource, provider) {
  * </div>
  *
  * 一个通过分割高度图生成地形几何的 {@link TerrainProvider}
- * 从 {@link http://vr-theworld.com/|VT MÄK VR-TheWorld 服务器} 获取
+ * retrieved from a {@link http://vr-theworld.com/|VT MÄK VR-TheWorld server}.
  *
  * @alias VRTheWorldTerrainProvider
  * @constructor
@@ -187,7 +187,7 @@ Object.defineProperties(VRTheWorldTerrainProvider.prototype, {
   /**
    * 当地形提供器遇到异步错误时触发事件。通过订阅该事件，您将收到错误通知并可能从中恢复。事件监听器
    * 接收 {@link TileProviderError} 的实例。
-   * 获取要显示的署名。通常用于标注地形的来源。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof VRTheWorldTerrainProvider.prototype
    * @type {Event}
    * @readonly
@@ -264,8 +264,8 @@ Object.defineProperties(VRTheWorldTerrainProvider.prototype, {
 });
 
 /**
- * VR-TheWorld 瓦片地图的 URL。
- * 描述初始化选项的对象。
+ * Creates a {@link TerrainProvider} that produces terrain geometry by tessellating height maps
+ * retrieved from a {@link http://vr-theworld.com/|VT MÄK VR-TheWorld server}.
  *
  * @param {Resource|string} url const terrainProvider = await Cesium.VRTheWorldTerrainProvider.fromUrl(
  * @param {VRTheWorldTerrainProvider.ConstructorOptions} [options] "https://www.vr-theworld.com/vr-theworld/tiles1.0.0/73/"

@@ -1076,7 +1076,7 @@ Object.defineProperties(VoxelPrimitive.prototype, {
 
   /**
    * 获取或设置自定义着色器。如果未定义，则尝试构建与元数据类型相适应的默认自定义着色器。如果失败，则使用 {@link VoxelPrimitive.DefaultCustomShader}。
-   * 在编译自定义着色器时触发事件。
+   * appropriate to the metadata type. If that fails, use {@link VoxelPrimitive.DefaultCustomShader}.
    *
    * @memberof VoxelPrimitive.prototype
    * @type {CustomShader}
@@ -1821,7 +1821,7 @@ VoxelPrimitive.prototype.isDestroyed = function () {
  * 一旦对象被销毁，不应使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 对象被销毁，即调用了 destroy()。
  *
  * @exception {DeveloperError} This object was destroyed, i.e., destroy() was called.

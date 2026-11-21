@@ -202,7 +202,7 @@ Object.defineProperties(PostProcessStageCollection.prototype, {
    * <code>delta</code>、<code>sigma</code> 和 <code>stepSize</code> 与 {@link PostProcessStageLibrary#createBlurStage} 中的属性相同。
    * </ul>
    * <p>
-   * 模糊效果应用于从图像生成的阴影，使其更加平滑。
+   * <code>delta</code>, <code>sigma</code>, and <code>stepSize</code> are the same properties as {@link PostProcessStageLibrary#createBlurStage}.
    * 启用后，此阶段将在所有其他阶段之前执行。
    * </p>
    * <p>

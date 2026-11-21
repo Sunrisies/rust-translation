@@ -271,7 +271,7 @@ ReferenceProperty.prototype.getValue = function (time, result) {
 
 /**
  * 检索值的时长。
- * 期望结果的参考框架。
+ * This method is only valid if the property being referenced is a {@link PositionProperty}.
  *
  * @param {JulianDate} time 如果未提供，则创建并返回新实例，用于存储值。
  * @param {ReferenceFrame} referenceFrame 修改后的结果参数或新实例（如果未提供结果参数）。
@@ -291,7 +291,7 @@ ReferenceProperty.prototype.getValueInReferenceFrame = function (
 
 /**
  * 获取指定时间下的 {@link Material} 类型。
- * 检索类型的时长。
+ * This method is only valid if the property being referenced is a {@link MaterialProperty}.
  *
  * @param {JulianDate} time 材料的类型。
  * @returns {string} The 材料的类型。

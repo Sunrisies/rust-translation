@@ -201,7 +201,7 @@ function ClippingPolygonCollection(options) {
 Object.defineProperties(ClippingPolygonCollection.prototype, {
   /**
    * {@link ClippingPolygonCollection#get} 以遍历集合中的所有多边形。
-   * 
+   * {@link ClippingPolygonCollection#get} to iterate over all the polygons
    * 如果为 true，将显示可视化带符号距离场的调试纹理。
    *
    * @memberof ClippingPolygonCollection.prototype
@@ -588,13 +588,13 @@ ClippingPolygonCollection.prototype.update = function (frameState) {
 const scratchRectangleTile = new Rectangle();
 const scratchRectangleIntersection = new Rectangle();
 /**
- * 用于确定与多边形之间的交集的体积。
+ * Determines the type intersection with the polygons of this ClippingPolygonCollection instance and the specified {@link TileBoundingVolume}.
  * @ignore
  *
  * @param {object} tileBoundingVolume 定义边界体积的椭球体。
  * @param {Ellipsoid} [ellipsoid=Ellipsoid.default] 交集类型：如果整个体积未被裁剪，则为 {@link Intersect.OUTSIDE}；如果整个体积被裁剪，则为 {@link Intersect.INSIDE}；如果体积与多边形相交且部分被裁剪，则为 {@link Intersect.INTERSECTING}。
- * @returns {Intersect} The 如果不存在其他拥有者，则设置此 ClippingPolygonCollection 的拥有者。
- * 如果设置成功，则销毁拥有者之前的 ClippingPolygonCollection。
+ * @returns {Intersect} The intersection type: {@link Intersect.OUTSIDE} if the entire volume is not clipped, {@link Intersect.INSIDE}
+ *                      if the entire volume should be clipped, and {@link Intersect.INTERSECTING} if the volume intersects the polygons and will partially clipped.
  */
 ClippingPolygonCollection.prototype.computeIntersectionWithBoundingVolume =
   function (tileBoundingVolume, ellipsoid) {
@@ -680,7 +680,7 @@ ClippingPolygonCollection.setOwner = function (
 
 /**
  * 用于裁剪的空间区域。位于此矩形外的多边形
- * 将不会包含在返回的数据中。
+ * Consumers should listen to {@link ClippingPolygonCollection#polygonAdded} and {@link ClippingPolygonCollection#polygonRemoved}
  * 用于创建纹理的上下文。
  *
  * @param {Rectangle} rectangle 指定矩形内的裁剪多边形的数据（包括纹理）。

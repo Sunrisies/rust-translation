@@ -31,7 +31,7 @@ import ShadowMode from "./ShadowMode.js";
  *
  * @param {object} options 用于确定时间维度值的 {@link Clock} 实例。
  * @param {Clock} options.clock 包含指向 3D Tiles Point Cloud 瓦片的 <code>uri</code> 和可选 <code>transform</code> 的 {@link TimeIntervalCollection} 数据属性。
- * @param {TimeIntervalCollection} options.intervals 决定点云是否显示。
+ * @param {TimeIntervalCollection} options.intervals A {@link TimeIntervalCollection} with its data property being an object containing a <code>uri</code> to a 3D Tiles Point Cloud tile and an optional <code>transform</code>.
  * @param {boolean} [options.show=true] 转换点云的 4x4 变换矩阵。
  * @param {Matrix4} [options.modelMatrix=Matrix4.IDENTITY] 决定点云是否从光源投射或接收阴影。
  * @param {ShadowMode} [options.shadows=ShadowMode.ENABLED] 点云可投射或接收阴影的能力。

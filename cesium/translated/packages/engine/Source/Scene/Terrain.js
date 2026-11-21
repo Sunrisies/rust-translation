@@ -69,7 +69,7 @@ Object.defineProperties(Terrain.prototype, {
 
   /**
    * 传递 {@link TerrainProvider} 的创建实例。
-   * 返回 true，表示地形提供器已成功创建；否则返回 false。
+   * are passed the created instance of {@link TerrainProvider}.
    * @memberof Terrain.prototype
    * @type {Event<Terrain.ReadyEventCallback>}
    * @readonly
@@ -94,7 +94,7 @@ Object.defineProperties(Terrain.prototype, {
   },
 
   /**
-   * 为 {@link https://cesium.com/content/#cesium-world-terrain|Cesium World Terrain} 创建 {@link Terrain} 实例。
+   * The terrain provider providing surface geometry to a globe. Do not use until {@link Terrain.readyEvent} is raised.
    * @memberof Terrain.prototype
    *
    * @type {TerrainProvider}
@@ -107,7 +107,7 @@ Object.defineProperties(Terrain.prototype, {
   },
 });
 /**
- * 具有以下属性的对象：
+ * Creates a {@link Terrain} instance for {@link https://cesium.com/content/#cesium-world-terrain|Cesium World Terrain}.
  *
  * @function
  *

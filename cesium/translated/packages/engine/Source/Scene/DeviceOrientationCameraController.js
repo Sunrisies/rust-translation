@@ -110,7 +110,7 @@ DeviceOrientationCameraController.prototype.isDestroyed = function () {
  * 而不是依赖垃圾收集器来销毁此对象。
  * <br /><br />
  * 一旦对象被销毁，就不应再使用它；除了调用 <code>isDestroyed</code> 函数之外，调用其他任何函数都会引发 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给该对象，如示例中所做的那样。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 即表示对象已被销毁，也就是调用了 destroy() 方法。
  *
  * @exception {DeveloperError} This object was destroyed, i.e., destroy() was called.

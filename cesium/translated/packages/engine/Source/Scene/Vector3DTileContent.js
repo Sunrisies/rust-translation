@@ -21,7 +21,7 @@ import decodeVectorPolylinePositions from "../Core/decodeVectorPolylinePositions
 
 /**
  * 表示一个瓦片的内容
- * {@link https://github.com/CesiumGS/3d-tiles/tree/vctr/TileFormats/VectorData|向量数据}
+ * {@link https://github.com/CesiumGS/3d-tiles/tree/vctr/TileFormats/VectorData|Vector}
  * 是 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification|3D Tiles} 瓦片集中的一个瓦片
  * <p>
  * 实现了 {@link Cesium3DTileContent} 接口

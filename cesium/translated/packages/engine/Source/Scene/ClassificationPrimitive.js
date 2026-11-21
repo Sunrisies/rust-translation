@@ -32,7 +32,7 @@ import StencilOperation from "./StencilOperation.js";
  * {@link Material} 和 {@link RenderState}。大致来说，几何实例定义了结构和位置，
  * 而外观则定义了视觉特征。将几何和外观分离使我们能够混合
  * 并独立地匹配它们中的大部分，同时添加新的几何或外观。
- * 目前在使用
+ * Only {@link PerInstanceColorAppearance} with the same color across all instances is supported at this time when using
  * 直接应用 ClassificationPrimitive 时，仅支持所有实例颜色相同的 {@link PerInstanceColorAppearance}。
  * 在分类地形或 3D Tiles 时为了获得完整的 {@link Appearance} 支持，应使用 {@link GroundPrimitive}。
  * </p>

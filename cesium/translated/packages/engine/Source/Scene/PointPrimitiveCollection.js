@@ -144,7 +144,7 @@ function PointPrimitiveCollection(options) {
    * 将该集合中的每个点从模型坐标转换为世界坐标的 4x4 变换矩阵。
    * 当此矩阵为单位矩阵时，pointPrimitives将在世界坐标中绘制，即地球的 WGS84 坐标。
    * 可以通过提供不同的变换矩阵来使用本地参考框架，例如 {@link Transforms.eastNorthUpToFixedFrame} 返回的矩阵。
-   * const center = Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883);
+   * by {@link Transforms.eastNorthUpToFixedFrame}.
    *
    * @type {Matrix4}
    * @default {@link Matrix4.IDENTITY}
@@ -410,7 +410,7 @@ PointPrimitiveCollection.prototype.contains = function (pointPrimitive) {
  * @returns {PointPrimitive} The const len = pointPrimitives.length;
  *
  * @performance Expected for (let i = 0; i < len; ++i) {
- * const p = pointPrimitives.get(i);
+ * {@link PointPrimitiveCollection#update} was not called, an implicit <code>O(n)</code>
  * p.show = !p.show;
  *
  * @exception {DeveloperError} This 如果实体被销毁，返回 true；否则返回 false。
@@ -1179,7 +1179,7 @@ PointPrimitiveCollection.prototype.update = function (frameState) {
  * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
  * <br /><br />
  * 实体被销毁，即调用了 destroy()。
- * pointPrimitives = pointPrimitives && pointPrimitives.destroy();
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  *
  * @returns {boolean} <code>true</code> if this object was destroyed; otherwise, <code>false</code>.
  *

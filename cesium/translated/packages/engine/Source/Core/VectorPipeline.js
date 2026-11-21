@@ -971,7 +971,7 @@ let scratchRingUv = new Float64Array(512);
 let scratchClipWorking = new Float64Array(512);
 
 /**
- * `positions` 中有效顶点的数量。
+ * A ring clipped by {@link _clipRingToRect}.
  *
  * 将多边形环（[lng, lat] 弧度对来自 `positions`）投影到
  * 瓦片的 [0,1]^2 UV 域中。经度依次展开，使反子午线交叉环保持连续，然后整个环移动至

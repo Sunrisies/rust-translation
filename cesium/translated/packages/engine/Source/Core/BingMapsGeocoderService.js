@@ -19,7 +19,7 @@ const url = "https://dev.virtualearth.net/REST/v1/Locations";
  *
  * @param {object} options 具有以下属性的对象：
  * @param {string} options.key 用于 Bing 地图地理编码服务的密钥
- * @param {string} [options.culture] 用于以特定文化和语言返回结果的 Bing 地图 {@link https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes|文化代码}。
+ * @param {string} [options.culture] A Bing Maps {@link https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes|Culture Code} to return results in a specific culture and language.
  */
 function BingMapsGeocoderService(options) {
   options = options ?? Frozen.EMPTY_OBJECT;

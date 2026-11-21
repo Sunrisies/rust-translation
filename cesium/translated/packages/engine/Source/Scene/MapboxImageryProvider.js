@@ -311,7 +311,7 @@ MapboxImageryProvider.prototype.requestImage = function (x, y, level, request) {
  * @param {number} longitude 选择功能的经度。
  * @param {number} latitude  选择功能的纬度。
  * @return {Promise<ImageryLayerFeatureInfo[]>|undefined} A 选择功能的承诺，该承诺将在异步操作完成时解析。解析值是一个 {@link ImageryLayerFeatureInfo} 实例数组。如果给定位置没有找到功能，该数组可能为空。
- * 如果不支持选择功能，则也可能定义为未定义。
+ *                   picking completes.  The resolved value is an array of {@link ImageryLayerFeatureInfo}
  * instances.  The array may be empty if no features are found at the given location.
  * It may also be undefined if picking is not supported.
  */

@@ -8,7 +8,7 @@ import {
 import PositionProperty from "./PositionProperty.js";
 
 /**
- * 一个<code>PositionProperty</code>，其值由回调函数延迟计算。
+ * A {@link PositionProperty} whose value is lazily evaluated by a callback function.
  *
  * @alias CallbackPositionProperty
  * @constructor

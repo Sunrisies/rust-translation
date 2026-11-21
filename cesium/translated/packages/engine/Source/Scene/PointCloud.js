@@ -46,7 +46,7 @@ const DecodingState = {
 
 /**
  * 表示一个 tiles 的内容。
- * {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/PointCloud|点云}
+ * {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/PointCloud|Point Cloud}
  * 被 {@link TimeDynamicPointCloud} 内部使用。
  *
  * @alias PointCloud

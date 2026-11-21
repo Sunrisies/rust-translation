@@ -29,7 +29,7 @@ import TerrainProvider from "./TerrainProvider.js";
  * @param {number} options.width 每个高度图瓦片中的行数。
  * @param {number} options.height 指定椭球表面如何被划分为瓦片的镶嵌方案。如果未提供此参数，则使用 {@link GeographicTilingScheme}。
  * @param {TilingScheme} [options.tilingScheme] 椭球体。如果指定了镶嵌方案，
- * 则忽略此参数，使用镶嵌方案的椭球体。如果两者均未指定，
+ * surface is broken into tiles. If this parameter is not provided, a {@link GeographicTilingScheme}
  * 则使用默认椭球体。
  * @param {Ellipsoid} [options.ellipsoid=Ellipsoid.default] 在画布上显示的数据来源标签。
  * const viewer = new Cesium.Viewer("cesiumContainer", {
@@ -91,7 +91,7 @@ Object.defineProperties(CustomHeightmapTerrainProvider.prototype, {
   /**
    * 在地形提供器激活时显示的标签。通常用于标注
    * 地形的来源。
-   * 此提供器使用的镶嵌方案。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof CustomHeightmapTerrainProvider.prototype
    * @type {Event}
    * @readonly

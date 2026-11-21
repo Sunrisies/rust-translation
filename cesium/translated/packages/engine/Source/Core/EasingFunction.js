@@ -3,7 +3,7 @@ import { Easing } from "@tweenjs/tween.js";
 /**
  * 用于 TweenCollection 的缓动函数。这些函数来自
  * {@link https://github.com/sole/tween.js/|Tween.js} 和 Robert Penner。请参见
- * {@link http://sole.github.io/tween.js/examples/03_graphs.html|Tween.js graphs 以了解每个函数的效果}。
+ * {@link http://sole.github.io/tween.js/examples/03_graphs.html|Tween.js graphs for each function}.
  *
  * @namespace
  */

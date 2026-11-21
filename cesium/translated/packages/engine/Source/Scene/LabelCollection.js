@@ -583,8 +583,8 @@ function destroyLabel(labelCollection, label) {
  * 示例标签
  * </div>
  * <br /><br />
- * 使用 {@link LabelCollection#add} 和 {@link LabelCollection#remove} 向集合中添加和移除标签。
- * 具有以下属性：
+ * Labels are added and removed from the collection using {@link LabelCollection#add}
+ * and {@link LabelCollection#remove}.
  *
  * @alias LabelCollection
  * @constructor
@@ -670,7 +670,7 @@ function LabelCollection(options) {
    * 将此集合中的每个标签从模型坐标转换为世界坐标的 4x4 变换矩阵。
    * 当该矩阵为单位矩阵时，标签以世界坐标绘制，即地球的 WGS84 坐标。
    * 可以通过提供不同的变换矩阵来使用本地参考框架，例如 {@link Transforms.eastNorthUpToFixedFrame} 返回的矩阵。
-   * const center = Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883);
+   * by {@link Transforms.eastNorthUpToFixedFrame}.
    *
    * @type Matrix4
    * @default {@link Matrix4.IDENTITY}
@@ -723,7 +723,7 @@ function LabelCollection(options) {
 Object.defineProperties(LabelCollection.prototype, {
   /**
    * {@link LabelCollection#get} 结合使用，以遍历集合中的所有标签。
-   * 返回WebGL纹理资源的大小（字节）。
+   * {@link LabelCollection#get} to iterate over all the labels
    * 当集合中所有标签都准备好渲染时，返回 true。
    * @memberof LabelCollection.prototype
    * @type {number}
@@ -801,9 +801,9 @@ Object.defineProperties(LabelCollection.prototype, {
    * 标签都将可见。当设置为 <code>0</code> 时，此功能被禁用，位于地形后面的标签部分将被裁剪。
    * 此设置仅在标签的 {@link Label#disableDepthTestDistance} 值
    * <br/><br/>
-   * 否则允许深度测试时适用——即，从相机到标签的距离小于
+   * This setting only applies when a labels's {@link Label#disableDepthTestDistance} value would
    * 标签的 {@link Label#disableDepthTestDistance} 值。
-   * 创建并添加具有指定初始属性的标签到集合中。
+   * labels's {@link Label#disableDepthTestDistance} value.
    * @see {@link https://cesium.com/blog/2018/07/30/billboards-on-terrain-improvements/|Billboards and Labels on Terrain Improvements}
    * @memberof LabelCollection.prototype
    * @type {number}
@@ -893,7 +893,7 @@ LabelCollection.prototype.add = function (options) {
  * 会被重新写入——这是一个 <code>O(n)</code> 操作，还会产生 CPU 到 GPU 的开销。为了获得最佳性能，在调用 <code>update</code> 之前应移除尽可能多的标签。
  * 如果你打算暂时隐藏一个标签，通常更高效的做法是调用
  * {@link Label#show} 而不是移除并重新添加该标签。
- * 对象被销毁，即调用了 destroy()。
+ * {@link Label#show} instead of removing and re-adding the label.
  *
  * @exception {DeveloperError} This const l = labels.add(...);
  *
@@ -962,7 +962,7 @@ LabelCollection.prototype.contains = function (label) {
  * 返回集合中指定索引的标签。索引从零开始
  * 并且随着标签的添加而增加。移除一个标签会将所有该标签之后的标签左移一位，从而改变它们的索引。此函数通常与
  * {@link LabelCollection#length} 一起使用，以遍历集合中的所有标签。
- * 广告牌的零基索引。
+ * {@link LabelCollection#length} to iterate over all the labels
  * 指定索引处的标签。
  *
  * @param {number} index 常数时间操作。如果标签从集合中移除且
@@ -970,7 +970,7 @@ LabelCollection.prototype.contains = function (label) {
  * @returns {Label} The 未调用 {@link Scene#render}，则执行一个隐式的 <code>O(n)</code> 操作。
  *
  * @performance Expected 对象被销毁，即调用了 destroy()。
- * // 切换集合中每个标签的 show 属性
+ * {@link Scene#render} was not called, an implicit <code>O(n)</code>
  * const len = labels.length;
  *
  * @exception {DeveloperError} This for (let i = 0; i < len; ++i) {
@@ -1071,7 +1071,7 @@ LabelCollection.prototype.isDestroyed = function () {
  * 一旦对象被销毁，就不应再使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 表明对象已被销毁，即调用了 destroy() 方法。
  *
  * @exception {DeveloperError} This labels = labels && labels.destroy();

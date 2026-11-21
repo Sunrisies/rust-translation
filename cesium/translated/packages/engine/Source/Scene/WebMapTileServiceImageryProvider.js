@@ -27,7 +27,7 @@ import GetFeatureInfoFormat from "./GetFeatureInfoFormat.js";
  * @property {GetFeatureInfoFormat[]} [getFeatureInfoFormats=WebMapTileServiceImageryProvider.DefaultGetFeatureInfoFormats] 格式
  * 用于尝试 WMTS GetFeatureInfo 请求的格式。由于不同 WMTS 服务中的要素信息响应不同，
  * 您可能需要提供自定义格式和解析回调；请参阅
- * {@link https://sandcastle.cesium.com/?id=web-map-tile-service-picking|Sandcastle 示例} 以获取编写自定义回调的完整
+ *                          {@link https://sandcastle.cesium.com/?id=web-map-tile-service-picking|Sandcastle example} for a complete
  * 示例。
  * @property {Rectangle} [rectangle=Rectangle.MAX_VALUE] 图层所覆盖的矩形区域。
  * @property {TilingScheme} [tilingScheme] 与 TileMatrixSet 中图块组织相对应的平铺方案。
@@ -483,7 +483,7 @@ Object.defineProperties(WebMapTileServiceImageryProvider.prototype, {
   /**
    * 获取该影像提供器激活时显示的信用信息。通常用于显示影像的来源。
    * 获取指示该影像提供器提供的图片是否包含 Alpha 通道的值。如果此属性为 false，则存在的 Alpha 通道将被忽略。如果此属性为 true，则没有 Alpha 通道的图片将被视为其 Alpha 为 1.0。当此属性为 false 时，内存使用和纹理上传时间都会减少。
-   * 获取或设置是否启用特征选择功能的值。如果为 true，{@link WebMapTileServiceImageryProvider#pickFeatures} 将在 WMTS 服务器上调用 <code>GetFeatureInfo</code> 服务，并尝试解析响应中的特征信息。如果为 false，{@link WebMapTileServiceImageryProvider#pickFeatures} 将立即返回 undefined（表示没有可选择的
+   * are passed an instance of {@link TileProviderError}.
    * @memberof WebMapTileServiceImageryProvider.prototype
    * @type {Event}
    * @readonly

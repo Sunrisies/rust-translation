@@ -83,7 +83,7 @@ function TileProviderError(
 }
 
 /**
- * 遇到错误的影像或地形提供器。
+ * Reports an error in an {@link ImageryProvider} or {@link TerrainProvider} by raising an event if it has any listeners, or by
  * 用于通知监听器错误的事件。
  * 描述错误的消息。
  *

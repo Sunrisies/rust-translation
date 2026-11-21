@@ -18,8 +18,8 @@ import BufferPrimitiveMaterial from "./BufferPrimitiveMaterial.js";
 /**
  * {@link BufferPolyline} 的材质描述。
  *
- * <p> {@link BufferPolylineMaterial} 对象是 {@link Packable|packable}，在调用 {@link BufferPolyline#setMaterial} 时存储。后续对材质的更改不会影响折线，直到再次调用 setMaterial() 为止。</p>
- * 该特性尚未定稿，可能会根据 Cesium 的标准弃用政策发生变化。
+ * <p>BufferPolylineMaterial objects are {@link Packable|packable}, stored
+ * when calling {@link BufferPolyline#setMaterial}. Subsequent changes to the
  * 折线宽度，以 {@link BufferPolylineCollection#widthUnits} 选择的单位为准。
  *
  * @experimental This 返回一个可序列化为 JSON 的对象，代表材质信息。这种编码方式
@@ -46,7 +46,7 @@ class BufferPolylineMaterial extends BufferPrimitiveMaterial {
     super(options);
 
     /**
-     * 并不节省内存，通常仅用于调试和测试。
+     * Width of polyline, in the unit selected by {@link BufferPolylineCollection#widthUnits}.
      * @type {number}
      */
     this.width = options.width ?? 1;

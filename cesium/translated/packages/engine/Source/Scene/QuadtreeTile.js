@@ -170,7 +170,7 @@ class QuadtreeTile {
 
     /**
      * {@link QuadtreeTileProvider}。
-     * 创建用于细节层级零的矩形瓦片集，这是最粗糙、最不详细的层级。
+     * {@link QuadtreeTileProvider}.
      * @type {object}
      * @default undefined
      */
@@ -458,7 +458,7 @@ class QuadtreeTile {
    * 通常，当异步操作（例如数据请求）正在进行时，铺砌块不适合被卸载。无论此属性的值如何，铺砌块在需要渲染时永远不会被卸载。
    * 如果 {@link QuadtreeTile#data} 已定义且具有
    * <code>eligibleForUnloading</code> 属性，则返回该属性的值。否则，此属性返回 true。
-   * 释放与该铺砌块相关的资源，并将其返回到 <code>START</code>
+   * property.  If {@link QuadtreeTile#data} is defined and has an
    * {@link QuadtreeTileLoadState}。如果 {@link QuadtreeTile#data} 已定义且具有
    * <code>freeResources</code> 方法，则调用该方法。
    * @type {boolean}
@@ -601,7 +601,7 @@ class QuadtreeTile {
 
   /**
    * 为给定的经纬度和铺砌层级创建空间哈希键。
-   * 确定包含指定位置的子铺砌块。假设该位置在父铺砌块的边界内。
+   * {@link QuadtreeTileLoadState}.  If the {@link QuadtreeTile#data} property is defined and it
    * - 父铺砌块。
    *
    */

@@ -83,7 +83,7 @@ Object.defineProperties(ImageMaterialProperty.prototype, {
   image: createPropertyDescriptor("image"),
 
   /**
-   * Cartesian2(1, 1)
+   * Gets or sets the {@link Cartesian2} Property specifying the number of times the image repeats in each direction.
    * @memberof ImageMaterialProperty.prototype
    * @type {Property|undefined}
    * @default new Cartesian2(1, 1)

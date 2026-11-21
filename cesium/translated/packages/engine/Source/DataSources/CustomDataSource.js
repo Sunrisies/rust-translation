@@ -159,7 +159,7 @@ Object.defineProperties(CustomDataSource.prototype, {
  * 将数据源更新到提供的时间。此函数可选，
  * 无需实现。它适用于基于当前动画时间或场景状态来检索数据的数据源。
  * 如果实现，每帧都会由 {@link DataSourceDisplay} 调用更新。
- * 模拟时间。
+ * If implemented, update will be called by {@link DataSourceDisplay} once a frame.
  *
  * @param {JulianDate} time 如果此数据源在提供的时间点准备好显示，则为真；否则为假。
  * @returns {boolean} True if this data source is ready to be displayed at the provided time, false otherwise.

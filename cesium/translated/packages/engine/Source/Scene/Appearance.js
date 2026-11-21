@@ -4,7 +4,7 @@ import CullFace from "./CullFace.js";
 
 /**
  * 外观定义了完整的 GLSL 顶点和片段着色器以及用于绘制 {@link Primitive} 的渲染状态。所有外观都实现
- * 此基础 <code>Appearance</code> 接口。
+ * render state used to draw a {@link Primitive}.  All appearances implement
  * 以下属性：
  *
  * @alias Appearance

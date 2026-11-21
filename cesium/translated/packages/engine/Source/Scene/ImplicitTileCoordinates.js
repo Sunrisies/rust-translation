@@ -26,8 +26,8 @@ import ImplicitSubdivisionScheme from "./ImplicitSubdivisionScheme.js";
  * </p>
  * <p>
  * 该瓦片的 x 坐标
- * 该瓦片的 y 坐标
- * 该瓦片的 z 坐标。仅在 options.subdivisionScheme 为 ImplicitSubdivisionScheme.OCTREE 时 required。
+ * indices because there is a 16-bit limit on {@link MortonOrder#encode2D} and
+ * a 10-bit limit on {@link MortonOrder#encode3D}. Typically these conversions
  * 这是 3D Tiles 规范中尚未定稿的部分，可能会根据 Cesium 的标准弃用政策进行更改。
  * 瓦片集是四叉树还是八叉树
  * 坐标子树中不同的层级数量

@@ -2,7 +2,7 @@ import { Ellipsoid, Frozen } from "@cesium/core";
 import CesiumTerrainProvider from "./CesiumTerrainProvider.js";
 
 /**
- * 为 {@link Cesium World Terrain} 创建 {@link https://cesium.com/content/#cesium-world-terrain|Cesium World Terrain} 的 {@link CesiumTerrainProvider} 实例。
+ * Creates a {@link CesiumTerrainProvider} instance for the {@link https://cesium.com/content/#cesium-world-terrain|Cesium World Terrain}.
  *
  * @function
  *

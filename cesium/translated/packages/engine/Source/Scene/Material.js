@@ -43,7 +43,7 @@ import WaterMaterial from "../Shaders/Materials/Water.js";
  * 材质通过漫射、镜面反射、法线、发射和阿尔法等组件的组合来定义表面外观。这些值通过名为 Fabric 的 JSON 模式进行指定，该模式会被解析并组装成 GLSL 着色器代码。
  * 这些值通过 Fabric 模式进行指定，该模式会被解析并组装成 GLSL 着色器代码。
  * 查看 {@link https://github.com/CesiumGS/cesium/wiki/Fabric|wiki 页面}以了解更多关于 Fabric 的信息。
- * 幕后细节。请查看 {@link https://github.com/CesiumGS/cesium/wiki/Fabric|wiki 页面}。
+ * behind-the-scenes. Check out the {@link https://github.com/CesiumGS/cesium/wiki/Fabric|wiki page}
  * 了解有关 Fabric 的更多细节。
  * <br /><br />
  * <style type="text/css">

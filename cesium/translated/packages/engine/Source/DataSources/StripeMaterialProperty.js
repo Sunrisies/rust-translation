@@ -10,7 +10,7 @@ const defaultOffset = 0;
 const defaultRepeat = 1;
 
 /**
- * 一个映射至 Stripe {@link Material} 统一体的 <code>...</code>、{@link ...}、反引号 `...` 内的内容。
+ * A {@link MaterialProperty} that maps to stripe {@link Material} uniforms.
  * @alias StripeMaterialProperty
  * @constructor
  *
@@ -123,7 +123,7 @@ Object.defineProperties(StripeMaterialProperty.prototype, {
 });
 
 /**
- * 检索材料类型的持续时间。
+ * Gets the {@link Material} type at the provided time.
  *
  * @param {JulianDate} time 用于获取类型的时间。
  * @returns {string} The 材料的类型。

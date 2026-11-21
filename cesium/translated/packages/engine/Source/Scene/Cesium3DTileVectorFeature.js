@@ -37,12 +37,12 @@ const polygonMaterial = new BufferPolygonMaterial();
  * <p>
  * 对 <code>Cesium3DTileVectorFeature</code> 对象的修改具有该瓦片内容的生命周期。如果瓦片内容被卸载，例如因为其不再可见且需要释放缓存中的空间以显示其他瓦片，请监听 {@link Cesium3DTileset#tileUnload} 事件以保存任何修改。同时监听 {@link Cesium3DTileset#tileVisible} 事件以重新应用这些修改。
  * 不要直接构造此对象。通过 {@link Cesium3DTileContent#getFeature} 或
- * 使用 {@link Scene#pick} 和 {@link Scene#pickPosition} 选择来访问它。
- * 该特性使用的是 3D Tiles 规范中的部分内容，该规范尚未定稿且可能根据 Cesium 的标准弃用政策进行更改。
+ * to free space in the cache for visible tiles, listen to the {@link Cesium3DTileset#tileUnload} event to save any
+ * modifications. Also listen to the {@link Cesium3DTileset#tileVisible} event to reapply any modifications.
  * </p>
  * <p>
- * 该特性属于未最终定稿的内容，可能根据 Cesium 的标准弃用政策进行更改。
- * // 当鼠标悬停时，在控制台日志中显示该特性的所有属性。
+ * Do not construct this directly.  Access it through {@link Cesium3DTileContent#getFeature}
+ * or picking using {@link Scene#pick} and {@link Scene#pickPosition}.
  * </p>
  *
  * @experimental This handler.setInputAction(function(movement) {

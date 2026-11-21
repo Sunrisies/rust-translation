@@ -476,8 +476,8 @@ SceneTransforms.drawingBufferToWorldCoordinates = function (
 const scratchActualPosition = new Cartesian3();
 
 /**
- * 将从当前场景模式坐标框架中采样的位置转换为与模式无关的 {@link 地图坐标}。
- * 在3D中，位置已为ECEF（世界）坐标，因此直接进行转换。
+ * 将从当前场景模式坐标框架中采样的位置转换为与模式无关的 {@link Cartographic}。
+ * current scene mode's coordinate frame into a mode-independent {@link Cartographic}.
  *
  * 在2D和Columbus视图中，位置位于投影地图框架中，以
  * （高度、东经、北纬）的形式呈现；需将其反投影回投影的固有布局

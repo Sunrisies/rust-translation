@@ -650,8 +650,8 @@ Object.defineProperties(Label.prototype, {
   /**
    * 根据标签与相机的距离，获取或设置Label的近远半透明属性。
    * 标签的半透明度将在 {@link NearFarScalar#nearValue}和
-   * {@link NearFarScalar#farValue}之间插值，当相机距离处于指定 {@link NearFarScalar#near}和 {@link NearFarScalar#far}的下限和上限范围内时。
-   * 。
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 超出这些范围时，标签的半透明度被限制在最近的边界值。如果未定义，
    * translucencyByDistance将被禁用。
    * @memberof Label.prototype
@@ -707,8 +707,8 @@ Object.defineProperties(Label.prototype, {
   /**
    * 根据标签与相机的距离，获取或设置 Label 的近远像素偏移缩放属性。
    * 标签的像素偏移将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间缩放，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的下限和上限范围内时。
-   * 在此范围之外，标签的像素偏移缩放被限制在最近的边界值。如果未定义，
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * pixelOffsetScaleByDistance 将被禁用。
    * // 示例 1
    * @memberof Label.prototype
@@ -765,8 +765,8 @@ Object.defineProperties(Label.prototype, {
   /**
    * 根据标签与相机的距离，获取或设置 Label 的近远缩放属性。
    * 标签的缩放将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的下限和上限范围内时。
-   * 在此范围之外，标签的缩放被限制在最近的边界值。如果未定义，
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * scaleByDistance 将被禁用。
    * // 示例 1
    * @memberof Label.prototype

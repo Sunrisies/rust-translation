@@ -587,9 +587,9 @@ function closestPointPolygon(p, vertices, plane, edgeNormals) {
  * 确定该体积位于平面的哪一侧。
  *
  * @param {Plane} plane 要测试的平面。
- * @returns {Intersect} {@link 如果整个体积位于平面的同一侧，则使用 {@link TileBoundingS2Cell#INSIDE} 进行交集计算。
- * 如果整个体积在相反侧，则指向 {@link Intersect.OUTSIDE}；如果体积与平面相交，则指向 {@link Intersect.INTERSECTING}。
- * 如果体积与平面相交，则指向 {@link Intersect.INTERSECTING}；如果整个体积在相反侧，则指向 {@link Intersect.OUTSIDE}。
+ * @returns {Intersect} {@link Intersect.INSIDE} if the entire volume is on the side of the plane
+ *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire volume is
+ *                      on the opposite side, and {@link Intersect.INTERSECTING} if the volume
  * 如果体积与平面相交。
  */
 TileBoundingS2Cell.prototype.intersectPlane = function (plane) {

@@ -107,7 +107,7 @@ TerrainData.prototype.upsample = DeveloperError.throwInstantiationError;
  * 获取一个值，指示该地形数据是否通过上采样低分辨率数据生成。
  * 如果此值为 false，则数据来自其他来源，例如从远程服务器下载。此方法对于通过 {@link TerrainData#upsample} 调用返回的实例应返回 true。
  * 如果该实例是通过上采样生成的，否则返回 false。
- * 用于地形处理的最大异步任务数量。
+ * returned from a call to {@link TerrainData#upsample}.
  * @function
  *
  * @returns {boolean} True if this instance was created by upsampling; otherwise, false.

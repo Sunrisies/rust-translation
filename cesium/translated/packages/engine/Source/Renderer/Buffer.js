@@ -159,7 +159,7 @@ Buffer.createVertexBuffer = function (options) {
  * @param {Context} options.context 包含要复制到缓冲区中的数据类型的数组。
  * @param {ArrayBufferView} [options.typedArray] 一个 <code>Number</code>，用于定义缓冲区在字节数上的大小。如果未指定 <options.typedArray>，则必须提供此值。
  * @param {number} [options.sizeInBytes] 指定缓冲区的预期使用模式。在某些 GL 实现中，这可能会显著影响性能。请参阅 {@link BufferUsage}。
- * @param {BufferUsage} options.usage 缓冲区中索引的数据类型。
+ * @param {BufferUsage} options.usage Specifies the expected usage pattern of the buffer. On some GL implementations, this can significantly affect performance. See {@link BufferUsage}.
  * @param {IndexDatatype} options.indexDatatype 索引缓冲区，准备好被附加到顶点数组上。
  * @returns {Buffer} The 指定 <options.typedArray> 或 <options.sizeInBytes> 中的一个，但不能同时指定两者。
  *

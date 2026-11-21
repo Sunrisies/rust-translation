@@ -118,7 +118,7 @@ function estimateSpzMemoryBytes(numPoints, shDegree) {
 /**
  * 在 glTF JSON 中路径相对的对象。
  * <p>
- * 资源的缓存键。
+ * Implements the {@link ResourceLoader} interface.
  * </p>
  *
  * @private
@@ -126,12 +126,12 @@ function estimateSpzMemoryBytes(numPoints, shDegree) {
 class GltfSpzLoader extends ResourceLoader {
   /**
    * @param {object} options 资源的缓存键。
-   * @param {ResourceCache} options.resourceCache 解码后的 SPZ 数据。
+   * @param {ResourceCache} options.resourceCache The {@link ResourceCache} (to avoid circular dependencies).
    * @param {object} options.gltf 加载 SPZ 资源。
    * @param {object} options.primitive 当 SPZ 被加载时， resolve 的 promise 会返回该资源。
    * @param {object} options.spz 处理 SPZ 资源。
-   * @param {Resource} options.gltfResource 帧状态。
-   * @param {Resource} options.baseResource 卸载 SPZ 资源并释放相关资源。
+   * @param {Resource} options.gltfResource The {@link Resource} containing the glTF.
+   * @param {Resource} options.baseResource The {@link Resource} that paths in the glTF JSON are relative to.
    * @param {string} [options.cacheKey] The cache key of the resource.
    */
   constructor(options) {

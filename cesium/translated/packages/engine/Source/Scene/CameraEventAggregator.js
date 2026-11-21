@@ -601,7 +601,7 @@ CameraEventAggregator.prototype.reset = function () {
  * 如果此对象被销毁，则返回 <code>true</code>；否则返回 <code>false</code>。
  * <br /><br />
  * 如果此对象被销毁，不应使用它；调用任何非 <code>isDestroyed</code> 的函数将导致 {@link DeveloperError} 异常。
- * 如果此对象被销毁，则返回 <code>false</code>；否则返回 <code>true</code>。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  *
  * @returns {boolean} <code>true</code> 移除此对象持有的鼠标监听器。
  *

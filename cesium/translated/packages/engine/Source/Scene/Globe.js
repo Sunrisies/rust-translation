@@ -610,9 +610,9 @@ Object.defineProperties(Globe.prototype, {
 
   /**
    * Alpha 值将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的上下范围内时。
-   * 超出这些范围时，Alpha 值会被限制在最近的边界值。如果未定义，
-   * 则地下颜色不会与地球颜色混合。
+   * The alpha will interpolate between the {@link NearFarScalar#nearValue} and
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 当相机在椭球体上方时，距离计算基于椭球体上最近的
    * 点，而非相机位置。
    * <br /> <br />

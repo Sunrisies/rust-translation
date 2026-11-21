@@ -686,7 +686,7 @@ function parseType(property, enums) {
  * 归一化和反归一化几乎是互为逆运算，但不完全如此。特别是，
  * 最小的有符号整数值在归一化和反归一化后会相差一。
  * <p>
- * 参见
+ * Given the way normalization is defined in {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#normalized-values|the 3D Metadata Specification},
  * {@link https://www.desmos.com/calculator/nledg1evut|此 Desmos 图表}
  * 以 INT8 为例。
  * unnormalizing. See
@@ -719,11 +719,11 @@ MetadataClassProperty.prototype.normalize = function (value) {
  * 不进行归一化操作，直接返回整数属性值。如果属性未进行归一化，
  * 则保持原样返回。
  * <p>
- * 根据 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#normalized-values|3D 元数据规范}中定义的归一化方式，
+ * Given the way normalization is defined in {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/Metadata#normalized-values|the 3D Metadata Specification},
  * “归一化”和“去归一化”几乎是互为逆操作，但并非完全如此。特别是，
  * 最小的有符号整数值在归一化后会偏差一个，
  * 在去归一化后也会如此。参见
- * {@link https://www.desmos.com/calculator/nledg1evut|这个 Desmos 图表}
+ * {@link https://www.desmos.com/calculator/nledg1evut|this Desmos graph} for
  * 以 INT8 为例。
  * </p>
  * <p>

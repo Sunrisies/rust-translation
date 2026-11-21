@@ -31,10 +31,10 @@ import renderBufferPointCollection from "./renderBufferPointCollection.js";
  * 当添加或更改点时，或者当分配某个属性时，结果会被缓存；修改数据后需调用 {@link VectorPrimitive#makeStyleDirty}。
  * 当任何属性是回调时，其他值也会被缓存，因此像 <code>primitive.color.alpha = 0.5</code> 这样的就地更改也需要调用 {@link VectorPrimitive#makeStyleDirty}。
  * const collection = new Cesium.BufferPointCollection();
- * collection.add({ position: Cesium.Cartesian3.fromDegrees(-75.16, 39.95) });
+ * are cached; call {@link VectorPrimitive#makeStyleDirty} after changing data that
  * viewer.scene.primitives.add(
  * new Cesium.CircleVectorPrimitive({
- * collection,
+ * require {@link VectorPrimitive#makeStyleDirty}.</p>
  *
  * @example
  * radius: 8,

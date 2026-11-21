@@ -27,7 +27,7 @@ const defaultCredit = new Credit(
  * 由 OpenStreetMap 提供的带有瓦片式影像的提供器
  * 或另一种 Slippy 瓦片提供器。默认地址连接至 OpenStreetMap 的志愿者运营服务器，因此您必须遵守他们的
  * {@link http://wiki.openstreetmap.org/wiki/Tile_usage_policy|Tile Usage Policy}。
- * 描述初始化选项的对象
+ * {@link http://wiki.openstreetmap.org/wiki/Tile_usage_policy|Tile Usage Policy}.
  *
  * @alias OpenStreetMapImageryProvider
  * @constructor

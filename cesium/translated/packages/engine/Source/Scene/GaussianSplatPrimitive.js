@@ -407,8 +407,8 @@ function trimAggregateScratchBuffer(buffer, length) {
  * 快照<b>必须</b>处于 {@link SnapshotState.READY} 状态；否则将抛出 {@link DeveloperError}。
  * 原语。
  *
- * 要提交的快照。
- * 当前帧状态。
+ * The snapshot <b>must</b> be in the {@link SnapshotState.READY} state;
+ * otherwise a {@link DeveloperError} is thrown.
  *
  * @param {GaussianSplatPrimitive} primitive 快照尚未准备好。
  * @param {GaussianSplatPrimitive.Snapshot} snapshot 最终完成快照的异步斑点纹理生成。解决的数据
@@ -491,7 +491,7 @@ function commitSnapshot(primitive, snapshot, frameState) {
 /**
  * 原语。
  * 当前帧状态。
- * 快照尚未准备好。
+ * {@link SnapshotState.TEXTURE_READY} when complete.
  *
  * @param {GaussianSplatPrimitive} primitive The owning primitive.
  * @param {FrameState} frameState The current frame state.

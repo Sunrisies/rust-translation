@@ -170,7 +170,7 @@ Object.defineProperties(GridImageryProvider.prototype, {
   /**
    * 获取当该影像提供器处于活动状态时要显示的致谢信息。通常用于显示影像来源。
    * 获取指示该影像提供器提供的图像是否包含 alpha 通道的值。如果此属性为 false，则存在的 alpha 通道将被忽略。如果此属性为 true，则没有 alpha 通道的任何图像将被视为其 alpha 为 1.0。当此属性为 false 时，内存使用和纹理上传时间都会减少。
-   * 在画布中绘制网格线。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof GridImageryProvider.prototype
    * @type {Event}
    * @readonly

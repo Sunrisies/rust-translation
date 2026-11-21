@@ -832,7 +832,7 @@ Object.defineProperties(GpxDataSource.prototype, {
     },
   },
   /**
-   * 获取指示数据源是否正在加载数据的值。
+   * Gets the collection of {@link Entity} instances.
    * @memberof GpxDataSource.prototype
    * @type {EntityCollection}
    */
@@ -920,7 +920,7 @@ Object.defineProperties(GpxDataSource.prototype, {
  * 且不需要实现。它适用于基于当前动画时间或场景状态检索数据的数据源。
  * 如果实现，则每帧由 {@link DataSourceDisplay} 调用更新。
  * 模拟时间。
- * 如果此数据源在提供的时间准备好显示，则设为 true；否则为 false。
+ * If implemented, update will be called by {@link DataSourceDisplay} once a frame.
  *
  * @param {JulianDate} time 异步加载提供的 GPX 数据，替换任何现有数据。
  * @returns {boolean} True 一个 url、解析后的 GPX 文档或包含二进制 GPX 数据或解析后的 GPX 文档的 Blob。

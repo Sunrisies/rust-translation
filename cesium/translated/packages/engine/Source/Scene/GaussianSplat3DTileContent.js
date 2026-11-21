@@ -649,14 +649,14 @@ class GaussianSplat3DTileContent {
   }
 
   /**
-       * 用于实现 <code>Cesium3DTileContent</code> 接口，但不属于公共 Cesium API。
+       * Called when {@link Cesium3DTileset#debugColorizeTiles} changes.
        * <p>
        * 是否启用或禁用调试设置。
        * 对应 {@link Cesium3DTileFeature} 对象。
        * </p>
        *
        * @param {boolean} enabled 对内容应用样式。
-       * @returns {Cesium3DTileFeature} The 用于实现 <code>Cesium3DTileContent</code> 接口，但不属于公共 Cesium API。
+       * @returns {Cesium3DTileFeature} The corresponding {@link Cesium3DTileFeature} object.
 
        * @private
        */

@@ -35,7 +35,7 @@ class QuadtreeTileProvider {
   /**
    * 获取几何提供器遇到异步错误时引发的事件。通过订阅该事件，您将收到错误通知并可能从中恢复。事件监听器
    * 接收 {@link TileProviderError} 的实例。
-   * 计算四叉树零级层级的默认几何误差。
+   * are passed an instance of {@link TileProviderError}.
    * @type {Event}
    */
   errorEvent;
@@ -120,7 +120,7 @@ class QuadtreeTileProvider {
   /**
    * 确定给定瓦片的可见性。该瓦片可能是完全可见、部分可见或完全不可见。可渲染且至少部分可见的瓦片将通过调用
    * {@link QuadtreeTileProvider#showTileThisFrame} 来显示。
-   * 被显示。
+   * to {@link QuadtreeTileProvider#showTileThisFrame}.
    *
    * @param {QuadtreeTile} tile 瓦片实例。
    * @param {FrameState} frameState 当前帧的状态信息。
@@ -162,7 +162,7 @@ class QuadtreeTileProvider {
    * 如果此对象被销毁，则不应使用它；调用除
    * <br /><br />
    * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。
-   * 以外的函数，则返回 false。
+   * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
    *
    * @returns {boolean} True 如果此对象被销毁，则不应使用它；调用除
    *

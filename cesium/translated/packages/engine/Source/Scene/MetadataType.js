@@ -31,7 +31,7 @@ import {
 
 /**
  * 元数据类型的枚举。这些元数据类型是包含
- * 一个或多个 <code>MetadataComponentType</code> 类型的组件容器
+ * one or more components of type {@link MetadataComponentType}
  *
  * @enum {string}
  * @experimental This 该特性使用了 3D Tiles 规范中尚未最终定稿且可能根据 Cesium 标准弃用政策进行更改的部分内容。
@@ -101,7 +101,7 @@ const MetadataType = {
    */
   STRING: "STRING",
   /**
-   * 枚举值。此类型与 <code>MetadataEnum</code> 结合使用，以描述有效值。
+   * An enumerated value. This type is used in conjunction with a {@link MetadataEnum} to describe the valid values.
    *
    * @see MetadataEnum
    *

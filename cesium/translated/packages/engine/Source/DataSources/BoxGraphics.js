@@ -145,7 +145,7 @@ Object.defineProperties(BoxGraphics.prototype, {
   shadows: createPropertyDescriptor("shadows"),
 
   /**
-   * 复制此实例。
+   * Gets or sets the {@link DistanceDisplayCondition} Property specifying at what distance from the camera that this box will be displayed.
    * @memberof BoxGraphics.prototype
    * @type {Property|undefined}
    */

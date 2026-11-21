@@ -180,7 +180,7 @@ Object.defineProperties(PolylineMaterialAppearance.prototype, {
 });
 
 /**
- * 程序化生成完整的 GLSL 片段着色器源代码。对于 {@link PolylineMaterialAppearance}，
+ * The {@link VertexFormat} that all {@link PolylineMaterialAppearance} instances
  * are compatible with. This requires <code>position</code> and <code>st</code> attributes.
  *
  * @type VertexFormat

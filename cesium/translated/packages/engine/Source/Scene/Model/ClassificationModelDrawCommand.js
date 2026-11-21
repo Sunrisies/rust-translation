@@ -451,7 +451,7 @@ Object.defineProperties(ClassificationModelDrawCommand.prototype, {
   /**
    * 分类模型的剔除功能被禁用，因此这对模型的渲染效果没有影响。此选项仅用于匹配
    * {@link ModelDrawCommand} 的接口。
-   * 界面。
+   * {@link ModelDrawCommand}.
    *
    * @memberof ClassificationModelDrawCommand.prototype
    * @type {CullFace}

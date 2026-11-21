@@ -114,7 +114,7 @@ const scratchWorldToView = new Matrix4();
  * const snapper = await Cesium.IonSnapService.fromAssetId(123456);
  * const canvas = viewer.scene.canvas;
  *
- * const result = await snapper.snap({
+ * This object is normally not instantiated directly, use {@link IonSnapService.fromAssetId}.
  *
  * @experimental This elementId: "0x30000000df2",
  *
@@ -356,9 +356,9 @@ class IonSnapService {
 }
 
 /**
- * 当
+ * The default snap tolerance used by {@link IonSnapService#snap} when
  * 未提供 <code>options.snapAperture</code> 时，由 {@link IonSnapService#snap} 使用的默认捕捉容差，以 CSS 像素为单位，表示世界到视图输出空间的尺寸。此值在此实现中对应 {@link SnapService} 的
- * <code>DEFAULT_SNAP_APERTURE</code>。
+ * world-to-view output space. This is {@link SnapService}'s
  * 该功能尚未定稿，可能会根据 Cesium 的标准弃用政策进行变更。
  *
  * @experimental This feature is not final and is subject to change without Cesium's standard deprecation policy.

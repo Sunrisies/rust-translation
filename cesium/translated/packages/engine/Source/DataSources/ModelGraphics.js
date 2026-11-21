@@ -183,7 +183,7 @@ Object.defineProperties(ModelGraphics.prototype, {
   /**
    * 获取或设置布尔型属性，指定是否应运行 glTF 动画。
    * 获取或设置布尔型属性，指定 glTF 动画是否应在没有关键帧的时间段中保留最后姿态。
-   * 获取或设置枚举属性，指定模型是向光源投射阴影还是接收阴影。
+   * {@link ModelGraphics#minimumPixelSize}.
    * @memberof ModelGraphics.prototype
    * @type {Property|undefined}
    */
@@ -311,8 +311,8 @@ Object.defineProperties(ModelGraphics.prototype, {
   ),
 
   /**
-   * 获取或设置应用于该模型的节点变换集合。以 {@link PropertyBag} 形式表示，键为节点名称，值为描述该节点应应用的 {@link TranslationRotationScale} 属性。
-   * 根据 glTF 中的规定，该变换在节点现有变换之后应用，并不替换节点现有的变换。
+   * Gets or sets the set of node transformations to apply to this model.  This is represented as an {@link PropertyBag}, where keys are
+   * names of nodes, and values are {@link TranslationRotationScale} Properties describing the transformation to apply to that node.
    * 获取或设置应用于该模型的关节值集合。以 {@link PropertyBag} 形式表示，键为关节名称，中间有一个空格，后跟舞台名称。
    * @memberof ModelGraphics.prototype
    * @type {PropertyBag}
@@ -336,14 +336,14 @@ Object.defineProperties(ModelGraphics.prototype, {
   ),
 
   /**
-   * 复制此实例。
+   * A property specifying the {@link ClippingPlaneCollection} used to selectively disable rendering the model.
    * @memberof ModelGraphics.prototype
    * @type {Property|undefined}
    */
   clippingPlanes: createPropertyDescriptor("clippingPlanes"),
 
   /**
-   * 指定存储结果的对象。
+   * Gets or sets the {@link CustomShader} to apply to this model. When <code>undefined</code>, no custom shader code is used.
    * @memberof ModelGraphics.prototype
    * @type {Property|undefined}
    */

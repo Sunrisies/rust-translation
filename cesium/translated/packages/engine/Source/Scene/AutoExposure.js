@@ -66,7 +66,7 @@ function AutoExposure() {
 Object.defineProperties(AutoExposure.prototype, {
   /**
    * 确定此后处理阶段是否准备好执行。只有当 <code>ready</code> 和 {@link AutoExposure#enabled} 均为 <code>true</code> 时，该阶段才会执行。当等待纹理加载时，该阶段不会准备好。
-   * 此后处理阶段的唯一名称，供其他阶段参考。
+   * and {@link AutoExposure#enabled} are <code>true</code>. A stage will not be ready while it is waiting on textures
    * 执行此后处理阶段时写入的纹理引用。
    *
    * @memberof AutoExposure.prototype
@@ -356,7 +356,7 @@ AutoExposure.prototype.execute = function (context, colorTexture) {
  * 如果此对象被销毁，则返回 true；否则返回 false。
  * <p>
  * 如果此对象被销毁，则不应使用它；调用除 <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。
- * 如果此对象被销毁，则返回 <code>false</code>；否则返回 <code>true</code>。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  * </p>
  *
  * @returns {boolean} <code>true</code> 销毁此对象持有的 WebGL 资源。销毁对象允许确定性的
@@ -372,7 +372,7 @@ AutoExposure.prototype.isDestroyed = function () {
  * 一旦对象被销毁，就不应再使用它；调用除 <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。因此，
  * <p>
  * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
- * 对象被销毁，即调用了 destroy() 方法。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * assign the return value (<code>undefined</code>) to the object as done in the example.
  * </p>
  *

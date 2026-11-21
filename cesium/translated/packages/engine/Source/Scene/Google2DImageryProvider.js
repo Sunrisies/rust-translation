@@ -286,7 +286,7 @@ Object.defineProperties(Google2DImageryProvider.prototype, {
 });
 
 /**
- * Google 地图影像的地图类型。有效选项包括卫星、地形和路线图。如果设置了 overlayLayerType，则忽略 mapType，返回透明覆盖层；如果 overlayMapType 未定义，则返回 mapType 的基础地图。layerRoadmap 包含在地形和路线图地图类型中。
+ * Creates an {@link ImageryProvider} which provides 2D global tiled imagery from {@link https://developers.google.com/maps/documentation/tile/2d-tiles-overview|Google 2D Tiles}, streamed using the Cesium ion REST API.
  * @param {object} options 指定在瓦片上显示信息的语言使用的 IETF 语言标签。
  * @param {string} options.assetId 一个 Common Locale Data Repository 区域标识符（两个大写字母），表示用户的物理位置。
  * @param {"satellite" | "terrain" | "roadmap"} [options.mapType="satellite"] 返回具有指定 layerType 的透明覆盖层地图。如果未提供值，则返回 mapType 的基础地图。使用多个 Google2DImageryProvider 可以在场景中添加多个 Google 地图覆盖层。layerRoadmap 包含在地形和路线图地图类型中，因此将其作为地形或路线图的覆盖层添加没有效果。

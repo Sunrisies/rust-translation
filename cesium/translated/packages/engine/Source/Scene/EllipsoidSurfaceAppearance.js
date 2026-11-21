@@ -103,7 +103,7 @@ Object.defineProperties(EllipsoidSurfaceAppearance.prototype, {
 
   /**
    * 片段着色器的 GLSL 源代码。完整的片段着色器源代码是程序化生成的，考虑了 {@link EllipsoidSurfaceAppearance#material}、
-   * {@link EllipsoidSurfaceAppearance#flat} 和 {@link EllipsoidSurfaceAppearance#faceForward}。
+   * source is built procedurally taking into account {@link EllipsoidSurfaceAppearance#material},
    * {@link EllipsoidSurfaceAppearance#flat}, and {@link EllipsoidSurfaceAppearance#faceForward}.
    * 使用 {@link EllipsoidSurfaceAppearance#getFragmentShaderSource} 获取完整源代码。
    *
@@ -121,7 +121,7 @@ Object.defineProperties(EllipsoidSurfaceAppearance.prototype, {
   /**
    * 渲染几何图形时使用的 WebGL 固定函数状态。
    * <p>
-   * 在构建 {@link EllipsoidSurfaceAppearance} 时，可以显式定义渲染状态，也可以通过 {@link EllipsoidSurfaceAppearance#translucent} 隐式设置。
+   * The render state can be explicitly defined when constructing a {@link EllipsoidSurfaceAppearance}
    * 或者通过 {@link EllipsoidSurfaceAppearance#aboveGround} 设置。
    * 以及 {@link EllipsoidSurfaceAppearance#aboveGround}。
    * </p>
@@ -194,7 +194,7 @@ Object.defineProperties(EllipsoidSurfaceAppearance.prototype, {
    * 以确保法线朝向查看器，避免暗点。当几何图形的两侧都需
    * 以 {@link WallGeometry} 方式着色时非常有用。
    * 当 <code>true</code> 时，期望几何图形位于椭球表面——而不是在其上方恒定高度处——因此 {@link EllipsoidSurfaceAppearance#renderState}
-   * 启用了背面剔除。
+   * shaded like {@link WallGeometry}.
    *
    * @memberof EllipsoidSurfaceAppearance.prototype
    *
@@ -211,7 +211,7 @@ Object.defineProperties(EllipsoidSurfaceAppearance.prototype, {
 
   /**
    * 所有 {@link EllipsoidSurfaceAppearance} 实例兼容的 {@link VertexFormat}，
-   * 仅需要 <code>position</code> 和 <code>st</code> 属性。其他属性在片段着色器中通过程序计算生成。
+   * surface - not at a constant height above it - so {@link EllipsoidSurfaceAppearance#renderState}
    * 程序化生成完整的 GLSL 片段着色器源代码。对于 {@link EllipsoidSurfaceAppearance}，
    *
    *
@@ -230,7 +230,7 @@ Object.defineProperties(EllipsoidSurfaceAppearance.prototype, {
 });
 
 /**
- * 该源代码来自 {@link EllipsoidSurfaceAppearance#fragmentShaderSource}、{@link EllipsoidSurfaceAppearance#flat} 和 {@link EllipsoidSurfaceAppearance#faceForward}。
+ * The {@link VertexFormat} that all {@link EllipsoidSurfaceAppearance} instances
  * 完整的 GLSL 片段着色器源代码。
  * 根据 {@link EllipsoidSurfaceAppearance#translucent} 和 {@link Material#isTranslucent} 确定几何图形是否为半透明。
  *
@@ -241,9 +241,9 @@ Object.defineProperties(EllipsoidSurfaceAppearance.prototype, {
 EllipsoidSurfaceAppearance.VERTEX_FORMAT = VertexFormat.POSITION_AND_ST;
 
 /**
- * 如果控件是半透明的。
- * 创建渲染状态。这不是最终的渲染状态实例；相反，
- * 它可以包含与上下文中的渲染状态相同的部分渲染状态属性。
+ * Procedurally creates the full GLSL fragment shader source.  For {@link EllipsoidSurfaceAppearance},
+ * this is derived from {@link EllipsoidSurfaceAppearance#fragmentShaderSource}, {@link EllipsoidSurfaceAppearance#flat},
+ * and {@link EllipsoidSurfaceAppearance#faceForward}.
  *
  * @function
  *

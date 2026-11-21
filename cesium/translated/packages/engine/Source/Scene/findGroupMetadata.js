@@ -9,7 +9,7 @@ import hasExtension from "./hasExtension.js";
  * @function
  *
  * @param {Cesium3DTileset} tileset 如果未找到组元数据，则返回 <code>undefined</code>
- * @param {object} contentHeader 该特性使用了 3D Tiles 规范中的部分内容，该内容尚未最终定稿，可能会根据 Cesium 标准弃用政策进行更改。
+ * @param {object} contentHeader the JSON header for a {@link Cesium3DTileContent}
  * @return {GroupMetadata} the group metadata, or <code>undefined</code> if not found
  * @private
  * @experimental This feature is using part of the 3D Tiles spec that is not final and is subject to change without Cesium's standard deprecation policy.

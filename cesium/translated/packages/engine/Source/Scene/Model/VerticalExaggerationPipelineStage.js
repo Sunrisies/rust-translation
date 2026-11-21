@@ -4,7 +4,7 @@ import VerticalExaggerationStageVS from "../../Shaders/Model/VerticalExaggeratio
 
 /**
  * 垂直放大管道阶段根据 {@link Scene#verticalExaggeration} 的值来转换顶点位置。
- * 以及
+ * positions based on the values of {@link Scene#verticalExaggeration} and
  * {@link Scene#verticalExaggerationRelativeHeight}
  *
  * @namespace VerticalExaggerationPipelineStage

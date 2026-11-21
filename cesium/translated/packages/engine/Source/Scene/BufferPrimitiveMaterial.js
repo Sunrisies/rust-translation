@@ -14,8 +14,8 @@ import { Color, Frozen } from "@cesium/core";
 /**
  * {@link BufferPrimitive} 的材质描述。简要说明。
  *
- * <p>BufferPrimitiveMaterial 对象是 {@link Packable|可打包}，在调用 {@link BufferPrimitive#setMaterial} 时存储。后续对材质的修改不会影响原始实体，直到再次调用 setMaterial() 为止。</p>
- * 该特性尚未定稿，可能会根据 Cesium 的标准弃用政策发生变化。
+ * <p>BufferPrimitiveMaterial objects are {@link Packable|packable}, stored
+ * when calling {@link BufferPrimitive#setMaterial}. Subsequent changes to the
  * 填充颜色。
  *
  * @see BufferPointMaterial

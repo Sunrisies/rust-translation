@@ -20,7 +20,7 @@ import createPropertyDescriptor from "./createPropertyDescriptor.js";
  */
 
 /**
- * 描述位于包含实体位置的图形点。
+ * Describes a graphical point located at the position of the containing {@link Entity}.
  *
  * @alias PointGraphics
  * @constructor
@@ -127,9 +127,9 @@ Object.defineProperties(PointGraphics.prototype, {
 
   /**
    * 获取或设置指定基于与相机距离的点半透明效果的 {@link NearFarScalar} 属性。
-   * 点的半透明效果将在 {@link NearFarScalar#nearValue} 和 {@link NearFarScalar#farValue} 之间插值。
-   * 当相机距离落在指定的 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的上下范围内时，点的半透明效果会介于两者之间。
-   * 在这些范围之外，点的半透明效果被限制在最近的边界上。
+   * A point's translucency will interpolate between the {@link NearFarScalar#nearValue} and
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 在这些范围之外，点的半透明效果被限制在最近的边界上。
    * @memberof PointGraphics.prototype
    * @type {Property|undefined}

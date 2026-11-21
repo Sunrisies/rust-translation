@@ -39,7 +39,7 @@ const Tonemapper = {
   ACES: "ACES",
 
   /**
-   * 使用 PBR 中性音变算法 {@link https://github.com/KhronosGroup/ToneMapping/tree/main/PBR_Neutral|来自 Khronos}。
+   * Use the PBR Neutral tonemapping {@link https://github.com/KhronosGroup/ToneMapping/tree/main/PBR_Neutral|from Khronos}.
    *
    * @type {string}
    * @constant

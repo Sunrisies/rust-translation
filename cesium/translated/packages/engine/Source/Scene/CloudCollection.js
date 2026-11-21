@@ -73,8 +73,8 @@ const COLOR_INDEX = CumulusCloud.COLOR_INDEX;
  * 示例云朵形态
  * </div>
  * <br /><br />
- * 使用 {@link CloudCollection#add} 和 {@link CloudCollection#remove} 向集合中添加或移除云实体。
- * 
+ * Clouds are added and removed from the collection using {@link CloudCollection#add}
+ * and {@link CloudCollection#remove}.
  * @alias CloudCollection
  * @constructor
  *

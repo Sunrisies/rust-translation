@@ -76,7 +76,7 @@ function PerformanceWatchdogViewModel(options) {
 
 Object.defineProperties(PerformanceWatchdogViewModel.prototype, {
   /**
-   * 获取用于忽略低帧率消息的命令。一旦被忽略，消息
+   * Gets the {@link Scene} instance for which to monitor performance.
    * @memberof PerformanceWatchdogViewModel.prototype
    * @type {Scene}
    */

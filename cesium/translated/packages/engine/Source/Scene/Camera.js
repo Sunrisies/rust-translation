@@ -1547,7 +1547,7 @@ const pitchScratch = new Cartesian3();
  * 3D 场景的默认视图。2D 和哥伦布视图的默认视图显示整个地图。
  * 飞行的持续时间（秒）。如果省略，Cesium 会尝试根据飞行需行进的距离计算理想持续时间。参见 {@link Camera#flyTo}
  *
- * @param {number} [duration] 将向量或点从世界坐标变换到相机的参考框架。
+ * @param {number} [duration] The duration of the flight in seconds. If omitted, Cesium attempts to calculate an ideal duration based on the distance to be traveled by the flight. See {@link Camera#flyTo}
  */
 Camera.prototype.flyHome = function (duration) {
   const mode = this._mode;

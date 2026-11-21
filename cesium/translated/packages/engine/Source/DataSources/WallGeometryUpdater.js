@@ -30,8 +30,8 @@ function WallGeometryOptions(entity) {
 }
 
 /**
- * 用于墙体的<code>GeometryUpdater</code>控件。
- * 通常客户端不会直接创建此类，而是依赖<code>DataSourceDisplay</code>。
+ * A {@link GeometryUpdater} for walls.
+ * Clients do not normally create this class directly, but instead rely on {@link DataSourceDisplay}.
  * @alias WallGeometryUpdater
  * @constructor
  *

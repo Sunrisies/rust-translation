@@ -14,7 +14,7 @@ import { DeveloperError } from "@cesium/core";
 /** @import { Ray } from "@cesium/core"; */
 
 /**
- * @link Cesium3DTileset 中的瓦片内容。
+ * The content of a tile in a {@link Cesium3DTileset}.
  * <p>
  * 此接口的派生类提供对瓦片中各个特征的访问。
  * 通过 {@link Cesium3DTile#content} 访问派生对象。
@@ -56,7 +56,7 @@ class Cesium3DTileContent {
   /**
    * 仅适用于具有点云内容的瓦片。这与 {@link Cesium3DTileContent#featuresLength} 不同，后者
    * <p>
-   * 等于由 <code>BATCH_ID</code> 特征表语义区分的点组数量。
+   * Only applicable for tiles with Point Cloud content. This is different than {@link Cesium3DTileContent#featuresLength} which
    * 获取瓦片中的三角形数量。
    * </p>
    *
@@ -234,7 +234,7 @@ class Cesium3DTileContent {
   }
 
   /**
-   * 特性的批次 ID。
+   * Returns the {@link Cesium3DTileFeature} object for the feature with the
    * 对应的 < {@link Cesium3DTileFeature} > 对象。
    * 必须介于零和 < {@link Cesium3DTileContent#featuresLength} - 1 之间。
    * <p>
@@ -244,16 +244,16 @@ class Cesium3DTileContent {
    * @see {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/BatchTable}.
    *
    * @param {number} batchId 此属性用于实现 <code>Cesium3DTileContent</code> 接口，但
-   * @returns {Cesium3DTileFeature} The 不属于公共 Cesium API。
+   * @returns {Cesium3DTileFeature} The corresponding {@link Cesium3DTileFeature} object.
    *
-   * @exception {DeveloperError} batchId 是否启用或禁用调试设置。
+   * @exception {DeveloperError} batchId must be between zero and {@link Cesium3DTileContent#featuresLength} - 1.
    */
   getFeature(batchId) {
     DeveloperError.throwInstantiationError();
   }
 
   /**
-       * 调试颜色。
+       * Called when {@link Cesium3DTileset#debugColorizeTiles} changes.
        * <p>
        * 对应的 < {@link Cesium3DTileFeature} > 对象。
        * 将样式应用于内容。
@@ -261,7 +261,7 @@ class Cesium3DTileContent {
        *
        * @param {boolean} enabled 此属性用于实现 <code>Cesium3DTileContent</code> 接口，但
        * @param {Color} color 不属于公共 Cesium API。
-       * @returns {Cesium3DTileFeature} The 样式。
+       * @returns {Cesium3DTileFeature} The corresponding {@link Cesium3DTileFeature} object.
 
        * @private
        */
@@ -322,7 +322,7 @@ class Cesium3DTileContent {
    * 如果此对象被销毁，则返回 true；否则返回 false。
    * <br /><br />
    * 如果此对象被销毁，则不应使用它；调用除 <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。
-   * 此方法用于实现 <code>Cesium3DTileContent</code> 接口，但不属于公共 Cesium API。
+   * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
    * <p>
    * 如果此对象被销毁，则返回 <code>false</code>；否则返回 <code>false</code>。
    * 销毁此对象所持有的 WebGL 资源。销毁对象可以确保 WebGL 资源的确定释放，而无需依赖垃圾收集器来销毁该对象。
@@ -343,7 +343,7 @@ class Cesium3DTileContent {
    * 此方法用于实现 <code>Cesium3DTileContent</code> 接口，但不属于公共 Cesium API。
    * <br /><br />
    * 一旦对象被销毁，则不应使用它；调用除 <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
-   * 应像示例中那样将返回值 (<code>undefined</code>) 赋给该对象。
+   * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
    * 如果对象被销毁，即调用了 destroy() 方法，则返回 <code>true</code>。
    * <p>
    * 此方法用于实现 <code>Cesium3DTileContent</code> 接口，但不属于公共 Cesium API。

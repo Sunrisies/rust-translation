@@ -57,7 +57,7 @@ const scratchPickRay = new Ray();
 const scratchPickCartesian = new Cartesian3();
 
 /**
- * @link CesiumInspector 的视图模型。
+ * The view model for {@link CesiumInspector}.
  * @alias CesiumInspectorViewModel
  * @constructor
  *

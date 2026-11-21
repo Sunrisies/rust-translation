@@ -232,7 +232,7 @@ EquirectangularPanorama.prototype.update = function (frameState) {
  * 将返回值（<code>undefined</code>）赋给对象，如示例中所示
  * <br /><br />
  * 对象已被销毁，即调用了 destroy()
- * equirectangularPanorama = equirectangularPanorama && equirectangularPanorama.destroy();
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * assign the return value (<code>undefined</code>) to the object as done in the example.
  *
  * @exception {DeveloperError} This object was destroyed, i.e., destroy() was called.

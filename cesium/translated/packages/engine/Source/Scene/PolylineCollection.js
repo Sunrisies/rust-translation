@@ -130,7 +130,7 @@ function PolylineCollection(options) {
    * 当此矩阵为单位矩阵时，多线以世界坐标绘制，即地球 WGS84 坐标。
    * 通过提供不同的变换矩阵，如 {@link Transforms.eastNorthUpToFixedFrame} 返回的矩阵，可以使用本地参考框架。
    * 此属性仅用于调试；不用于生产环境，也未经过优化。
-   * 为原语中的每条绘制命令绘制边界球。
+   * by {@link Transforms.eastNorthUpToFixedFrame}.
    *
    * @type {Matrix4}
    * @default {@link Matrix4.IDENTITY}
@@ -193,7 +193,7 @@ function PolylineCollection(options) {
 Object.defineProperties(PolylineCollection.prototype, {
   /**
    * 创建并添加具有指定初始属性的多线到集合中。
-   * 被添加到集合中的多线。
+   * {@link PolylineCollection#get} to iterate over all the polylines
    * 调用 <code>add</code>，则 {@link PolylineCollection#update} 会被调用。
    * @memberof PolylineCollection.prototype
    * @type {number}

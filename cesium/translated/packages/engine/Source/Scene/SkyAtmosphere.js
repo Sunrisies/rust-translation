@@ -26,7 +26,7 @@ import SceneMode from "./SceneMode.js";
 
 /**
  * 围绕提供的椭球体边缘绘制的大气层。基于
- * {@link http://nishitalab.org/user/nis/cdrom/sig93_nis.pdf|考虑大气散射的地球展示》。
+ * {@link http://nishitalab.org/user/nis/cdrom/sig93_nis.pdf|Display of The Earth Taking Into Account Atmospheric Scattering}.
  * <p>
  * 此功能仅支持 3D 模式。在转换为 2D 或 Columbus 视图时，大气效果会淡化。
  * </p>

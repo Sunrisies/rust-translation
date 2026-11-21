@@ -1059,7 +1059,7 @@ ImageryLayer.prototype._createTileImagerySkeletons = function (
 };
 
 /**
- * 计算附加于特定
+ * Calculate the translation and scale for a particular {@link TileImagery} attached to a
  * 地形瓦片上的 {@link TileImagery} 的平移和缩放比例。
  *
  * @private

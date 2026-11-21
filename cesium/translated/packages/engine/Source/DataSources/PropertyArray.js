@@ -2,7 +2,7 @@ import { Event, EventHelper, JulianDate, defined } from "@cesium/core";
 import Property from "./Property.js";
 
 /**
- * 一个控件，其值为一个数组，数组元素为其他属性实例的计算值。
+ * A {@link Property} whose value is an array whose items are the computed value
  * 的 computed 值。
  *
  * @alias PropertyArray

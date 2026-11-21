@@ -54,11 +54,11 @@ import PickId from "../Renderer/PickId.js";
  * @property {boolean} [debugShowBoundingVolume=false]
  * @property {BlendOption} [blendOption=BlendOption.TRANSLUCENT] 决定集合中的实体如何与场景混合。必须为 {@link BlendOption.OPAQUE} 或 {@link BlendOption.TRANSLUCENT}；不支持 {@link BlendOption.OPAQUE_AND_TRANSLUCENT}。
  * @property {HeightReference} [options.heightReference=HeightReference.NONE] 当设置为限制值时，
- * 集合将覆盖在指定值的选中表面上：{@link HeightReference.CLAMP_TO_TERRAIN} 覆盖在地球仪上，{@link HeightReference.CLAMP_TO_3D_TILE} 覆盖在 3D Tiles 上，而
- * {@link HeightReference.CLAMP_TO_GROUND} 则同时覆盖两者。仅 {@link BufferPolylineCollection} 和
- * {@link BufferPolygonCollection} 支持覆盖效果，且必须在集合被添加到
+ *   collection is draped onto the surfaces selected by the value: {@link HeightReference.CLAMP_TO_TERRAIN} drapes
+ *   onto the globe, {@link HeightReference.CLAMP_TO_3D_TILE} drapes onto 3D Tiles, and
+ *   {@link HeightReference.CLAMP_TO_GROUND} drapes onto both. Only {@link BufferPolylineCollection} and
  * {@link Scene#primitives} 之后才支持。覆盖后的集合不会作为独立几何图形绘制。
- * 自消费者上次读取集合以来发生变化的实体。
+ *   {@link Scene#primitives}. A draped collection is not also drawn as geometry of its own.
  */
 
 /**
@@ -570,7 +570,7 @@ class BufferPrimitiveCollection {
    * <p>当不再需要时，源集合的GPU资源将被释放。</p>
    * const grown = BufferPrimitiveCollection.fromCollection(collection, {
    * primitiveCountMax: collection.primitiveCountMax * 2,
-   * vertexCountMax: collection.vertexCountMax * 2,
+   * calling {@link BufferPrimitiveCollection#destroy} on the source once it is no
    * collection.destroy(); // 释放源集合的GPU资源
    *
    * @example
@@ -602,7 +602,7 @@ class BufferPrimitiveCollection {
 
   /**
    * 基础构造函数参数会传递集合级别的状态到由 {@link BufferPrimitiveCollection.fromCollection} 创建的
-   * 空副本中。
+   * empty copy created by {@link BufferPrimitiveCollection.fromCollection}.
    * 子类应在其构造函数参数中传递结果，并添加任何特定类型的选项。提供的选项会覆盖继承的
    * adding any type-specific options. Provided options override inherited
    * 状态；省略的选项则从此集合继承。

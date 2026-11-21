@@ -17,7 +17,7 @@ import Resource from "./Resource.js";
  * 这些地球定向参数（EOP）主要用于从
  * 国际天球参考框架（ICRF）到国际地面参考框架（ITRF）的转换中。
  * 此对象通常不直接实例化，应使用 {@link EarthOrientationParameters.fromUrl}。
- * 具有以下属性的对象：
+ * This object is normally not instantiated directly, use {@link EarthOrientationParameters.fromUrl}.
  *
  * @alias EarthOrientationParameters
  * @constructor
@@ -28,7 +28,7 @@ import Resource from "./Resource.js";
  *                 to be 0.0.
  * @param {boolean} [options.addNewLeapSeconds=true] 如果 EOP 数据中指定了闰秒，但 {@link JulianDate.leapSeconds} 中未指定，
  * 则这些闰秒应被添加到 {@link JulianDate.leapSeconds} 中。如果
- * 在 EOP 数据的上下文中需要正确处理新的闰秒，但其他情况被忽略，则为假。
+ *                  should be added to {@link JulianDate.leapSeconds}.  False if
  * 获取 EOP 数据的 URL。如果未指定此
  * 参数或 options.data，则假设所有 EOP 值均为 0.0。如果指定了 options.data，则忽略此参数。
  *
@@ -84,7 +84,7 @@ function EarthOrientationParameters(options) {
  * @param {object} [options] Object with the following properties:
  * @param {boolean} [options.addNewLeapSeconds=true] 如果 EOP 数据中指定了闰秒，但 {@link JulianDate.leapSeconds} 中未指定，
  * 则这些闰秒应被添加到 {@link JulianDate.leapSeconds} 中。如果
- * 在 EOP 数据的上下文中需要正确处理新的闰秒，但其他情况被忽略，则为假。
+ *                  should be added to {@link JulianDate.leapSeconds}.  False if
  * // 一个示例 EOP 数据文件，EOP.json：
  * "columnNames" : ["dateIso8601","modifiedJulianDateUtc","xPoleWanderRadians","yPoleWanderRadians","ut1MinusUtcSeconds","lengthOfDayCorrectionSeconds","xCelestialPoleOffsetRadians","yCelestialPoleOffsetRadians","taiMinusUtcSeconds"],
  *
@@ -130,7 +130,7 @@ EarthOrientationParameters.fromUrl = async function (url, options) {
 };
 
 /**
- * 如果 EOP 数据尚未下载，此方法返回 undefined。
+ * A default {@link EarthOrientationParameters} instance that returns zero for all EOP values.
  */
 EarthOrientationParameters.NONE = Object.freeze({
   compute: function (date, result) {

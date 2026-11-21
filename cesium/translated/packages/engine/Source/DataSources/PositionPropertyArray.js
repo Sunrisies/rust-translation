@@ -9,7 +9,7 @@ import {
 import Property from "./Property.js";
 
 /**
- * 一个控件，其值为一个数组，数组元素为计算得到的数值。
+ * A {@link Property} whose value is an array whose items are the computed value
  * 来自其他 PositionProperty 实例的值。
  *
  * @alias PositionPropertyArray

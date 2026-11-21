@@ -16,15 +16,15 @@ const defaultLineOffset = new Cartesian2(0, 0);
 const defaultLineThickness = new Cartesian2(1, 1);
 
 /**
- * 一个映射至网格 {@link Material} 统一变量的 <code>...</code>、{@link ...}、反引号 `...` 内的内容。
+ * A {@link MaterialProperty} that maps to grid {@link Material} uniforms.
  * @alias GridMaterialProperty
  *
  * @param {object} [options] 具有以下属性的对象：
  * @param {Property|Color} [options.color=Color.WHITE] 指定网格 {@link Color} 的属性。
  * @param {Property|number} [options.cellAlpha=0.1] 指定单元格 alpha 值的数值属性。
- * @param {Property|Cartesian2} [options.lineCount=new Cartesian2(8, 8)] 指定各轴上的网格线数量的 <code>Cartesian2</code> 属性。
- * @param {Property|Cartesian2} [options.lineThickness=new Cartesian2(1.0, 1.0)] 指定各轴上的网格线厚度的 <code>Cartesian2</code> 属性。
- * @param {Property|Cartesian2} [options.lineOffset=new Cartesian2(0.0, 0.0)] 指定各轴上的网格线起始偏移量的 <code>Cartesian2</code> 属性。
+ * @param {Property|Cartesian2} [options.lineCount=new Cartesian2(8, 8)] A {@link Cartesian2} Property specifying the number of grid lines along each axis.
+ * @param {Property|Cartesian2} [options.lineThickness=new Cartesian2(1.0, 1.0)] A {@link Cartesian2} Property specifying the thickness of grid lines along each axis.
+ * @param {Property|Cartesian2} [options.lineOffset=new Cartesian2(0.0, 0.0)] A {@link Cartesian2} Property specifying starting offset of grid lines along each axis.
  *
  * @constructor
  */
@@ -103,7 +103,7 @@ Object.defineProperties(GridMaterialProperty.prototype, {
   cellAlpha: createPropertyDescriptor("cellAlpha"),
 
   /**
-   * 获取或设置指定各轴上的网格线数量的 <code>Cartesian2</code> 属性。
+   * Gets or sets the {@link Cartesian2} Property specifying the number of grid lines along each axis.
    * @memberof GridMaterialProperty.prototype
    * @type {Property|undefined}
    * @default new <code>Cartesian2</code>(8.0, 8.0)
@@ -111,7 +111,7 @@ Object.defineProperties(GridMaterialProperty.prototype, {
   lineCount: createPropertyDescriptor("lineCount"),
 
   /**
-   * 获取或设置各轴上的网格线厚度的 <code>Cartesian2</code> 属性。
+   * Gets or sets the {@link Cartesian2} Property specifying the thickness of grid lines along each axis.
    * @memberof GridMaterialProperty.prototype
    * @type {Property|undefined}
    * @default new <code>Cartesian2</code>(1.0, 1.0)
@@ -119,7 +119,7 @@ Object.defineProperties(GridMaterialProperty.prototype, {
   lineThickness: createPropertyDescriptor("lineThickness"),
 
   /**
-   * 获取或设置各轴上的网格线起始偏移量的 <code>Cartesian2</code> 属性。
+   * Gets or sets the {@link Cartesian2} Property specifying the starting offset of grid lines along each axis.
    * @memberof GridMaterialProperty.prototype
    * @type {Property|undefined}
    * @default new <code>Cartesian2</code>(0.0, 0.0)

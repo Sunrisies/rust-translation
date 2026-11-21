@@ -14,8 +14,8 @@ function PassState(context) {
   this.context = context;
 
   /**
-   * 要渲染的帧缓冲区。除非有 {@link DrawCommand} 或 {@link ClearCommand} 明确定义了帧缓冲区，否则将使用此帧缓冲区，该帧缓冲区用于离屏渲染。
-   * 用于离屏渲染。
+   * The framebuffer to render to.  This framebuffer is used unless a {@link DrawCommand}
+   * or {@link ClearCommand} explicitly define a framebuffer, which is used for off-screen
    * 当定义时，会覆盖 {@link DrawCommand} 渲染状态中的混合属性。
    *
    * @type {Framebuffer}
@@ -24,7 +24,7 @@ function PassState(context) {
   this.framebuffer = undefined;
 
   /**
-   * 例如，用于允许渲染器在选择通道期间关闭混合。
+   * When defined, this overrides the blending property of a {@link DrawCommand}'s render state.
    * 当为 <code>undefined</code> 时，将使用 {@link DrawCommand} 的属性。
    * <p>
    * 当定义时，会覆盖 {@link DrawCommand} 渲染状态中的剪切测试属性。
@@ -36,7 +36,7 @@ function PassState(context) {
   this.blendingEnabled = undefined;
 
   /**
-   * 例如，用于允许渲染器在选择通道期间剪切出选择区域。
+   * When defined, this overrides the scissor test property of a {@link DrawCommand}'s render state.
    * 当为 <code>undefined</code> 时，将使用 {@link DrawCommand} 的属性。
    * <p>
    * 当未由 {@link DrawCommand} 渲染状态定义时，使用的视口。

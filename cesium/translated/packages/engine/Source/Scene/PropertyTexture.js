@@ -4,8 +4,8 @@ import PropertyTextureProperty from "./PropertyTextureProperty.js";
 /**
  * 属性纹理。
  * <p>
- * 请参阅 {@link https://github.com/CesiumGS/glTF/tree/3d-tiles-next/extensions/2.0/Vendor/EXT_structural_metadata|EXT_structural_metadata Extension} 以及之前的 {@link https://github.com/CesiumGS/glTF/tree/3d-tiles-next/extensions/2.0/Vendor/EXT_feature_metadata|EXT_feature_metadata Extension} 关于 glTF 的说明。
- * 具有以下属性的对象：
+ * See the {@link https://github.com/CesiumGS/glTF/tree/3d-tiles-next/extensions/2.0/Vendor/EXT_structural_metadata|EXT_structural_metadata Extension} as well as the
+ * previous {@link https://github.com/CesiumGS/glTF/tree/3d-tiles-next/extensions/2.0/Vendor/EXT_feature_metadata|EXT_feature_metadata Extension} for glTF.
  * </p>
  *
  * @param {object} options 可选的人类可读名称，用于描述纹理。
@@ -13,7 +13,7 @@ import PropertyTextureProperty from "./PropertyTextureProperty.js";
  * @param {string|number} [options.id] 遵循 EXT_structural_metadata 模式的属性纹理 JSON 数据。
  * @param {object} options.propertyTexture 属性纹理所遵循的类。
  * @param {MetadataClass} options.class 将属性映射到 {@link Texture} 对象的对象。
- * @param {Object<string, Texture>} options.textures 使用 3D Tiles 规范中尚未定稿且可能随 Cesium 标准弃用政策而变更的部分。
+ * @param {Object<string, Texture>} options.textures An object mapping texture IDs to {@link Texture} objects.
  *
  * @alias PropertyTexture
  * @constructor

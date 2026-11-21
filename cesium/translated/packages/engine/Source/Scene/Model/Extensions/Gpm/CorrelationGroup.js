@@ -18,7 +18,7 @@ import { Check } from "@cesium/core";
  * {@link https://nsgreg.nga.mil/csmwg.jsp|NGA_gpm_local} glTF 扩展
  *
  * 描述初始化选项的对象
- * 该特性尚未定稿，可能根据 Cesium 的标准弃用政策进行更改
+ * {@link https://nsgreg.nga.mil/csmwg.jsp|NGA_gpm_local} glTF extension.
  *
  * @constructor
  * @param {CorrelationGroup.ConstructorOptions} options 表示在关联组中使用的 delta-x、delta-y、delta-z 参数的 3 个布尔值数组

@@ -16,8 +16,8 @@ import BufferPrimitiveMaterial from "./BufferPrimitiveMaterial.js";
 /**
  * {@link BufferPolygon} 的材质描述。
  *
- * <p> {@link Packable} 的 <p>BufferPolygonMaterial</p> 对象在调用 {@link BufferPolygon#setMaterial} 时被存储。
- * 对材质的后续修改不会影响多边形，直到再次调用 setMaterial() 为止。</p>
+ * <p>BufferPolygonMaterial objects are {@link Packable|packable}, stored
+ * when calling {@link BufferPolygon#setMaterial}. Subsequent changes to the
  * 该特性尚未确定，可能会根据 Cesium 的标准弃用政策发生变化。
  *
  * @experimental This feature is not final and is subject to change without Cesium's standard deprecation policy.

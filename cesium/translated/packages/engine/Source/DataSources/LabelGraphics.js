@@ -162,7 +162,7 @@ Object.defineProperties(LabelGraphics.prototype, {
   showBackground: createPropertyDescriptor("showBackground"),
 
   /**
-   * 获取或设置指定背景颜色的属性。
+   * Gets or sets the Property specifying the background {@link Color}.
    * @memberof LabelGraphics.prototype
    * @type {Property|undefined}
    * @default new 颜色：(0.165, 0.165, 0.165, 0.8)
@@ -269,8 +269,8 @@ Object.defineProperties(LabelGraphics.prototype, {
   /**
    * 获取或设置指定根据相机距离计算标签透明度的 {@link NearFarScalar} 属性。
    * 标签的透明度将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的下限和上限范围内时。
-   * 标签的透明度在这两个范围之外时，会被限制为最近的边界值。
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 获取或设置指定根据相机距离计算标签像素偏移量的 {@link NearFarScalar} 属性。
    * @memberof LabelGraphics.prototype
    * @type {Property|undefined}
@@ -280,8 +280,8 @@ Object.defineProperties(LabelGraphics.prototype, {
   /**
    * 获取或设置指定根据相机距离计算标签像素偏移量的 {@link NearFarScalar} 属性。
    * 标签的像素偏移量将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的下限和上限范围内时。
-   * 标签的像素偏移量在这两个范围之外时，会被限制为最近的边界值。
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 获取或设置基于标签与相机距离的 {@link NearFarScalar} 属性，用于调整标签的缩放比例。
    * @memberof LabelGraphics.prototype
    * @type {Property|undefined}
@@ -293,8 +293,8 @@ Object.defineProperties(LabelGraphics.prototype, {
   /**
    * 获取或设置基于标签与相机距离的 {@link NearFarScalar} 属性，用于调整标签的缩放比例。
    * 标签的缩放比例将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的下限和上限范围内时。
-   * 标签的缩放比例在这两个范围之外时，会被限制为最近的边界值。如果未定义，
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * {@link NearFarScalar#farValue} 将被禁用。
    * 获取或设置指定该标签在距相机多远的距离下显示的 {@link DistanceDisplayCondition} 属性。
    * @memberof LabelGraphics.prototype
@@ -303,7 +303,7 @@ Object.defineProperties(LabelGraphics.prototype, {
   scaleByDistance: createPropertyDescriptor("scaleByDistance"),
 
   /**
-   * 获取或设置用于禁用深度测试的距相机距离，例如，以防止与地形发生裁剪。
+   * Gets or sets the {@link DistanceDisplayCondition} Property specifying at what distance from the camera that this label will be displayed.
    * @memberof LabelGraphics.prototype
    * @type {Property|undefined}
    */

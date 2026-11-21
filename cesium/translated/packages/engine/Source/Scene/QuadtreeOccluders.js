@@ -21,7 +21,7 @@ class QuadtreeOccluders {
   }
 
   /**
-   * 获取可用于判断某点是否被
+   * Gets the {@link EllipsoidalOccluder} that can be used to determine if a point is
    * 椭球体遮挡的 {@link EllipsoidalOccluder}。
    * @type {EllipsoidalOccluder}
    */

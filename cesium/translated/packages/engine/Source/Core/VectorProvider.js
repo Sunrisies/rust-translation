@@ -181,7 +181,7 @@ class VectorProvider {
 
   /**
    * 立即删除集合，而不是等待下一次 {@link VectorProvider#update} 时自动删除。
-   * 当集合被销毁时调用此函数，以确保其缓冲区释放后不会被覆盖。
+   * the next {@link VectorProvider#update}. Call when a collection is destroyed,
    * 当前集合是否正在被覆盖，即它是否已被标记但尚未被删除。
    *
    * @param {BufferPrimitiveCollection<BufferPrimitive>} collection
@@ -342,7 +342,7 @@ class VectorProvider {
    * @param {Context} context
    * @param {HeightReference} targetHeightReference 数据被烘焙的表面的类型，要么是 {@link HeightReference.CLAMP_TO_TERRAIN}，要么是
    * {@link HeightReference.CLAMP_TO_3D_TILE}。只有覆盖在该表面上的集合被包含。
-   * 为任意地图矩形烘焙向量查找数据，例如
+   *   {@link HeightReference.CLAMP_TO_3D_TILE}. Only collections draped onto that surface are
    * 3D Tiles 内容的边界区域。
    * @returns {VectorTileData}
    */
@@ -368,7 +368,7 @@ class VectorProvider {
    * @param {Context} context
    * @param {HeightReference} targetHeightReference 数据被烘焙的表面的类型，要么是 {@link HeightReference.CLAMP_TO_TERRAIN}，要么是
    * {@link HeightReference.CLAMP_TO_3D_TILE}。只有覆盖在该表面上的集合被包含。
-   * 一个瓦片是否与自上次变化后改变的区域重叠
+   *   {@link HeightReference.CLAMP_TO_3D_TILE}. Only collections draped onto that surface are
    * {@link VectorProvider#makeClean}。
    * @returns {VectorTileData}
    */
@@ -459,7 +459,7 @@ class VectorProvider {
 
   /**
    * 当从
-   * {@link VectorProvider#makeClean} 重新烘焙的向量数据发生变化时，为任意矩形重新烘焙向量数据。与 {@link VectorProvider#isTileDirty} 不同，此操作不查询 {@link VectorProvider#_dirtyRegions} — 它们会在每帧通过 {@link VectorProvider#makeClean} 清除，而地形外的消费者无法依赖观察到这些区域 — 因此陈旧性是通过比较数据烘焙时记录的集合版本来检测的。
+   * {@link VectorProvider#makeClean}.
    *
    * @param {number} x
    * @param {number} y
@@ -479,9 +479,9 @@ class VectorProvider {
 
   /**
    * 要么是
-   * {@link HeightReference.CLAMP_TO_TERRAIN}，要么是 {@link HeightReference.CLAMP_TO_3D_TILE}。
-   * 烘焙后的数据是否不再反映其矩形内重叠的集合。当从其中烘焙的集合发生变化时，或者
-   * 集合离开矩形或被修剪，或者集合自烘焙后进入矩形时，即为陈旧。
+   * baked from have changed. Unlike {@link VectorProvider#isTileDirty}, this
+   * does not consult {@link VectorProvider#_dirtyRegions} — they are cleared
+   * each frame by {@link VectorProvider#makeClean}, which consumers outside the
    * 清除被记录为已变化的区域。在重新烘焙通过后调用一次。
    * comparing the collection versions recorded when the data was baked.
    *

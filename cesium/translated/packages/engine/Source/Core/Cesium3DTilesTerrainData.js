@@ -478,7 +478,7 @@ Cesium3DTilesTerrainData.prototype._upsampleSync = function (
  * 获取一个值指示此地形数据是否通过放大低分辨率数据创建。
  * 地形数据。如果此值为 false，则数据来自其他来源，例如从远程服务器下载。此方法对于通过 {@link Cesium3DTilesTerrainData#upsample} 调用得到的实例应返回 true。
  * 如果此实例是通过放大创建的，则值为 true；否则为 false。
- * 具有以下属性的对象：
+ * returned from a call to {@link Cesium3DTilesTerrainData#upsample}.
  *
  * @returns {boolean} True 地形网格。
  */

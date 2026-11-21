@@ -426,7 +426,7 @@ function pickImageryHelper(scene, pickedLocation, pickFeatures, callback) {
 
 /**
  * 确定被拾取射线相交的影像图层。要从屏幕上的位置计算拾取射线，请使用 {@link Camera.getPickRay}。
- * 用于测试相交的射线。
+ * location on the screen, use {@link Camera.getPickRay}.
  *
  * @param {Ray} ray 用于检测相交的射线。
  * @param {Scene} scene 场景。
@@ -606,14 +606,14 @@ function pickModelFeatures(model, pickedLocation, callback) {
 
 /**
  * 对于被拾取射线相交的每个影像图层瓦片，调用 {@link ImageryProvider#pickFeatures} 来查找的。要从屏幕上的位置计算拾取射线，请使用 {@link Camera.getPickRay}。
- * 用于测试相交的射线。
- * 场景。
+ * layer features are found by invoking {@link ImageryProvider#pickFeatures} for each imagery layer tile intersected
+ * by the pick ray.  To compute a pick ray from a location on the screen, use {@link Camera.getPickRay}.
  *
  * @param {Ray} ray 承诺，该承诺会返回一个被拾取射线相交的特征数组。
  * @param {Scene} scene 如果可以迅速确定没有特征相交（例如，
  * @return {Promise<ImageryLayerFeatureInfo[]>|undefined} A 因为没有活跃的影像提供程序支持 {@link ImageryProvider#pickFeatures}
  * 或者因为拾取射线没有与表面相交），此函数将
- * 返回 undefined。
+ *                                             because no active imagery providers support {@link ImageryProvider#pickFeatures}
  * or because the pick ray does not intersect the surface), this function will
  * return undefined.
  *

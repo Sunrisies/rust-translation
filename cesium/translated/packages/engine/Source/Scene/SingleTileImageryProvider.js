@@ -208,7 +208,7 @@ Object.defineProperties(SingleTileImageryProvider.prototype, {
   /**
    * 获取当该图像提供器激活时显示的署名。通常用于署名图像来源。
    * 获取指示该图像提供器提供的图像是否包含 Alpha 通道的值。如果此属性为 false，则存在的 Alpha 通道将被忽略。如果此属性为 true，则没有 Alpha 通道的任何图像将被视为其 Alpha 为 1.0。当此属性为 false 时，内存使用和纹理上传时间都会减少。
-   * 使用 SingleTileImageryProvider.fromUrl 时 SingleTileImageryProvider 构造函数的初始化选项
+   * are passed an instance of {@link TileProviderError}.
    * @memberof SingleTileImageryProvider.prototype
    * @type {Event}
    * @readonly

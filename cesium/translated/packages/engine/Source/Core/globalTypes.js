@@ -1,5 +1,5 @@
 /**
- * @typedef {{destroy: Function}} 可销毁
+ * @typedef {{destroy: Function}} Destroyable
  */
 
 /**

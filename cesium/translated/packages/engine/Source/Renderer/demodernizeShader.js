@@ -1,6 +1,6 @@
 /**
- * 将 [GLSL 3.00]{@link https://registry.khronos.org/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf} 转换为 [GLSL 1.00]{@link https://registry.khronos.org/OpenGL/specs/es/2.0/GLSL_ES_Specification_1.00.pdf} 着色器。
- * 将 [GLSL 3.00] 着色器转换为 [GLSL 1.00] 着色器。
+ * Transpiles a [GLSL 3.00]{@link https://registry.khronos.org/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf}
+ * shader to a [GLSL 1.00]{@link https://registry.khronos.org/OpenGL/specs/es/2.0/GLSL_ES_Specification_1.00.pdf} shader.
  *
  * 此功能并非旨在提供从 [GLSL 3.00] 到 [GLSL 1.00] 的完整转换，仅支持 CesiumJS 着色器中使用的功能。
  * CesiumJS 着色器内使用的功能均被支持。

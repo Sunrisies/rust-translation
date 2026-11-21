@@ -568,8 +568,8 @@ function processTopology(dataSource, geoJson, geometry, crsFunction, options) {
  */
 
 /**
- * 一个处理
- * {@link http://www.geojson.org/|GeoJSON} 和 {@link https://github.com/mbostock/topojson|TopoJSON} 数据的 {@link DataSource}。
+ * A {@link DataSource} which processes both
+ * {@link http://www.geojson.org/|GeoJSON} and {@link https://github.com/mbostock/topojson|TopoJSON} data.
  * 如果存在，{@link https://github.com/mapbox/simplestyle-spec|simplestyle-spec} 属性也会被使用。
  * 这些属性也会被使用。
  *

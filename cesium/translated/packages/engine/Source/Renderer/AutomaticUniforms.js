@@ -73,9 +73,9 @@ const AutomaticUniforms = {
    * 不要将 {@link czm_viewportTransformation} 与 <code>czm_viewportOrthographic</code> 混淆。
    * <br /><br />
    * 前者将归一化设备坐标转换为窗口坐标；后者将窗口坐标转换为裁剪坐标，常用于赋值给 <code>gl_Position</code>。
-   * // GLSL 声明
+   * as done by {@link BillboardCollection}.
    * <br /><br />
-   * uniform mat4 czm_viewportOrthographic;
+   * Do not confuse {@link czm_viewportTransformation} with <code>czm_viewportOrthographic</code>.
    * // 示例
    * gl_Position = czm_viewportOrthographic * vec4(windowPosition, 0.0, 1.0);
    *
@@ -1010,7 +1010,7 @@ const AutomaticUniforms = {
    * 一个自动生成的 GLSL 统一变量，包含大地经度（<code>x</code>）、
    * 纬度（<code>y</code>）以弧度为单位和高度（<code>z</code>）以米为单位，分别针对眼睛（相机）。<code>z</code> 分量与 {@link czm_eyeHeight} 对应。
    * 该统一变量仅在 {@link SceneMode} 为 <code>SCENE3D</code> 时有效。
-   * // GLSL 声明
+   * This uniform is only valid when the {@link SceneMode} is <code>SCENE3D</code>.
    *
    * @example
    * uniform vec3 czm_eyeCartographic;
@@ -1030,7 +1030,7 @@ const AutomaticUniforms = {
   /**
    * 以米为单位，针对眼睛（相机）在 2D 世界平面上的高度。该统一变量仅在
    * {@link SceneMode} 为 <code>SCENE2D</code> 时有效。
-   * 一个自动生成的 GLSL 统一变量，包含椭球表面法线
+   * when the {@link SceneMode} is <code>SCENE2D</code>.
    *
    * @see UniformState#eyeHeight2D
    */
@@ -1045,7 +1045,7 @@ const AutomaticUniforms = {
   /**
    * 在眼睛（相机）下方的位置，以眼睛坐标表示。
    * 该统一变量仅在 {@link SceneMode} 为 <code>SCENE3D</code> 时有效。
-   * 一个自动生成的 GLSL 统一变量，包含相机位置处的椭球曲率半径。
+   * This uniform is only valid when the {@link SceneMode} is <code>SCENE3D</code>.
    */
   czm_eyeEllipsoidNormalEC: new AutomaticUniform({
     size: 1,
@@ -1059,7 +1059,7 @@ const AutomaticUniforms = {
    * .x 分量是主垂直曲率半径（东西方向）
    * .y 是子午线曲率半径（南北方向）
    * 该统一变量仅在 {@link SceneMode} 为 <code>SCENE3D</code> 时有效。
-   * 一个自动生成的 GLSL 统一变量，包含从眼睛坐标到某个位置的 3x3 旋转矩阵。
+   * This uniform is only valid when the {@link SceneMode} is <code>SCENE3D</code>.
    */
   czm_eyeEllipsoidCurvature: new AutomaticUniform({
     size: 1,
@@ -1094,7 +1094,7 @@ const AutomaticUniforms = {
    * 一个自动生成的 GLSL 统一变量，包含从模型坐标到以
    * 相机最近的椭球面上的位置为中心的东-北-上坐标系统的变换。
    * 此统一变量仅在 {@link SceneMode} 为 <code>SCENE3D</code> 时有效。
-   * 一个自动生成的 GLSL 统一变量，包含
+   * This uniform is only valid when the {@link SceneMode} is <code>SCENE3D</code>.
    */
   czm_modelToEnu: new AutomaticUniform({
     size: 1,
@@ -1107,7 +1107,7 @@ const AutomaticUniforms = {
   /**
    * {@link AutomaticUniforms.czm_modelToEnu}的逆变换。
    * 此统一变量仅在 {@link SceneMode} 为 <code>SCENE3D</code> 时有效。
-   * 一个自动生成的 GLSL 统一变量，包含近距 (<code>x</code>)和远距(<code>y</code>)
+   * This uniform is only valid when the {@link SceneMode} is <code>SCENE3D</code>.
    */
   czm_enuToModel: new AutomaticUniform({
     size: 1,
@@ -1495,7 +1495,7 @@ const AutomaticUniforms = {
   }),
 
   /**
-   * float 形式表达。
+   * An automatic GLSL uniform representing the current {@link SceneMode}, expressed
    * // GLSL 声明
    *
    * @example

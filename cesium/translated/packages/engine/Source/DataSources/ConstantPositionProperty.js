@@ -9,8 +9,8 @@ import {
 import PositionProperty from "./PositionProperty.js";
 
 /**
- * 一个<code>PositionProperty</code>，其值相对于
- * {@link 参考框架} 保持不变。
+ * A {@link PositionProperty} whose value does not change in respect to the
+ * {@link ReferenceFrame} in which is it defined.
  *
  * @alias ConstantPositionProperty
  * @constructor

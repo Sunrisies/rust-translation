@@ -23,7 +23,7 @@ import ClippingPlane from "./ClippingPlane.js";
 
 /**
  * 指定一组裁剪平面。这些裁剪平面会选择性地禁用指定列表中的 {@link ClippingPlane} 对象在单个 gltf 模型、3D Tileset 或地球仪上的渲染。
- * 通常，裁剪平面的坐标相对于其连接的物体而言，因此距离设为 0 的平面会裁剪通过物体的中心。
+ * outside of the specified list of {@link ClippingPlane} objects for a single gltf model, 3D Tileset, or the globe.
  * <p>
  * 对于 3D Tiles，使用根瓦片的变换来定位裁剪平面。如果未定义变换，则使用根瓦片的 {@link Cesium3DTile#boundingSphere}。
  * 具有以下属性的物体：
@@ -36,7 +36,7 @@ import ClippingPlane from "./ClippingPlane.js";
  * @constructor
  *
  * @param {object} [options] 确定裁剪平面是否处于活动状态。
- * @param {ClippingPlane[]} [options.planes=[]指定相对于裁剪平面原始坐标系的额外变换的 4x4 变换矩阵。
+ * @param {ClippingPlane[]} [options.planes=[]] An array of {@link ClippingPlane} objects used to selectively disable rendering on the outside of each plane.
  * @param {boolean} [options.enabled=true] 如果为真，则任何位于集合中所有平面外部的区域都会被裁剪；否则，只有位于所有平面外部的区域才会被裁剪。
  * @param {Matrix4} [options.modelMatrix=Matrix4.IDENTITY] 用于突出显示被裁剪物体边缘的颜色。
  * @param {boolean} [options.unionClippingRegions=false] 用于突出显示被裁剪物体边缘的亮度的像素宽度。
@@ -297,7 +297,7 @@ ClippingPlaneCollection.prototype.add = function (plane) {
  * 返回集合中指定索引的平面。索引从零开始，并随着平面的添加而增加。移除一个平面会将所有平面向左移动，从而改变它们的索引。此函数通常与
  * {@link ClippingPlaneCollection#length} 一起使用，以遍历集合中的所有平面。
  * 在集合中。
- * 平面的零基索引。
+ * {@link ClippingPlaneCollection#length} to iterate over all the planes
  * 指定索引下的裁剪平面。
  *
  * @param {number} index 检查该集合是否包含与给定裁剪平面相等的裁剪平面。
@@ -611,7 +611,7 @@ const scratchPlane = new Plane(Cartesian3.UNIT_X, 0.0);
  *
  * @param {object} tileBoundingVolume 用于确定与平面相交的体积。
  * @param {Matrix4} [transform] 一个可选的额外矩阵，用于将平面转换为世界坐标。
- * @returns {Intersect} {@link 如果整个体积位于平面的内侧，则使用 Intersect.INSIDE。
+ * @returns {Intersect} {@link Intersect.INSIDE} if the entire volume is on the side of the planes
  * 法线指向该方向且应完全渲染，参见 {@link Intersect.OUTSIDE}。
  * 如果整个体积位于平面外侧且被裁剪，则使用此参数。
  * {@link Intersect.INTERSECTING}，表示体积与平面相交。
@@ -747,7 +747,7 @@ ClippingPlaneCollection.prototype.isDestroyed = function () {
  * 一旦对象被销毁，不应再使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 表示对象被销毁，即调用了 destroy() 方法。
  *
  * @exception {DeveloperError} This object was destroyed, i.e., destroy() was called.

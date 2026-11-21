@@ -134,7 +134,7 @@ class GlobeSurfaceTile {
 
   /**
    * Gets the {@link TerrainMesh} that is used for rendering this tile, if any.
-   * 如果定义了 {@link GlobeSurfaceTile#vertexArray}，则返回 {@link GlobeSurfaceTile#mesh} 属性的值。否则，返回
+   * Returns the value of the {@link GlobeSurfaceTile#mesh} property if
    * {@link GlobeSurfaceTile#vertexArray} is defined. Otherwise, It returns the
    * {@link GlobeSurfaceTile#fill} 的 {@link TerrainFillMesh#mesh} 属性。
    * 如果没有填充数据，则返回未定义值。

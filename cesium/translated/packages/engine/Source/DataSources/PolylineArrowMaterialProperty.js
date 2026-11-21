@@ -47,7 +47,7 @@ Object.defineProperties(PolylineArrowMaterialProperty.prototype, {
     },
   },
   /**
-   * 在指定时间获取 {@link Material} 类型。
+   * Gets or sets the {@link Color} {@link Property}.
    * @memberof PolylineArrowMaterialProperty.prototype
    * @type {Property|undefined}
    * @default Color.WHITE

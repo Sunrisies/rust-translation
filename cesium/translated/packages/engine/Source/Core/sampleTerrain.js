@@ -12,7 +12,7 @@ import { Check, defined } from "@cesium/core";
  * （如 {@link Ellipsoid.WGS84}），而不是海平面以上的海拔。换句话说，如果在海洋中采样，它不一定为 0.0。此函数需要
  * words, it will not necessarily be 0.0 if sampled in the ocean. This function needs the
  * 地形细节层级作为输入，如果希望获得尽可能精确的地形海拔值（即最大细节层级），请使用 {@link sampleTerrainMostDetailed}。
- * 用于查询高度的地形提供器。
+ * as possible (i.e. with maximum level of detail) use {@link sampleTerrainMostDetailed}.
  *
  * @function sampleTerrain
  *

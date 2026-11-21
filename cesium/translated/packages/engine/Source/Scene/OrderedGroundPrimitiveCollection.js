@@ -179,7 +179,7 @@ OrderedGroundPrimitiveCollection.prototype.update = function (frameState) {
  * 如果此对象被销毁，返回 true；否则返回 false。
  * <br /><br />
  * 如果此对象被销毁，不应使用它；调用除 <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。
- * 如果此对象被销毁；否则返回 false。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  *
  * @returns {boolean} True 销毁此集合中包含的每个控件的 WebGL 资源。明确销毁此集合允许确定性地释放 WebGL 资源，而不是依赖垃圾收集器来销毁该集合。
  *

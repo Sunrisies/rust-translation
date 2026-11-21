@@ -688,7 +688,7 @@ Object.defineProperties(Cesium3DTilesTerrainProvider.prototype, {
   /**
    * 在地形提供程序遇到异步错误时触发事件。通过订阅该事件，您将收到错误通知并可能从中恢复。事件监听器
    * 接收 {@link TileProviderError} 的实例。
-   * 获取此地形提供程序处于活动状态时显示的信用值。通常用于显示地形的来源。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof Cesium3DTilesTerrainProvider.prototype
    * @type {Event}
    */

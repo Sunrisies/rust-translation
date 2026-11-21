@@ -11,7 +11,7 @@ const defaultAccessToken =
  * 访问 ArcGIS 影像瓦片图层需要一个 ArcGIS 访问令牌。
  * 仅用于测试目的的默认令牌已提供。
  * 要获取访问令牌，请访问 {@link https://developers.arcgis.com} 并创建免费账户。
- * 更多信息可参阅 {@link https://developers.arcgis.com/documentation/mapping-apis-and-services/security/ | ArcGIS 开发者指南}。
+ * More info can be found in the {@link https://developers.arcgis.com/documentation/mapping-apis-and-services/security/ | ArcGIS developer guide}.
  *
  * @see ArcGisMapServerImageryProvider
  * @namespace ArcGisMapService

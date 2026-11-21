@@ -7,7 +7,7 @@ import MetadataTableProperty from "./MetadataTableProperty.js";
  * 用于表示批量表的二进制属性，以及 3D Tiles Next 扩展中的二进制元数据。
  * 用于 3D Tiles Next 细节，请参考 3D Tiles 的 {@link https://github.com/CesiumGS/3d-tiles/tree/main/extensions/3DTILES_metadata|3DTILES_metadata Extension}，以及 glTF 的 {@link https://github.com/CesiumGS/glTF/tree/3d-tiles-next/extensions/2.0/Vendor/EXT_feature_metadata|EXT_feature_metadata Extension}。
  * <p>
- * 对象包含以下属性：
+ * For 3D Tiles Next details, see the {@link https://github.com/CesiumGS/3d-tiles/tree/main/extensions/3DTILES_metadata|3DTILES_metadata Extension} for 3D Tiles, as well as the {@link https://github.com/CesiumGS/glTF/tree/3d-tiles-next/extensions/2.0/Vendor/EXT_feature_metadata|EXT_feature_metadata Extension} for glTF.
  * </p>
  *
  * @param {object} options 表格中实体的数量。

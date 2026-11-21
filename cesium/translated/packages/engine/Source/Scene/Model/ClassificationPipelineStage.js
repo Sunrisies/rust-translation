@@ -5,7 +5,7 @@ import ModelUtility from "./ModelUtility.js";
 
 /**
  * 分类处理阶段负责将特征批量处理。
- * 并由 {@linkClassificationModelDrawCommand} 进行渲染。
+ * together to be rendered by the {@link ClassificationModelDrawCommand}.
  *
  * @namespace ClassificationPipelineStage
  *
@@ -24,7 +24,7 @@ const ClassificationPipelineStage = {
  * </ul>
  *
  * <p>
- * 关于批量偏移量和长度的用法，请参阅 {@linkClassificationModelDrawCommand}。
+ * See {@link ClassificationModelDrawCommand} for the use of the batch offsets and lengths.
  * </p>
  *
  * @param {PrimitiveRenderResources} renderResources 该基本体的渲染资源。

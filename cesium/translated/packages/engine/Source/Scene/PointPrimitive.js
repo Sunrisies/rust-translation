@@ -198,8 +198,8 @@ Object.defineProperties(PointPrimitive.prototype, {
   /**
    * 根据点与相机的距离获取或设置近和远缩放属性。
    * 点的缩放会在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，当相机距离落在指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的上下范围内时。
-   * 超出这些范围时，点的缩放被限制在最近的边界。此缩放
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * 将 pixelSize 和 outlineWidth 相乘以影响点的总大小。如果未定义，
    * multiplies the pixelSize and outlineWidth to affect the total size of the point.  If undefined,
    * scaleByDistance 将被禁用。

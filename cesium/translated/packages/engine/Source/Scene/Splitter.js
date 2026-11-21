@@ -11,7 +11,7 @@ const Splitter = {
    * 仅在屏幕的某一侧渲染。另一侧的片段将被丢弃。屏幕侧通过名为
    * `czm_splitDirection` 的统一变量来指定，可通过调用
    * {@link Splitter#addUniforms} 添加该变量，分割位置则通过名为
-   * `czm_splitPosition` 的自动统一变量来指定。
+   * {@link Splitter#addUniforms}, and the split position is given by an
    * 将 `czm_splitDirection` 添加到给定的统一变量映射中。
    */
   modifyFragmentShader: function modifyFragmentShader(shader) {

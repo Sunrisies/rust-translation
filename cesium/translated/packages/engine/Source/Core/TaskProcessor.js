@@ -365,7 +365,7 @@ TaskProcessor.prototype.initWebAssemblyModule = async function (
  * 如果此对象被销毁，则不应使用它；调用任何非
  * <br /><br />
  * <code>isDestroyed</code> 的函数将导致 {@link DeveloperError} 异常。
- * 如果此对象被销毁；否则，返回 false。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  *
  * @returns {boolean} True 销毁此对象。这将立即终止 Worker。
  *

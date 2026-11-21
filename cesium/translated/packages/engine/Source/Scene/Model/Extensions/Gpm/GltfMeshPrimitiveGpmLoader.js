@@ -28,7 +28,7 @@ import MeshPrimitiveGpmLocal from "./MeshPrimitiveGpmLocal.js";
  * @param {object} options.gltf NGA_gpm_local 扩展对象。
  * @param {string} [options.extension] 包含 glTF 的 {@link Resource}。
  * @param {Resource} options.gltfResource 在 glTF JSON 中相对路径指向的 {@link Resource}。
- * @param {Resource} options.baseResource 支持的图像格式。
+ * @param {Resource} options.baseResource The {@link Resource} that paths in the glTF JSON are relative to.
  * @param {SupportedImageFormats} options.supportedImageFormats 帧状态。
  * @param {FrameState} options.frameState 资源的缓存键。
  * @param {string} [options.cacheKey] 决定 WebGL 资源创建是分散在多个帧进行，还是一次性完成，直到所有 WebGL 资源都被创建。

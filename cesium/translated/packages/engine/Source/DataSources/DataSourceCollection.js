@@ -319,7 +319,7 @@ DataSourceCollection.prototype.isDestroyed = function () {
  * 销毁该集合中所有数据源所持有的资源。明确销毁此
  * 实体可以确保 WebGL 资源的确定性释放，而不是依赖垃圾收集器。一旦此实体被销毁，则不应使用它；调用除
  * <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给该对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 实体被销毁，即调用了 destroy() 方法。
  *
  * @exception {DeveloperError} This 实体被销毁，即调用了 destroy() 方法。

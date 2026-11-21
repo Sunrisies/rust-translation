@@ -55,7 +55,7 @@ RequestScheduler.maximumRequests = 50;
 
 /**
  * RequestScheduler.requestsByServer["myserver.com:443"] = 18;
- * RequestScheduler.requestsByServer = {
+ * listed in {@link requestsByServer} do not observe this limit.
  * @type {number}
  * @default 18
  */

@@ -650,7 +650,7 @@ function TraversalDetails() {
    * {@link TraversalDetails#allAreRenderable} 为真时，该值不一定为零，原因较为复杂。
    * 当 {@link TraversalDetails#allAreRenderable} 和
    * {@link TraversalDetails#anyWereRenderedLastFrame} 都为假时，我们将
-   * 渲染该瓦片而不是其子树中的任何瓦片，并且该瓦片的 `allAreRenderable` 值仅反映 _该_
+   * {@link TraversalDetails#anyWereRenderedLastFrame} are both false, we
    * 瓦片是否可以被渲染。然而，`notYetRenderableCount` 值仍反映我们等待的总瓦片数量，包括
    * 那些未被渲染的瓦片。`notYetRenderableCount` 仅在子树从渲染队列中移除且
    * `notYetRenderableCount` 超过
@@ -658,7 +658,7 @@ function TraversalDetails() {
    * 访问瓦片以考虑是否进行渲染。当我们用瓦片调用此函数时：
    * * 该瓦片被确定可见（可能基于一个不太紧密的边界体积）
    * * 其父瓦片不符合 SSE 条件（除非 ancestorMeetsSse=true，详见下方注释）
-   * * 该瓦片可能可以被渲染，也可能不能
+   * {@link QuadtreePrimitive#loadingDescendantLimit}.
    */
   this.notYetRenderableCount = 0;
 }

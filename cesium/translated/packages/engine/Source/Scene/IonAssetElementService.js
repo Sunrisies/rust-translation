@@ -121,7 +121,7 @@ function treeNodeFromResponse(response) {
  */
 
 /**
- * 该页面上的元素。
+ * A page of results from {@link IonAssetElementService#listElements}.
  *
  * @typedef {object} IonAssetElementService.ElementPage
  * @property {IonAssetElementService.Element[]} items 所有页面中符合查询条件的元素总数，或者当无法获取总数时返回 <code>null</code>。
@@ -172,7 +172,7 @@ function treeNodeFromResponse(response) {
  * BIM/CAD 数据库模型支持的 ion REST API 的
  * <a href="https://cesium.com/learn/ion/ion-rest-api/">Asset Elements</a> 端点，查询 Cesium ion 资产中的单个元素。
  *
- * 元素 ID 通常是通过选择
+ * Element ids are typically obtained by picking a {@link Cesium3DTileFeature}
  * 并读取其 <code>element</code> 属性获得的。
  *
  * 此对象通常不直接实例化，应使用 {@link IonAssetElementService.fromAssetId}。
@@ -247,7 +247,7 @@ class IonAssetElementService extends ElementService {
   }
 
   /**
-   * 从元素的
+   * Computes a {@link BoundingSphere} enclosing an element from its
    * <code>location</code> 计算包围该元素的 {@link BoundingSphere}，适用于使用
    * {@link Camera#flyToBoundingSphere} 或 {@link Viewer#zoomTo} 调整相机视角。
    *
@@ -327,7 +327,7 @@ class IonAssetElementService extends ElementService {
    * @param {number} [options.top=100] 从之前调用中返回的用于获取下一页结果的令牌。
    * @param {string} [options.continuationToken] 一个实体过滤器。有关支持的结构，请参阅 <a href="https://cesium.com/learn/ion/rest-api/#operation/getAssetElementsV1">List elements</a> ion REST API 文档中的查询参数部分。
    * @param {object|string} [options.filter] 一个 promise，用于返回页面中的实体。如果请求失败，promise 会拒绝并抛出 {@link RequestErrorEvent}。
-   * @returns {Promise<IonAssetElementService.ElementPage>} A 必须是正整数。
+   * @returns {Promise<IonAssetElementService.ElementPage>} A promise that resolves to a page of elements. The promise rejects with a {@link RequestErrorEvent} if the request fails.
    * @exception {DeveloperError} <code>options.top</code> 必须是字符串。
    * @exception {DeveloperError} <code>options.continuationToken</code> const page = await elements.listElements({
    *
@@ -479,7 +479,7 @@ class IonAssetElementService extends ElementService {
    *
    * @param {object} [options] 由端点返回的不透明节点键。省略它以列出根节点。
    * @param {string} [options.nodeKey] 一个承诺，用于获取子节点。如果请求失败或提供了不存在的节点键，则承诺会拒绝并抛出 {@link RequestErrorEvent}。
-   * @returns {Promise<{nodes: IonAssetElementService.ElementTreeNode[]}>} 必须是一个字符串。
+   * @returns {Promise<{nodes: IonAssetElementService.ElementTreeNode[]}>} A promise that resolves to the child nodes. The promise rejects with a {@link RequestErrorEvent} if the request fails or a key for a node that does not exist is provided.
    * @exception {DeveloperError} <code>options.nodeKey</code> try {
    *
    * @example
@@ -521,7 +521,7 @@ class IonAssetElementService extends ElementService {
    * 一个承诺，用于获取根优先路径。如果请求失败或不存在路径，则承诺会拒绝并抛出 {@link RequestErrorEvent}。
    *
    * @param {string} elementId 必须是一个字符串。
-   * @returns {Promise<{path: IonAssetElementService.ElementTreePathEntry[]}>} try {
+   * @returns {Promise<{path: IonAssetElementService.ElementTreePathEntry[]}>} A promise that resolves to the root-first path. The promise rejects with a {@link RequestErrorEvent} if the request fails or no path exists.
    * @exception {DeveloperError} <code>elementId</code> const { path } = await elements.getElementTreeParents(elementId);
    *
    * @example

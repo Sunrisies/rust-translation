@@ -17,7 +17,7 @@ import BufferPrimitiveMaterial from "./BufferPrimitiveMaterial.js";
 /**
  * {@link BufferPoint} 的材质描述。
  *
- * <p>BufferPointMaterial 对象是 {@link Packable|可打包}，在调用
+ * <p>BufferPointMaterial objects are {@link Packable|packable}, stored
  * {@link BufferPoint#setMaterial} 时存储。后续对材质的修改
  * 不会影响该点，直到再次调用 setMaterial() 为止。</p>
  *

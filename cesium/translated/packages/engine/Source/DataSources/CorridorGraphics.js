@@ -191,7 +191,7 @@ Object.defineProperties(CorridorGraphics.prototype, {
   outline: createPropertyDescriptor("outline"),
 
   /**
-   * 获取或设置加粗线的颜色属性。
+   * Gets or sets the Property specifying the {@link Color} of the outline.
    * @memberof CorridorGraphics.prototype
    * @type {Property|undefined}
    * @default Color.BLACK

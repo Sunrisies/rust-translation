@@ -168,8 +168,8 @@ Object.defineProperties(VoxelBoundsCollection.prototype, {
 });
 
 /**
- * 将指定的 {@link ClippingPlane} 添加到集合中，用于选择性地禁用每个平面外侧的渲染。使用 {@link VoxelBoundsCollection#unionClippingRegions} 来修改
- * 多个平面的裁剪行为。
+ * Adds the specified {@link ClippingPlane} to the collection to be used to selectively disable rendering
+ * on the outside of each plane. Use {@link VoxelBoundsCollection#unionClippingRegions} to modify
  * 要添加到集合中的 ClippingPlane。
  *
  * @param {ClippingPlane} plane 要添加到集合中的 ClippingPlane。
@@ -463,7 +463,7 @@ VoxelBoundsCollection.getTextureResolution = function (
  * 如果此对象被销毁，不应使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。
- * 如果此对象被销毁，返回 <code>false</code>；否则返回 <code>false</code>。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  *
  * @returns {boolean} <code>true</code> 销毁此对象所持有的 WebGL 资源。销毁对象允许确定性的
  *
@@ -478,7 +478,7 @@ VoxelBoundsCollection.prototype.isDestroyed = function () {
  * 一旦对象被销毁，不应使用它；调用除
  * <br />
  * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 对象被销毁，即调用了 destroy() 方法。
  *
  * @exception {DeveloperError} This voxelBounds = voxelBounds && voxelBounds.destroy();

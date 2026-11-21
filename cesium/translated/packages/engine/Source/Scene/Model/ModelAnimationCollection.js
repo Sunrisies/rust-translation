@@ -109,7 +109,7 @@ function addAnimation(collection, animation, options) {
 /**
  * 具有以下属性的对象：
  * <p>
- * 识别动画的 glTF 动画名称。如果 <code>options.index</code> 为 <code>undefined</code>，则必须定义该名称。
+ * This raises the {@link ModelAnimationCollection#animationAdded} event so, for example, a UI can stay in sync.
  * </p>
  *
  * @param {object} options 识别动画的 glTF 动画索引。如果 <code>options.name</code> 为 <code>undefined</code>，则必须定义该索引。

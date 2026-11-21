@@ -25,8 +25,8 @@ const scratchCartographic = new Cartographic();
  * <p>
  * 对 <code>Cesium3DTilePointFeature</code> 对象的修改具有该瓦片内容的生命周期。如果瓦片内容被卸载，例如因超出视野而需要释放缓存中的空间以保留可见瓦片，请监听 {@link Cesium3DTileset#tileUnload} 事件以保存任何修改。同时监听 {@link Cesium3DTileset#tileVisible} 事件以重新应用这些修改。
  * 不要直接构造此对象。通过 {@link Cesium3DTileContent#getFeature} 或
- * 使用 {@link Scene#pick} 和 {@link Scene#pickPosition} 选择来访问它。
- * 该特征使用的是 3D Tiles 规范中的部分内容，该规范尚未定稿且可能根据 Cesium 的标准弃用政策进行更改。
+ * to free space in the cache for visible tiles, listen to the {@link Cesium3DTileset#tileUnload} event to save any
+ * modifications. Also listen to the {@link Cesium3DTileset#tileVisible} event to reapply any modifications.
  * </p>
  * <p>
  * 不要直接构造此对象。通过 {@link Cesium3DTileContent#getFeature} 或

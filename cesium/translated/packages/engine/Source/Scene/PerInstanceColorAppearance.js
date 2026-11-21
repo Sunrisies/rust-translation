@@ -8,7 +8,7 @@ import Appearance from "./Appearance.js";
 /**
  * 具有颜色属性的 {@link GeometryInstance} 实例的外观。
  * 这允许多个具有不同颜色的几何实例使用相同的 {@link Primitive} 进行绘制，如下例所示。
- * 具有以下属性的对象：
+ * be drawn with the same {@link Primitive} as shown in the second example below.
  *
  * @alias PerInstanceColorAppearance
  * @constructor
@@ -221,7 +221,7 @@ Object.defineProperties(PerInstanceColorAppearance.prototype, {
    * 暗点出现。当几何图形的两侧都需被着色时，这非常有用，应像 {@link WallGeometry} 那样着色。
    * 所有 {@link PerInstanceColorAppearance} 实例兼容的 {@link VertexFormat}。这仅需要 <code>position</code> 和 <code>normal</code>
    * 属性。
-   * 当 {@link PerInstanceColorAppearance#flat} 为 <code>true</code> 时，所有 {@link PerInstanceColorAppearance} 实例兼容的 {@link VertexFormat}。
+   * shaded like {@link WallGeometry}.
    *
    * @memberof PerInstanceColorAppearance.prototype
    *
@@ -238,7 +238,7 @@ Object.defineProperties(PerInstanceColorAppearance.prototype, {
 });
 
 /**
- * 仅需要 <code>position</code> 和 <code>normal</code>
+ * The {@link VertexFormat} that all {@link PerInstanceColorAppearance} instances
  * 属性。
  * 属性。
  *
@@ -249,8 +249,8 @@ Object.defineProperties(PerInstanceColorAppearance.prototype, {
 PerInstanceColorAppearance.VERTEX_FORMAT = VertexFormat.POSITION_AND_NORMAL;
 
 /**
- * 当 {@link PerInstanceColorAppearance#flat} 为 <code>true</code> 时，所有 {@link PerInstanceColorAppearance} 实例兼容的 {@link VertexFormat}。
- * 属性。
+ * The {@link VertexFormat} that all {@link PerInstanceColorAppearance} instances
+ * are compatible with when {@link PerInstanceColorAppearance#flat} is <code>true</code>.
  * 仅需要 <code>position</code> 属性。
  *
  * @type VertexFormat
@@ -261,8 +261,8 @@ PerInstanceColorAppearance.FLAT_VERTEX_FORMAT = VertexFormat.POSITION_ONLY;
 
 /**
  * 程序化生成完整的 GLSL 片段着色器源代码。对于 {@link PerInstanceColorAppearance}，
- * 此代码源自 {@link PerInstanceColorAppearance#fragmentShaderSource}、{@link PerInstanceColorAppearance#flat} 和 {@link PerInstanceColorAppearance#faceForward}。
- * 完整的 GLSL 片段着色器源代码。
+ * this is derived from {@link PerInstanceColorAppearance#fragmentShaderSource}, {@link PerInstanceColorAppearance#flat},
+ * and {@link PerInstanceColorAppearance#faceForward}.
  *
  * @function
  *
@@ -272,7 +272,7 @@ PerInstanceColorAppearance.prototype.getFragmentShaderSource =
   Appearance.prototype.getFragmentShaderSource;
 
 /**
- * 如果外观为半透明。
+ * Determines if the geometry is translucent based on {@link PerInstanceColorAppearance#translucent}.
  *
  * @function
  *

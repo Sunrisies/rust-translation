@@ -608,7 +608,7 @@ BatchTable.prototype.isDestroyed = function () {
  * 一旦对象被销毁，就不应再使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给该对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 表明对象已被销毁，即调用了 destroy() 方法。
  *
  * @exception {DeveloperError} This 用于更新统一映射的回调函数。

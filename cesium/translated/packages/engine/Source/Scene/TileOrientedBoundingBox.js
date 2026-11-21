@@ -150,7 +150,7 @@ TileOrientedBoundingBox.prototype.distanceToCamera = function (frameState) {
  * 确定该框位于平面的哪一侧。
  *
  * @param {Plane} plane 需要检测的平面。
- * @returns {Intersect} {@link 如果整个框都在平面的同一侧，则使用 Intersect.INSIDE；
+ * @returns {Intersect} {@link Intersect.INSIDE} if the entire box is on the side of the plane
  * 如果整个框都在平面的相反侧，则使用 {@link Intersect.OUTSIDE}；
  * 如果框与平面相交，则使用 {@link Intersect.INTERSECTING}。
  * 如果框与平面相交。

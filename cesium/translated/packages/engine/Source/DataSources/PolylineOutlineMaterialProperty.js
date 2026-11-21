@@ -7,7 +7,7 @@ const defaultOutlineColor = Color.BLACK;
 const defaultOutlineWidth = 1.0;
 
 /**
- * 一个映射至多段线轮廓 {@link Material} 统一变量的 <code>...</code>、{@link ...}、反引号 `...` 内的内容。
+ * A {@link MaterialProperty} that maps to polyline outline {@link Material} uniforms.
  * @alias PolylineOutlineMaterialProperty
  * @constructor
  *

@@ -285,7 +285,7 @@ class BufferPolygonCollection extends BufferPrimitiveCollection {
 
   /**
    * 提供的 'result' 参数，否则使用新实例。对于重复调用，
-   * 建议重用单个 BufferPolygon 实例，而不是每次调用时都分配新实例。
+   * {@link BufferPolygon} instance is linked to the new polygon, using
    * 此集合拥有的缓冲区总字节长度。包括由 {@link primitiveCountMax} 分配的任何未使用空间，即使该空间中尚未添加任何多边形。
    * 集合中洞的数量。必须 <= {@link holeCountMax}。
    * 集合中洞的最大数量。必须 >= {@link holeCount}。

@@ -439,9 +439,9 @@ TileBoundingRegion.prototype.distanceToCamera = function (frameState) {
  * 确定该盒子位于平面的哪一侧。
  *
  * @param {Plane} plane 要测试的平面。
- * @returns {Intersect} {@link 如果整个盒子位于平面的法向量指向的一侧，则执行 {@link Intersect.INSIDE}；如果整个盒子位于相反一侧，则执行 {@link Intersect.OUTSIDE}；如果盒子与平面相交，则执行 {@link Intersect.INTERSECTING}。
- * 如果整个盒子位于平面的法向量指向的一侧，则执行 {@link Intersect.INSIDE}；如果整个盒子位于相反一侧，则执行 {@link Intersect.OUTSIDE}；如果盒子与平面相交，则执行 {@link Intersect.INTERSECTING}。
- * 创建一个调试primitive，显示瓦片边界区域的轮廓。
+ * @returns {Intersect} {@link Intersect.INSIDE} if the entire box is on the side of the plane
+ *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire box is
+ *                      on the opposite side, and {@link Intersect.INTERSECTING} if the box
  * intersects the plane.
  */
 TileBoundingRegion.prototype.intersectPlane = function (plane) {

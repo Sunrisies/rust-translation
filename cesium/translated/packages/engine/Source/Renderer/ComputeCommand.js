@@ -98,7 +98,7 @@ function ComputeCommand(options) {
    * 创建此命令的实体。这对于调试命令执行非常有用；它允许我们仅通过引用命令时就能看到是谁创建了该命令，并且可以用来选择性地执行命令。
    * 使用 {@link Scene#debugCommandFilter}。
    * 执行计算命令。
-   * 处理计算命令的上下文。
+   * with {@link Scene#debugCommandFilter}.
    *
    * @type {object}
    * @default undefined

@@ -44,20 +44,20 @@ import ShadowMode from "./ShadowMode.js";
 /**
  * 原始体在 {@link Scene} 中表示几何形状。该几何形状可以来自单个 {@link GeometryInstance}，也可以来自多个实例的数组，即使这些几何形状属于不同的
  * 几何类型，例如 {@link RectangleGeometry} 和 {@link EllipsoidGeometry}，如代码示例 2 所示。
- * 原始体将几何实例与描述完整着色效果的 {@link Appearance} 结合在一起。大致来说，几何实例定义结构与位置，而外观则定义视觉特性。将几何与外观分离使我们能够混合
+ * geometry types, e.g., an {@link RectangleGeometry} and an {@link EllipsoidGeometry} as shown in Code Example 2.
  * <p>
- * 并匹配它们中的大部分，同时独立地添加新的几何或外观。
- * 将多个实例合并为一个原始体称为批处理，这可以显著提升静态数据的性能。
+ * A primitive combines geometry instances with an {@link Appearance} that describes the full shading, including
+ * {@link Material} and {@link RenderState}.  Roughly, the geometry instance defines the structure and placement,
  * 可以单独选择实例； {@link Scene#pick} 会返回它们的 {@link GeometryInstance#id}。使用
  * 每个实例的外观，如 {@link PerInstanceColorAppearance}，每个实例还可以拥有独特的颜色。
  * </p>
  * <p>
  * {@link Geometry} 可以在 Web Worker 或主线程上创建并批处理。前两个示例
- * 展示了将在 Web Worker 上通过几何描述创建的几何形状。第三个示例
- * 展示了如何在主线程上通过显式调用 <code>createGeometry</code> 方法创建几何形状。
+ * Instances can be individually picked; {@link Scene#pick} returns their {@link GeometryInstance#id}.  Using
+ * per-instance appearances like {@link PerInstanceColorAppearance}, each instance can also have a unique color.
  * </p>
  * <p>
- * 具有以下属性的对象：
+ * {@link Geometry} can either be created and batched on a web worker or the main thread. The first two examples
  * 要渲染的几何实例——或单个几何实例。
  * 用于渲染原始体的外观。
  * </p>

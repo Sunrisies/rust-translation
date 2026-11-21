@@ -1,7 +1,7 @@
 import { DeveloperError, Event, JulianDate, defined } from "@cesium/core";
 
 /**
- * 一个控件，其值由回调函数延迟计算。
+ * A {@link Property} whose value is lazily evaluated by a callback function.
  *
  * @alias CallbackProperty
  * @constructor

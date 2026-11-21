@@ -1417,7 +1417,7 @@ function setSunAndMoonDirections(uniformState, frameState) {
 
 /**
  * 将视锥体的状态与相机状态同步。在渲染时，{@link Scene}会执行此操作，以确保自动的 GLSL 统一变量被设置为正确值。
- * 与要同步的相机。
+ * by the {@link Scene} when rendering to ensure that automatic GLSL uniforms
  * 将视锥体的状态与统一状态同步。在渲染时，{@link Scene}会执行此操作，以确保自动的 GLSL 统一变量被设置为正确值。
  *
  * @param {object} camera 要同步的相机。
@@ -1438,7 +1438,7 @@ UniformState.prototype.updateCamera = function (camera) {
 
 /**
  * 将视锥体的状态与统一状态同步。在渲染时，{@link Scene}会执行此操作，以确保自动的 GLSL 统一变量被设置为正确值。
- * 与要同步的相机。
+ * by the {@link Scene} when rendering to ensure that automatic GLSL uniforms
  * 要同步的帧状态。
  *
  * @param {object} frustum 要同步的帧状态。
@@ -1481,7 +1481,7 @@ const defaultLight = new SunLight();
 
 /**
  * 将帧状态与统一状态同步。在渲染时，{@link Scene}会执行此操作，以确保自动的 GLSL 统一变量被设置为正确值。
- * 与要同步的帧状态。
+ * by the {@link Scene} when rendering to ensure that automatic GLSL uniforms
  * are set to the right value.
  *
  * @param {FrameState} frameState The frameState to synchronize with.

@@ -298,7 +298,7 @@ function Framebuffer(options) {
 Object.defineProperties(Framebuffer.prototype, {
   /**
    * 尝试向帧缓冲区渲染时会抛出 {@link DeveloperError}。
-   * 如果帧缓冲区具有深度附件，则为 true。深度附件包括
+   * a {@link DeveloperError} will be thrown when attempting to render to the framebuffer.
    * @memberof Framebuffer.prototype
    * @type {number}
    */

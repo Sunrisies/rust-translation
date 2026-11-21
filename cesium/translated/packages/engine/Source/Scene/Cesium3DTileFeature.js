@@ -10,17 +10,17 @@ import { Color, defined } from "@cesium/core";
  * <p>
  * 提供对瓦片批次表中存储的特性的访问权限，以及
  * 通过 {@link Cesium3DTileFeature#show} 和 {@link Cesium3DTileFeature#color} 分别显示/隐藏特性及更改其高亮颜色的能力。
- * 。
+ * {@link Cesium3DTileFeature#show} and {@link Cesium3DTileFeature#color}, respectively.
  * </p>
  * <p>
  * 对 <code>Cesium3DTileFeature</code> 对象的修改具有该瓦片内容的生命周期。如果瓦片内容被卸载，例如因超出视野范围而需要释放缓存中的空间以保留可见瓦片，请监听 {@link Cesium3DTileset#tileUnload} 事件以保存任何修改。同时监听 {@link Cesium3DTileset#tileVisible} 事件以重新应用这些修改。
  * 不要直接构造此对象。通过 {@link Cesium3DTileContent#getFeature} 或利用 {@link Scene#pick} 选择的方式访问它。
- * // 当鼠标悬停时，在控制台日志中显示所有特性的属性。
- * handler.setInputAction(function(movement) {
+ * to free space in the cache for visible tiles, listen to the {@link Cesium3DTileset#tileUnload} event to save any
+ * modifications. Also listen to the {@link Cesium3DTileset#tileVisible} event to reapply any modifications.
  * </p>
  * <p>
- * const feature = scene.pick(movement.endPosition);
- * if (feature instanceof Cesium.Cesium3DTileFeature) {
+ * Do not construct this directly.  Access it through {@link Cesium3DTileContent#getFeature}
+ * or picking using {@link Scene#pick}.
  * </p>
  *
  * @example
@@ -86,7 +86,7 @@ class Cesium3DTileFeature {
 
   /**
    * 获取包含该特性的瓦片内容。
-   * 获取包含该特性的瓦片集。
+   * Returns undefined if {@link Cesium3DTileset#vectorKeepDecodedPositions} is false
    * 获取包含该特性的特性图层（如果有的话）。
    *
    * @experimental This 此特性尚未定稿，可能根据 Cesium 的标准弃用政策发生变化。

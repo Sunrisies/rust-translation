@@ -28,7 +28,7 @@ Object.defineProperties(TerrainProvider.prototype, {
   /**
    * 在地形提供器遇到异步错误时触发事件。通过订阅该事件，您可以收到错误通知并可能从中恢复。事件监听器
    * 接收 {@link TileProviderError} 的实例。
-   * 获取此地形提供器处于活动状态时显示的信用信息。通常用于显示
+   * are passed an instance of {@link TileProviderError}.
    * @memberof TerrainProvider.prototype
    * @type {Event<TerrainProvider.ErrorEvent>}
    * @readonly
@@ -497,7 +497,7 @@ function addSkirtIndices(edgeIndices, vertexIndex, indices, offset) {
 /**
  * 指定由高度图生成的地形质量。值为 1.0 将确保相邻高度图顶点之间的间距不超过
  * {@link Globe.maximumScreenSpaceError} 屏幕像素，且渲染速度可能非常慢。
- * 值为 0.5 可将估计的零级几何误差减半，使相邻高度图顶点之间的屏幕像素数增加一倍，从而加快渲染速度。
+ * {@link Globe.maximumScreenSpaceError} screen pixels and will probably go very slowly.
  * 确定当几何数据来自高度图时适用的几何误差估计值。
  * 地形所连接的椭球体。
  * @type {number}

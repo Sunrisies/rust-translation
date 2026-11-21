@@ -46,9 +46,9 @@ TileBoundingVolume.prototype.distanceToCamera = function (frameState) {
  * 确定该边界框位于平面的哪一侧。
  *
  * @param {Plane} plane 需要测试的平面。
- * @returns {Intersect} {@link 如果整个边界框都在平面的同一侧，则使用 Intersect.INSIDE；
- * 如果法线指向该方向，则使用 {@link Intersect.OUTSIDE}；如果整个边界框都在相反的一侧，则使用 {@link Intersect.INTERSECTING}；
- * 如果边界框与平面相交，则使用 Intersect.INTERSECTING。
+ * @returns {Intersect} {@link Intersect.INSIDE} if the entire volume is on the side of the plane
+ *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire volume is
+ *                      on the opposite side, and {@link Intersect.INTERSECTING} if the volume
  * 创建一种调试primitive，显示瓦片边界框的轮廓。
  */
 TileBoundingVolume.prototype.intersectPlane = function (plane) {

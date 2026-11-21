@@ -81,7 +81,7 @@ EntityCollection.prototype.suspendEvents = function () {
 };
 
 /**
- * 当添加或移除项时，此函数会立即恢复触发事件。在事件暂停期间进行的任何修改
+ * Resumes raising {@link EntityCollection#collectionChanged} events immediately
  * 会在调用此函数时作为一个单一事件触发。
  * 此函数采用引用计数机制，只要存在对应的 {@link EntityCollection#resumeEvents} 调用，就可以安全地被多次调用。
  * 不能在 suspendEvents 之前调用此函数。

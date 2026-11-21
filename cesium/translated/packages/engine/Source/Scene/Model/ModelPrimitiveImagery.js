@@ -869,7 +869,7 @@ class ModelPrimitiveImagery {
    * 计算必须应用于原始实体位置属性的变换，以计算
    *
    * ECEF 坐标中的实际最终位置
-   * 这是基于在 buildDrawCommands 结束时进行的边界球计算
+   * <code>isDestroyed</code> will result in a {@link DeveloperError}.
    *
    * @returns {boolean} Whether 模型
    */

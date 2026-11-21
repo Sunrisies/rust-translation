@@ -87,7 +87,7 @@ function ModelRuntimeNode(options) {
 
   /**
    * 该节点是否被用户动画化。由对应的 {@link ModelNode} 在用户提供其变换时设置。如果为 true，则节点将忽略模型资源中的动画。
-   * 应用于该节点所有网格基元的管道阶段。
+   * corresponding {@link ModelNode} when the user supplies their
    * 这是一个类数组，每个类都有一个名为<code>process()</code>的静态方法。
    * 属于该节点的网格基元。
    *

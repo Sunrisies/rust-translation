@@ -1,7 +1,7 @@
 import { Event, defined } from "@cesium/core";
 
 /**
- * 一个属性值不会随模拟时间变化。
+ * A {@link Property} whose value does not change with respect to simulation time.
  *
  * @alias ConstantProperty
  * @constructor

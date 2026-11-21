@@ -60,7 +60,7 @@ function ClearCommand(options) {
    * 创建此命令的对象。这对于调试命令执行非常有用；即使只有对命令的引用，也可以查看是谁创建了该命令，并且可以通过 {@link Scene#debugCommandFilter} 选择性地执行命令。
    * 执行此命令的通道。
    * 执行此命令的遍数。
-   * 将颜色清除为 (0.0, 0.0, 0.0, 0.0)；深度清除为 1.0；模板清除为 0.
+   * with {@link Scene#debugCommandFilter}.
    *
    * @type {object}
    *

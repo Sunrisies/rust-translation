@@ -28,13 +28,13 @@ import ImageryProvider from "./ImageryProvider.js";
  * @property {BingMapsStyle} [mapStyle=BingMapsStyle.AERIAL] 要加载的 Bing Maps 影像类型。
  * @property {string} [mapLayer] 在 {@link https://learn.microsoft.com/en-us/bingmaps/rest-services/imagery/get-imagery-metadata#template-parameters} 中定义的额外显示图层选项。
  * @property {string} [culture=''] 请求 Bing Maps 影像时使用的文化。并非所有文化都受支持。有关支持文化的更多信息，请参见 {@link http://msdn.microsoft.com/en-us/library/hh441729.aspx}。
- * 如果未指定，则使用默认椭球体。
+ *        all cultures are supported. See {@link http://msdn.microsoft.com/en-us/library/hh441729.aspx}
  * 决定一个瓦片是否无效并应被丢弃的策略。默认情况下，将使用 {@link DiscardEmptyTileImagePolicy}，预期 Bing Maps 服务器对于缺失的瓦片会返回零长度响应。
  * @property {Ellipsoid} [ellipsoid=Ellipsoid.default] 用于跟踪创建细节，同时获取初始元数据。
  * @property {TileDiscardPolicy} [tileDiscardPolicy] 描述初始化选项的对象。
- * 根据构建器值完成 BingMapsImageryProvider 的创建。
+ *        is invalid and should be discarded.  By default, a {@link DiscardEmptyTileImagePolicy}
  * 一个描述初始化选项的对象。
- * 使用 Bing Maps 影像 REST API 提供瓦片式影像。
+ *        To ensure that no tiles are discarded, construct and pass a {@link NeverTileDiscardPolicy} for this parameter.
  */
 
 /**
@@ -415,7 +415,7 @@ Object.defineProperties(BingMapsImageryProvider.prototype, {
   /**
    * 获取指示此影像提供器提供的图像是否包含Alpha通道的值。如果此属性为false，则存在的Alpha通道将被忽略。如果此属性为true，则没有Alpha通道的任何图像将被视为其Alpha值为1.0。将此属性设置为false可减少内存使用和纹理上传时间。
    * 创建一个使用Bing Maps Imagery REST API提供瓦片影像的 {@link ImageryProvider}。
-   * 托管影像的Bing Maps服务器URL。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof BingMapsImageryProvider.prototype
    * @type {Event}
    * @readonly
@@ -457,7 +457,7 @@ Object.defineProperties(BingMapsImageryProvider.prototype, {
 });
 
 /**
- * 当给定瓦片被显示时要显示的徽标。
+ * Creates an {@link ImageryProvider} which provides tiled imagery using the Bing Maps Imagery REST API.
  *
  * @param {Resource|string} url 请求给定瓦片的图像。
  * @param {BingMapsImageryProvider.ConstructorOptions} options 瓦片的X坐标。

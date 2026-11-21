@@ -232,7 +232,7 @@ Object.defineProperties(DataSourceDisplay.prototype, {
  * 销毁此对象所持有的 WebGL 资源。销毁对象允许确定性地释放 WebGL 资源，而无需依赖垃圾收集器来销毁该对象。
  * <br /><br />
  * 一旦对象被销毁，不应使用它；调用除 <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  *
  * @returns {boolean} True 如果对象被销毁，则调用 destroy()；否则返回 false。
  *
@@ -247,7 +247,7 @@ DataSourceDisplay.prototype.isDestroyed = function () {
  * 一旦对象被销毁，不应使用它；调用除 <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
  * <br /><br />
  * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
- * 如果对象被销毁，则调用 destroy()。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 执行 dataSourceDisplay.destroy();
  *
  * @exception {DeveloperError} This 将显示更新为提供的时间。

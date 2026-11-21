@@ -42,11 +42,11 @@ import ArcGisBaseMapType from "./ArcGisBaseMapType.js";
  * @property {boolean} [usePreCachedTilesIfAvailable=true] 要显示的图层逗号分隔列表，或未定义表示所有图层都应显示。
  * 如果为true，{@link ArcGisMapServerImageryProvider#pickFeatures} 将调用 MapServer上的 Identify服务并返回响应中的特征。如果为false，
  * @property {string} [layers] {@link ArcGisMapServerImageryProvider#pickFeatures} 将立即返回 undefined（表示没有可选择的特征），而不与服务器通信。如果不需要此提供程序的特征可选择，请将此属性设置为 false。可以通过在对象上设置 {@link ArcGisMapServerImageryProvider#enablePickFeatures} 属性来覆盖此设置。
- * @property {boolean} [enablePickFeatures=true] 图层的矩形区域。当访问瓦片图层时，此参数被忽略。
+ * @property {boolean} [enablePickFeatures=true] If true, {@link ArcGisMapServerImageryProvider#pickFeatures} will invoke
  * 用于将世界划分为图块的镶嵌方案。
- * 当访问瓦片服务器时，此参数被忽略。
+ *        {@link ArcGisMapServerImageryProvider#pickFeatures} will immediately return undefined (indicating no pickable features)
  * 椭球体。如果指定了镶嵌方案并使用了它，
- * 则忽略此参数，使用镶嵌方案的椭球体。如果两者均未指定，则使用默认椭球体。
+ *        be pickable. Can be overridden by setting the {@link ArcGisMapServerImageryProvider#enablePickFeatures} property on the object.
  * @property {Rectangle} [rectangle=Rectangle.MAX_VALUE] 数据源的版权信息，在画布上显示。当访问瓦片服务器时，此参数被忽略。
  * 每个图块的宽度（以像素为单位）。当访问瓦片服务器时，此参数被忽略。
  * @property {TilingScheme} [tilingScheme=new GeographicTilingScheme()] The tiling scheme to use to divide the world into tiles.
@@ -264,7 +264,7 @@ async function requestMetadata(resource, imageryProviderBuilder) {
  *
  * <br/>
  *
- * 要访问安全的 ArcGIS 资源，需要创建一个 ArcGIS 开发者账户或 ArcGIS online 账户，然后实现认证方法以获取访问令牌。
+ * An {@link https://developers.arcgis.com/documentation/mapping-apis-and-services/security| ArcGIS Access Token } is required to authenticate requests to an ArcGIS Image Tile service.
  * 为了访问安全的 ArcGIS 资源，需要创建一个 ArcGIS 开发者账户或 ArcGIS online 账户，然后实现认证方法以获取访问令牌。
  * 描述初始化选项的对象。
  *
@@ -604,7 +604,7 @@ Object.defineProperties(ArcGisMapServerImageryProvider.prototype, {
   /**
    * 获取此影像提供器激活时显示的信用信息。通常用于显示影像的来源。
    * 获取指示此影像提供器是否使用来自 ArcGIS MapServer 的预缓存瓦片的值。
-   * 获取指示此影像提供器提供的图像是否包含 alpha 通道的值。如果此属性为 false，则存在的 alpha 通道将被忽略。如果此属性为 true，则没有 alpha 通道的任何图像将被视为有 alpha 通道。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof ArcGisMapServerImageryProvider.prototype
    * @type {Event}
    * @readonly

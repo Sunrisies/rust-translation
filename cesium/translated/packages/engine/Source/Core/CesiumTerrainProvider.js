@@ -450,8 +450,8 @@ async function requestLayerJson(terrainProviderBuilder, provider) {
  * 一个访问 Cesium 地形格式地形数据的 {@link TerrainProvider}。
  * 地形格式可以是以下之一：
  * <ul>
- * <li> {@link https://github.com/AnalyticalGraphicsInc/quantized-mesh 量化网格} </li>
- * <li> {@link https://github.com/AnalyticalGraphicsInc/cesium/wiki/heightmap-1.0 高度图} </li>
+ * <li> {@link https://github.com/AnalyticalGraphicsInc/quantized-mesh Quantized Mesh} </li>
+ * <li> {@link https://github.com/AnalyticalGraphicsInc/cesium/wiki/heightmap-1.0 Height Map} </li>
  * </ul>
  *
  * @alias CesiumTerrainProvider
@@ -1157,8 +1157,8 @@ CesiumTerrainProvider.prototype.getLevelMaximumGeometricError = function (
  * 根据 Cesium ion 资产 ID 创建 {@link TerrainProvider}，该提供器以 Cesium terrain 格式访问地形数据。
  * 地形格式可以是以下之一：
  * <ul>
- * <li> {@link https://github.com/AnalyticalGraphicsInc/quantized-mesh 量化网格} </li>
- * <li> {@link https://github.com/AnalyticalGraphicsInc/cesium/wiki/heightmap-1.0 高度图} </li>
+ * <li> {@link https://github.com/AnalyticalGraphicsInc/quantized-mesh Quantized Mesh} </li>
+ * <li> {@link https://github.com/AnalyticalGraphicsInc/cesium/wiki/heightmap-1.0 Height Map} </li>
  * </ul>
  *
  * @param {number} assetId Cesium ion 资产 ID。
@@ -1196,8 +1196,8 @@ CesiumTerrainProvider.fromIonAssetId = async function (assetId, options) {
  * 创建 {@link TerrainProvider}，该提供器以 Cesium terrain 格式访问地形数据。
  * 地形格式可以是以下之一：
  * <ul>
- * <li> {@link https://github.com/AnalyticalGraphicsInc/quantized-mesh 量化网格} </li>
- * <li> {@link https://github.com/AnalyticalGraphicsInc/cesium/wiki/heightmap-1.0 高度图} </li>
+ * <li> {@link https://github.com/AnalyticalGraphicsInc/quantized-mesh Quantized Mesh} </li>
+ * <li> {@link https://github.com/AnalyticalGraphicsInc/cesium/wiki/heightmap-1.0 Height Map} </li>
  * </ul>
  *
  * @param {Resource|string|Promise<Resource>|Promise<string>} url Cesium terrain 服务器的 URL。

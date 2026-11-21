@@ -24,7 +24,7 @@ const PntsParser = {};
 const sizeOfUint32 = Uint32Array.BYTES_PER_ELEMENT;
 
 /**
- * 解析 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/PointCloud|点云} 的内容。
+ * Parses the contents of a {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/TileFormats/PointCloud|Point Cloud}.
  *
  * @private
  *

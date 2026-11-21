@@ -54,7 +54,7 @@ const excludesReverseAxis = [
  * @property {GetFeatureInfoFormat[]} [getFeatureInfoFormats=WebMapServiceImageryProvider.DefaultGetFeatureInfoFormats] 格式
  * 用于尝试 WMS GetFeatureInfo 请求的形式。由于不同 WMS 服务的特征信息响应有所不同，
  * 您可能需要提供自定义格式和解析回调；请参阅
- * {@link https://sandcastle.cesium.com/?id=web-map-tile-service-picking|Sandcastle 示例} 以获取编写自定义回调的完整示例。
+ *        {@link https://sandcastle.cesium.com/?id=web-map-tile-service-picking|Sandcastle example} for a complete
  * 层的范围。
  * @property {Rectangle} [rectangle=Rectangle.MAX_VALUE] 用于将世界划分为瓦片的 tiling 方案。
  * @property {TilingScheme} [tilingScheme=new GeographicTilingScheme()] 使用的 tiling 方案，用于将世界划分为瓦片。
@@ -425,7 +425,7 @@ Object.defineProperties(WebMapServiceImageryProvider.prototype, {
   /**
    * 接收 {@link TileProviderError} 的实例。
    * 获取此影像提供器激活时显示的标识。通常用于标识影像的来源。
-   * 获取指示此影像提供器提供的图像是否存在的布尔值。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof WebMapServiceImageryProvider.prototype
    * @type {Event}
    * @readonly
@@ -468,7 +468,7 @@ Object.defineProperties(WebMapServiceImageryProvider.prototype, {
   /**
    * 用于获取或设置是否启用特征选择。如果为 true，{@link WebMapServiceImageryProvider#pickFeatures} 将在 WMS 服务器上调用 <code>GetFeatureInfo</code> 服务，并尝试解析响应中的特征信息。
    * 如果为 false，则不会与服务器通信，{@link WebMapServiceImageryProvider#pickFeatures} 将立即返回 undefined（表示没有可选择的
-   * 如果知道数据来源不支持特征选择或不想让此提供商的特征可选择，请将此属性设置为 false。
+   * {@link WebMapServiceImageryProvider#pickFeatures} will immediately return undefined (indicating no pickable
    * 用于获取时间动态参数所使用的时间的时钟。
    * 用于获取时间动态参数的时间间隔集合。每个 TimeInterval 都是一个包含在
    * @memberof WebMapServiceImageryProvider.prototype
@@ -587,7 +587,7 @@ WebMapServiceImageryProvider.prototype.requestImage = function (
  * @param {number} longitude 选择特征的经度。
  * @param {number} latitude  选择特征的纬度。
  * @return {Promise<ImageryLayerFeatureInfo[]>|undefined} A 异步完成后，所选特征的承诺将会解析。解析值是一个 {@link ImageryLayerFeatureInfo} 实例的数组。如果给定位置没有找到特征，则数组可能为空。
- * 用于获取图像时包含在 WMS URL 中的默认参数。其值如下：
+ *                   picking completes.  The resolved value is an array of {@link ImageryLayerFeatureInfo}
  * instances.  The array may be empty if no features are found at the given location.
  */
 WebMapServiceImageryProvider.prototype.pickFeatures = function (

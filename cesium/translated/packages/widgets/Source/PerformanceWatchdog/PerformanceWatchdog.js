@@ -11,7 +11,7 @@ import PerformanceWatchdogViewModel from "./PerformanceWatchdogViewModel.js";
  *
  * @param {object} [options] 具有以下属性的对象：
  * @param {Element|string} options.container 将包含控件 olan DOM 元素或 ID。
- * @param {Scene} options.scene 用于监控性能的 {@linkScene}。
+ * @param {Scene} options.scene The {@link Scene} for which to monitor performance.
  * @param {string} [options.lowFrameRateMessage='This application appears to be performing poorly on your system.  Please try using a different web browser or updating your video drivers.'] 当检测到低帧率时显示的
  * 消息。该消息被解析为 HTML，因此请确保它来自可信来源，以避免应用程序受到跨站脚本攻击。
  * 获取父容器。

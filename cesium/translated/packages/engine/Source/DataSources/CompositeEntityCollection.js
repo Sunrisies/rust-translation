@@ -411,7 +411,7 @@ CompositeEntityCollection.prototype.lowerCollectionToBottom = function (
  * 当事件被暂停时，集合的重新组合也会被暂停，因为这可能是一个耗时的操作。
  * 只要存在对应的 {@link EntityCollection#resumeEvents} 调用，就可以安全多次调用此函数。
  * 当添加或移除项目时，此函数可以立即恢复 {@link EntityCollection#collectionChanged} 事件的触发。在事件暂停期间所做的任何修改
- * 将在调用此函数时作为一个单一事件触发。此函数还确保
+ * are corresponding calls to {@link EntityCollection#resumeEvents}.
  */
 CompositeEntityCollection.prototype.suspendEvents = function () {
   this._suspendCount++;
@@ -419,12 +419,12 @@ CompositeEntityCollection.prototype.suspendEvents = function () {
 };
 
 /**
- * 如果事件也被恢复，则集合会被重新组合。
+ * Resumes raising {@link EntityCollection#collectionChanged} events immediately
  * 此函数是引用计数类型，只要存在对应的 {@link EntityCollection#resumeEvents} 调用，就可以安全多次调用。
  * 不能在 suspendEvents 之前调用。
  * 计算集合中实体的最大可用性。
  * 如果集合包含无限可用数据和非无限数据的混合情况，
- * 它将仅返回与非无限数据相关的区间。如果所有数据都是无限的，则将返回无限区间。
+ * are corresponding calls to {@link EntityCollection#resumeEvents}.
  *
  * @exception {DeveloperError} resumeEvents 集合中实体的可用性。
  */

@@ -417,8 +417,8 @@ Object.defineProperties(Billboard.prototype, {
   /**
    * 根据广告牌与相机的距离，获取或设置广告牌的近远半透明属性。
    * 广告牌的半透明效果将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的下限和上限范围内时。
-   * 超出这些范围时，广告牌的半透明效果会被限制在最近的边界值。如果未定义，则不会启用。
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * // 半透明效果将被禁用。
    * translucencyByDistance 将被禁用。
    * @memberof Billboard.prototype
@@ -466,8 +466,8 @@ Object.defineProperties(Billboard.prototype, {
   /**
    * 根据广告牌与相机的距离，获取或设置广告牌的近远像素偏移缩放属性。
    * 广告牌的像素偏移将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间缩放，当相机距离处于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的下限和上限范围内时。
-   * 超出这些范围时，广告牌的像素偏移缩放会被限制在最近的边界值。如果未定义，则不会启用。
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * // 像素偏移缩放效果将被禁用。
    * pixelOffsetScaleByDistance 将被禁用。
    * @memberof Billboard.prototype

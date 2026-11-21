@@ -3,7 +3,7 @@ import Cesium3DTileset from "./Cesium3DTileset.js";
 import Cesium3DTileStyle from "./Cesium3DTileStyle.js";
 
 /**
- * 为
+ * Creates a {@link Cesium3DTileset} instance for the
  * {@link https://cesium.com/content/cesium-osm-buildings/|Cesium OSM Buildings}
  * tileset 创建一个 {@link Cesium3DTileset} 实例。
  *

@@ -166,7 +166,7 @@ Object.defineProperties(PrimitiveOutlineGenerator.prototype, {
  * 从 CESIUM_primitive_outline 扩展数据中初始化轮廓生成器。这会更新三角形索引并生成轮廓坐标，但不更新其他属性（参见
  * {@link PrimitiveOutlineGenerator#updateAttribute})
  * 轮廓生成器
- * 此函数尝试为该三角形计算有效的边顺序，如果找到，则计算三个顶点的轮廓坐标。如果无法
+ * {@link PrimitiveOutlineGenerator#updateAttribute})
  *
  * @param {PrimitiveOutlineGenerator} outlineGenerator 计算，则返回一个顶点以便复制。
  *

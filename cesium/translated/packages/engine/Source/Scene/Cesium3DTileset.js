@@ -150,7 +150,7 @@ import ImageryLayerCollection from "./ImageryLayerCollection.js";
  */
 
 /**
- * 一个 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification|3D Tiles 瓦片集}，
+ * A {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification|3D Tiles tileset},
  * 用于流式传输庞大的异构 3D 地理空间数据集。
  *
  * <div class="notice">
@@ -470,7 +470,7 @@ function Cesium3DTileset(options) {
   /**
    * 优化选项。通过暂时提高屏幕空间误差，优先加载屏幕中央的瓦片。一旦由 {@link Cesium3DTileset#foveatedConeSize}确定的屏幕中央所有瓦片被加载，屏幕空间误差将恢复正常。
    * 获取或设置回调，以控制屏幕边缘瓦片的屏幕空间误差提升程度。
-   * 在 {@link Cesium3DTileset#foveatedMinimumScreenSpaceErrorRelaxation}和 {@link Cesium3DTileset#maximumScreenSpaceError}之间插值。
+   * the tiles in the center of the screen as determined by the {@link Cesium3DTileset#foveatedConeSize} are loaded.
    *
    * @type {boolean}
    * @default true
@@ -482,7 +482,7 @@ function Cesium3DTileset(options) {
 
   /**
    * 获取或设置回调，控制在聚焦锥外的瓦片屏幕空间误差的提升程度。
-   * 优化选项。用于控制相机停止移动后开始加载延迟瓦片的等待时间（以秒为单位）。
+   * interpolating between {@link Cesium3DTileset#foveatedMinimumScreenSpaceErrorRelaxation} and {@link Cesium3DTileset#maximumScreenSpaceError}.
    *
    * @type {Cesium3DTileset.foveatedInterpolationCallback}
    */
@@ -507,7 +507,7 @@ function Cesium3DTileset(options) {
    * <p>
    * 其效果是选择远离相机的低分辨率瓦片。靠近相机时不做调整。对于更远的瓦片，SSE减少量可达 {@link Cesium3DTileset#dynamicScreenSpaceErrorFactor}
    * （以错误像素数计量）。
-   * 增加密度会使钟形曲线变窄，从而更影响靠近相机的瓦片。这与...类似
+   * made. For tiles further away, the SSE is reduced by up to {@link Cesium3DTileset#dynamicScreenSpaceErrorFactor}
    * (measured in pixels of error).
    * </p>
    * <p>
@@ -564,7 +564,7 @@ function Cesium3DTileset(options) {
    * 决定瓦片集是否会被显示。
    * </p>
    * <p>
-   * 定义从 Cesium API 获取的每个特征颜色与原始特征的源颜色如何混合。
+   * Shadows are rendered only when {@link Viewer#shadows} is <code>true</code>.
    * </p>
    *
    * @type {ShadowMode}
@@ -793,7 +793,7 @@ function Cesium3DTileset(options) {
 
   /**
    * (例如 {@link MVTDataProvider})。设置后，{@link Cesium3DTile} 会绕过
-   * 标准的基于魔法数字/URL的内容分发机制，并将
+   * (e.g. {@link MVTDataProvider}). When set, {@link Cesium3DTile} bypasses
    * 内容构建工作委托给 <code>codec.createContent(...)</code>。这
    * 将格式特定的逻辑移出运行时。
    * 形状：
@@ -831,7 +831,7 @@ function Cesium3DTileset(options) {
    * 例如，如果某个瓦片的屏幕空间错误为 100，除非它们是叶子或具有 <code><= 100 / skipScreenSpaceErrorFactor</code> 的屏幕空间错误，否则不会加载任何瓦片。
    * 仅在 {@link Cesium3DTileset#skipLevelOfDetail} 为 <code>true</code> 时使用。
    * <p>
-   * 定义加载瓦片时需要跳过的最小层级数。当为 0 时，不跳过任何层级。
+   * Only used when {@link Cesium3DTileset#skipLevelOfDetail} is <code>true</code>.
    * </p>
    *
    * @type {number}
@@ -1298,7 +1298,7 @@ Object.defineProperties(Cesium3DTileset.prototype, {
   /**
    * 获取包含每个特性属性元数据的瓦片集属性字典对象。
    * <p>
-   * 参见 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification#reference-properties|属性规范参考}
+   * See the {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification#reference-properties|properties schema reference}
    * 在 3D Tiles 规范中可找到完整的属性集合。
    * </p>
    *
@@ -1374,7 +1374,7 @@ Object.defineProperties(Cesium3DTileset.prototype, {
 
   /**
    * 使用
-   * {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/Styling|3D Tiles Styling 语言},
+   * {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification/Styling|3D Tiles Styling language},
    * 定义的样式应用于瓦片集中的每个要素。
    * <p>
    * 将 <code>undefined</code> 赋值以移除该样式，这将恢复瓦片集的视觉
@@ -1623,7 +1623,7 @@ Object.defineProperties(Cesium3DTileset.prototype, {
    * </p>
    * <p>
    * 如果为了满足当前视图下由 {@link Cesium3DTileset#maximumScreenSpaceError} 确定的
-   * 期望的屏幕空间误差而需要的瓦片大小超过 <code>cacheBytes</code>，
+   * desired screen space error, determined by {@link Cesium3DTileset#maximumScreenSpaceError},
    * 则加载的瓦片内存使用量将超过
    * <code>cacheBytes</code>，最多达到 <code>maximumCacheOverflowBytes</code>。
    * 例如，如果 <code>cacheBytes</code> 为 500000，但为了满足屏幕空间误差需要 600000 字节的瓦片，

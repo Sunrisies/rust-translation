@@ -14,7 +14,7 @@ import TerrainPicker from "./TerrainPicker.js";
 
 /**
  * 用于单个地形瓦片的多边形网格及相关元数据。此类实例通常从原始 {@link TerrainData} 创建。
- * 该瓦片的中心点。顶点位置相对于此中心点指定。
+ * usually created from raw {@link TerrainData}.
  *
  * @alias TerrainMesh
  * @constructor

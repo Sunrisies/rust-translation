@@ -56,7 +56,7 @@ class MVTDataProvider extends UrlTemplate3DTilesDataProvider {
   /**
    * 此实例提供的特征层，每个 MVT 源层一个。层在包含其特征的第一个瓦片加载时添加，因此层顺序遵循
    * 瓦片加载顺序；使用 {@link FeatureLayerCollection#getByName} 查找层。
-   * 解码后的瓦片
+   * tile load order; use {@link FeatureLayerCollection#getByName} to find a layer.
    *
    * @type {FeatureLayerCollection}
    * @readonly

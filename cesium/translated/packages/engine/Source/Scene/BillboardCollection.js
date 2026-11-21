@@ -87,7 +87,7 @@ const attributeLocations = {
  * 示例广告牌
  * </div>
  * <br /><br />
- * 使用 {@link BillboardCollection#add} 和 {@link BillboardCollection#remove} 添加或移除集合中的广告牌。集合中的广告牌会自动共享纹理。
+ * Billboards are added and removed from the collection using {@link BillboardCollection#add}
  * and {@link BillboardCollection#remove}.  Billboards in a collection automatically share textures
  * 对于具有相同标识符的图像。
  *
@@ -482,9 +482,9 @@ Object.defineProperties(BillboardCollection.prototype, {
    * 广告牌也将可见。设置为 <code>0</code> 时，此功能被禁用，地形后面的部分将被裁剪。
    * 此设置仅在广告牌的 {@link Billboard#disableDepthTestDistance} 值
    * <br/><br/>
-   * 否则允许深度测试——即广告牌与相机的距离小于
+   * This setting only applies when a billboard's {@link Billboard#disableDepthTestDistance} value would
    * 广告牌的 {@link Billboard#disableDepthTestDistance} 值时适用。
-   * 创建并添加具有指定初始属性的广告牌到集合中。
+   * billboard's {@link Billboard#disableDepthTestDistance} value.
    * @see {@link https://cesium.com/blog/2018/07/30/billboards-on-terrain-improvements/|Billboards and Labels on Terrain Improvements}
    * @memberof BillboardCollection.prototype
    * @type {number}
@@ -580,7 +580,7 @@ BillboardCollection.prototype.add = function (options) {
  * 会被重新写入——这是一个 <code>O(n)</code> 操作，还会产生 CPU 到 GPU 的开销。为了获得最佳性能，在调用 <code>update</code> 之前移除尽可能多的广告牌。
  * 如果打算暂时隐藏广告牌，通常更高效的做法是调用
  * {@link Billboard#show} 而不是移除并重新添加广告牌。
- * 实体被销毁，即调用了 destroy()。
+ * {@link Billboard#show} instead of removing and re-adding the billboard.
  *
  * @exception {DeveloperError} This const b = billboards.add(...);
  *
@@ -678,7 +678,7 @@ BillboardCollection.prototype.contains = function (billboard) {
  * 返回集合中指定索引的广告牌。索引从零开始。
  * 随着广告牌的添加而增加。移除一个广告牌会将其后的所有广告牌位置左移，并改变它们的索引。此函数常用于
  * {@link BillboardCollection#length} 以遍历集合中的所有广告牌。
- * 该集合中。
+ * {@link BillboardCollection#length} to iterate over all the billboards
  * 广告牌的零基索引。
  *
  * @param {number} index 指定索引处的广告牌。
@@ -2110,7 +2110,7 @@ BillboardCollection.prototype.update = function (frameState) {
  * 如果此对象被销毁，则不应使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。
- * 如果此对象被销毁；否则返回 <code>false</code>。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.
  *
  * @returns {boolean} <code>true</code> 销毁此对象所持有的 WebGL 资源。销毁对象允许确定性地释放 WebGL 资源，而不依赖垃圾收集器来销毁该对象。
  *
@@ -2125,7 +2125,7 @@ BillboardCollection.prototype.isDestroyed = function () {
  * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
  * <br /><br />
  * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
- * 此对象被销毁，即调用了 destroy()。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * billboards = billboards && billboards.destroy();
  *
  * @exception {DeveloperError} This object was destroyed, i.e., destroy() was called.

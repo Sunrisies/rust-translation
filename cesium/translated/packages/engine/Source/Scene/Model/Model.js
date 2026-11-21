@@ -81,8 +81,8 @@ import ModelImagery from "./ModelImagery.js";
  *  </li>
  *  <li>
  * {@link https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor/EXT_mesh_primitive_edge_visibility|EXT_mesh_primitive_edge_visibility}
- * （默认情况下边缘被隐藏；通过
- * {@link Model#edgeDisplayMode} 或 {@link Cesium3DTileset#edgeDisplayMode} 设置 {@link EdgeDisplayMode} 以显示它们）
+ *  (edges are hidden by default; set {@link EdgeDisplayMode} via
+ *  {@link Model#edgeDisplayMode} or {@link Cesium3DTileset#edgeDisplayMode} to display them)
  *  </li>
  *  <li>
  * {@link https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor/EXT_meshopt_compression|EXT_meshopt_compression}
@@ -143,14 +143,14 @@ import ModelImagery from "./ModelImagery.js";
  * {@link https://github.com/KhronosGroup/glTF/blob/main/extensions/1.0/Vendor/WEB3D_quantized_attributes/README.md|WEB3D_quantized_attributes}
  *  </li>
  *  <li>
- * {@link https://nsgreg.nga.mil/csmwg.jsp|NGA_gpm_local (实验性)]
+ *  {@link https://nsgreg.nga.mil/csmwg.jsp|NGA_gpm_local (experimental)}
  *  </li>
  * </ul>
  * </p>
  * <p>
  * 注意：对于使用 KHR_texture_basisu 扩展的压缩纹理模型，我们建议在两个维度上采用 2 的幂纹理格式
- * 以实现最大兼容性。这是因为某些采样器需要 2 的幂纹理（{@link https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_textures_in_WebGL|在 WebGL 中使用纹理}）
- * 而 KHR_texture_basisu 需要 4 的倍乘维度（{@link https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_texture_basisu/README.md#additional-requirements|KHR_texture_basisu 额外要求}）。
+ * for maximum compatibility. This is because some samplers require power of 2 textures ({@link https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_textures_in_WebGL|Using textures in WebGL})
+ * and KHR_texture_basisu requires multiple of 4 dimensions ({@link https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_texture_basisu/README.md#additional-requirements|KHR_texture_basisu additional requirements}).
  * </p>
  *
  * @alias Model
@@ -241,7 +241,7 @@ function Model(options) {
    * 将模型从模型坐标转换为世界坐标的 4x4 变换矩阵。
    * 当此矩阵为单位矩阵时，模型将在世界坐标下绘制，即地球的 Cartesian WGS84 坐标。
    * 可以通过提供不同的变换矩阵来使用本地参考框架，例如 {@link Transforms.eastNorthUpToFixedFrame} 返回的矩阵。
-   * const origin = Cesium.Cartesian3.fromDegrees(-95.0, 40.0, 200000.0);
+   * by {@link Transforms.eastNorthUpToFixedFrame}.
    *
    * @type {Matrix4}
 
@@ -518,7 +518,7 @@ function Model(options) {
 
   /**
    * 当为 true 时，将显示轮廓；当为 false 时，不显示轮廓。
-   * 渲染轮廓时使用的颜色。
+   * {@link https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/CESIUM_primitive_outline|CESIUM_primitive_outline} extension.
    * 按名称存储 glTF 中的节点。
    *
    * @type {boolean}
@@ -871,7 +871,7 @@ Object.defineProperties(Model.prototype, {
   },
 
   /**
-   * 可能导致未定义行为。
+   * The model's custom shader, if it exists. Using custom shaders with a {@link Cesium3DTileStyle}
    * 该特性使用了 3D Tiles 规范中的部分内容，该内容尚未定稿且可能随 Cesium 标准弃用政策而变更。
    *
    * @memberof Model.prototype
@@ -906,7 +906,7 @@ Object.defineProperties(Model.prototype, {
   },
 
   /**
-   * 模型的高度参考值，决定模型相对于地形的绘制方式。
+   * The tile content this model belongs to, if it is loaded as part of a {@link Cesium3DTileset}.
    *
    * @memberof Model.prototype
    *
@@ -1601,8 +1601,8 @@ Object.defineProperties(Model.prototype, {
   /**
    * 大于 <code>1.0</code> 的值会增加模型的大小；小于 <code>1.0</code> 的值则会减小。
    * 受模型比例、最小像素尺寸和最大比例参数影响的模型真实比例。
-   * 无论缩放级别如何，模型的大约最小像素尺寸。
-   * 这可用于确保即使查看器放大时模型仍然可见。当为 <code>0.0</code> 时，不强制最小尺寸。
+   * culling is disabled. Back faces are not culled if {@link Model#color}
+   * is translucent or {@link Model#silhouetteSize} is greater than 0.0.
    *
    * @memberof Model.prototype
    *
@@ -1838,8 +1838,8 @@ Object.defineProperties(Model.prototype, {
   },
 
   /**
-   * 当前应用于模型中的特征的 {@link StyleCommandsNeeded}。该值由 {@link ModelDrawCommand}
-   * 在确定更新中提交哪些命令时内部使用。
+   * The {@link StyleCommandsNeeded} for the style currently applied to
+   * the features in the model. This is used internally by the {@link ModelDrawCommand}
    * 以大地坐标限定的矩形。对于具有
    *
    * @memberof Model.prototype
@@ -1997,7 +1997,7 @@ Model.prototype.getExtension = function (extensionName) {
 };
 
 /**
- * 根据分配的模型颜色判断模型是否为半透明。
+ * Marks the model's {@link Model#style} as dirty, which forces all features
  * to re-evaluate the style in the next frame the model is visible.
  */
 Model.prototype.makeStyleDirty = function () {

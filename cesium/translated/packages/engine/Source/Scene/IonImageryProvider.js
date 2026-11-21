@@ -144,7 +144,7 @@ Object.defineProperties(IonImageryProvider.prototype, {
   /**
    * 获取此提供器使用的代理。
    * 使用 Cesium ion REST API 创建瓦片式影像提供器。
-   * Ion 影像资产 ID。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof IonImageryProvider.prototype
    * @type {Event}
    * @readonly
@@ -325,7 +325,7 @@ IonImageryProvider.prototype.requestImage = function (x, y, level, request) {
  * @param {number} longitude 选择特征的经度。
  * @param {number} latitude  选择特征的纬度。
  * @return {Promise<ImageryLayerFeatureInfo[]>|undefined} A 选择特征的承诺，当异步操作完成时将解析。解析值是一个 {@link ImageryLayerFeatureInfo} 数组。
- * 如果未找到特征，数组可能为空。
+ *                   picking completes.  The resolved value is an array of {@link ImageryLayerFeatureInfo}
  * 如果不支持选择功能，则也可能为 undefined。
  * It may also be undefined if picking is not supported.
  */

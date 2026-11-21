@@ -3,7 +3,7 @@
 /**
  * 瓦片的优化方法。
  * <p>
- * 请参阅 {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification#refinement|优化说明}。
+ * See the {@link https://github.com/CesiumGS/3d-tiles/tree/main/specification#refinement|Refinement}
  * 位于 3D Tiles 规范中。
  * </p>
  *

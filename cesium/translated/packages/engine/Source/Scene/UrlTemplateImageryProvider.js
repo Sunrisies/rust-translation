@@ -113,7 +113,7 @@ const pickFeaturesTags = combine(tags, {
  * @property {number} [maximumLevel] 指定椭球体表面被划分为瓦片的 tiling 方案。如果未提供此参数，则使用 {@link WebMercatorTilingScheme}。
  * @property {Rectangle} [rectangle=Rectangle.MAX_VALUE] 椭球体。如果指定了 tilingScheme，则忽略此参数，使用 tiling 方案的椭球体。如果两者均未指定，则使用 WGS84 椭球体。
  * @property {TilingScheme} [tilingScheme=WebMercatorTilingScheme] 图像瓦片的像素宽度。
- * 图像瓦片的像素高度。
+ * surface is broken into tiles.  If this parameter is not provided, a {@link WebMercatorTilingScheme}
  * 如果此影像提供商提供的图像包含 Alpha 通道，则为 true；否则为 false。如果此属性为 false，则存在的 Alpha 通道将被忽略。如果此属性为 true，则没有 Alpha 通道的任何图像将被视为其 Alpha 为 1.0。当此属性为 false 时，内存使用和纹理上传时间可能会减少。
  * @property {Ellipsoid} [ellipsoid] 在调用 {@link UrlTemplateImageryProvider#pickFeatures} 时，获取特定位置特征信息的格式。如果未指定此参数，则禁用特征选择功能。
  * 如果为 true，{@link UrlTemplateImageryProvider#pickFeatures} 将请求 <code>pickFeaturesUrl</code> 并尝试解析响应中的特征。如果为 false，{@link UrlTemplateImageryProvider#pickFeatures} 将立即返回 undefined（表示没有可选择的
@@ -327,7 +327,7 @@ Object.defineProperties(UrlTemplateImageryProvider.prototype, {
    * 获取用于选择特征的 URL 模板。如果未指定此属性，
    * {@link UrlTemplateImageryProvider#pickFeatures} 将立即返回 undefined，表示没有选择任何特征。URL 模板支持
    * {@link UrlTemplateImageryProvider#url} 属性所支持的所有关键词，此外还支持以下内容：
-   * <li><code>{i}</code>: 被选择位置的像素列（水平坐标），最西端像素为 0。</li>
+   * {@link UrlTemplateImageryProvider#url} property, plus the following:
    * <ul>
    * <li><code>{i}</code>: The pixel column (horizontal coordinate) of the picked position, where the Westernmost pixel is 0.</li>
    * <li><code>{j}</code>: 被选择位置的像素行（垂直坐标），最北端像素为 0。</li>
@@ -458,7 +458,7 @@ Object.defineProperties(UrlTemplateImageryProvider.prototype, {
   /**
    * 获取影像提供程序处于活动状态时要显示的标签。通常用于显示影像来源的相关信息。
    * 获取指示该影像提供程序提供的图像是否包含 alpha 通道的值。如果此属性为 false，则存在的 alpha 通道将被忽略；如果为 true，则没有 alpha 通道的图像将被视为其 alpha 值为 1.0。当此属性为 false 时，内存使用和纹理上传时间都会减少。
-   * 获取给定瓦片显示时要显示的标签。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof UrlTemplateImageryProvider.prototype
    * @type {Event}
    * @readonly
@@ -543,7 +543,7 @@ UrlTemplateImageryProvider.prototype.requestImage = function (
  * @param {number} longitude 选择特征的经度。
  * @param {number} latitude  选择特征的纬度。
  * @return {Promise<ImageryLayerFeatureInfo[]>|undefined} A 异步选择完成时的特征承诺。解析值是一个 {@link ImageryLayerFeatureInfo} 实例数组。如果给定位置没有找到特征，该数组可能为空。
- * 如果不支持选择功能，则也返回 undefined。
+ *                   picking completes.  The resolved value is an array of {@link ImageryLayerFeatureInfo}
  * instances.  The array may be empty if no features are found at the given location.
  * It may also be undefined if picking is not supported.
  */

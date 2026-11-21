@@ -48,7 +48,7 @@ Object.defineProperties(MaterialProperty.prototype, {
 });
 
 /**
- * 用于检索类型的时长。
+ * Gets the {@link Material} type at the provided time.
  * @function
  *
  * @param {JulianDate} time 检索类型所持续的时间。

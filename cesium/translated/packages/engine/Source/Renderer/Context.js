@@ -1012,7 +1012,7 @@ Object.defineProperties(Context.prototype, {
   },
 
   /**
-   * 非发射材质。此纹理可用作发射材质的占位纹理。
+   * A 1x1 RGBA texture initialized to the color defined by {@link Texture.defaultColor}.
    * This can be used as a placeholder texture while other textures are downloaded.
    * @memberof Context.prototype
    * @type {Texture}
@@ -1152,8 +1152,8 @@ Object.defineProperties(Context.prototype, {
 
   /**
    * 仅在调试版本中可用。
-   * 定义读取像素的矩形的选项。
-   * 读取矩形中的 x 偏移量。
+   * {@link Framebuffer}, it is used to represent the default framebuffer in calls to
+   * {@link Texture.fromFramebuffer}.
    * @memberof Context.prototype
    * @type {object}
    */

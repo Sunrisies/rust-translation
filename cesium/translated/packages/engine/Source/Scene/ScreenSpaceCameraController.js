@@ -149,8 +149,8 @@ function ScreenSpaceCameraController(scene) {
   /**
    * 允许用户在地图上平移的输入。此功能仅适用于 2D 和 Columbus 视图模式。
    * <p>
-   * 类型可以是 {@link CameraEventType}、<code>undefined</code>、具有 <code>eventType</code> 属性的对象，以及具有类型 <code>CameraEventType</code> 和 {@link KeyboardEventModifier} 的 <code>modifier</code> 属性。
-   * 或者 foregoing 中的任意一种数组。
+   * The type can be a {@link CameraEventType}, <code>undefined</code>, an object with <code>eventType</code>
+   * and <code>modifier</code> properties with types <code>CameraEventType</code> and {@link KeyboardEventModifier},
    * 允许用户放大/缩小输入的输入。
    * </p>
    * @type {CameraEventType|Array|undefined}
@@ -160,8 +160,8 @@ function ScreenSpaceCameraController(scene) {
   /**
    * 允许用户放大/缩小输入的输入。
    * <p>
-   * 类型可以是 {@link CameraEventType}、<code>undefined</code>、具有 <code>eventType</code> 属性的对象，以及具有类型 <code>CameraEventType</code> 和 {@link KeyboardEventModifier} 的 <code>modifier</code> 属性。
-   * 或者 foregoing 中的任意一种数组。
+   * The type can be a {@link CameraEventType}, <code>undefined</code>, an object with <code>eventType</code>
+   * and <code>modifier</code> properties with types <code>CameraEventType</code> and {@link KeyboardEventModifier},
    * 允许用户围绕地球或另一个对象旋转的输入。此功能仅适用于 3D 和 Columbus 视图模式。
    * </p>
    * @type {CameraEventType|Array|undefined}
@@ -175,8 +175,8 @@ function ScreenSpaceCameraController(scene) {
   /**
    * 类型可以是 {@link CameraEventType}、<code>undefined</code>、具有 <code>eventType</code> 属性的对象，以及具有类型 <code>CameraEventType</code> 和 {@link KeyboardEventModifier} 的 <code>modifier</code> 属性。
    * <p>
-   * 允许用户围绕地球或另一个对象旋转的输入。此功能仅适用于 3D 和 Columbus 视图模式。
-   * 类型可以是 {@link CameraEventType}、<code>undefined</code>、具有 <code>eventType</code> 属性的对象，以及具有类型 <code>CameraEventType</code> 和 {@link KeyboardEventModifier} 的 <code>modifier</code> 属性。
+   * The type can be a {@link CameraEventType}, <code>undefined</code>, an object with <code>eventType</code>
+   * and <code>modifier</code> properties with types <code>CameraEventType</code> and {@link KeyboardEventModifier},
    * 或者 foregoing 中的任意一种数组。
    * </p>
    * @type {CameraEventType|Array|undefined}

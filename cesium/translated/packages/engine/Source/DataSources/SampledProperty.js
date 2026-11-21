@@ -114,7 +114,7 @@ function mergeNewSamples(epoch, times, values, newData, packedLength) {
 }
 
 /**
- * 一个控件，其值通过提供的样本集和指定的插值算法及程度在给定时间内进行插值计算。
+ * A {@link Property} whose value is interpolated for a given time from the
  * 由提供的样本集和指定的插值算法及程度决定。
  * @alias SampledProperty
  * @constructor

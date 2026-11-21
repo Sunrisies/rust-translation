@@ -59,8 +59,8 @@ import CustomShaderTranslucencyMode from "./CustomShaderTranslucencyMode.js";
  */
 
 /**
- * 该自定义 GLSL 着色器也可用于 {@link Model} 以及 {@link Cesium3DTileset}。
- * 如果使用了纹理统一变量，则必须进行额外的资源管理：
+ * A user defined GLSL shader used with {@link Model} as well
+ * as {@link Cesium3DTileset}.
  * <p>
  * 如果使用了纹理统一变量，则必须进行额外的资源管理：
  * </p>
@@ -77,7 +77,7 @@ import CustomShaderTranslucencyMode from "./CustomShaderTranslucencyMode.js";
  *   </li>
  * </ul>
  * <p>
- * 具有以下选项的对象
+ * See the {@link https://github.com/CesiumGS/cesium/tree/main/Documentation/CustomShaderGuide|Custom Shader Guide} for more detailed documentation.
  * </p>
  *
  * @param {object} options 自定义着色器模式，用于确定自定义着色器代码如何插入到片段着色器中。
@@ -207,7 +207,7 @@ function CustomShader(options) {
   this._defaultTexture = undefined;
   /**
    * 与 {@link DrawCommand} 使用的整体统一映射结合使用。
-   * 在 <code>vertexShaderText</code> 中使用的变量集合。此集合
+   * is combined with the overall uniform map used by the {@link DrawCommand}
    *
    * @type {Object<string, Function>}
    * @readonly
@@ -217,7 +217,7 @@ function CustomShader(options) {
 
   /**
    * 仅用于 {@link CustomShaderPipelineStage} 的优化。
-   * 在 <code>fragmentShaderText</code> 中使用的变量集合。此集合
+   * is used only for optimizations in {@link CustomShaderPipelineStage}.
    * @type {VertexVariableSets}
    * @private
    */

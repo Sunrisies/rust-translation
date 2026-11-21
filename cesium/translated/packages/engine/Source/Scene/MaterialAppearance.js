@@ -277,8 +277,8 @@ MaterialAppearance.prototype.getRenderState =
  */
 
 /**
- * 确定 {@link MaterialAppearance} 实例支持的 {@link Material} 类型。这是
- * (灵活性（多种材质）与内存/性能之间的权衡
+ * Determines the type of {@link Material} that is supported by a
+ * {@link MaterialAppearance} instance.  This is a trade-off between
  * (所需的顶点格式和 GLSL 着色器复杂度。
  * 仅支持基本材质，这些材质只需要 <code>position</code> 和
  * @namespace

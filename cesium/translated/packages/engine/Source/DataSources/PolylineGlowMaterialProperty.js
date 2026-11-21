@@ -7,7 +7,7 @@ const defaultGlowPower = 0.25;
 const defaultTaperPower = 1.0;
 
 /**
- * 一个映射至多段线发光 {@link Material} 统一变量的 <code>...</code>、{@link ...}、反引号 `...` 内的内容。
+ * A {@link MaterialProperty} that maps to polyline glow {@link Material} uniforms.
  * @alias PolylineGlowMaterialProperty
  * @constructor
  *
@@ -61,7 +61,7 @@ Object.defineProperties(PolylineGlowMaterialProperty.prototype, {
     },
   },
   /**
-   * 获取或设置指定发光的强度作为总线宽百分比的数值属性（小于 1.0）。
+   * Gets or sets the Property specifying the {@link Color} of the line.
    * @memberof PolylineGlowMaterialProperty.prototype
    * @type {Property|undefined}
    */

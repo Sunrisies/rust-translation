@@ -159,7 +159,7 @@ Object.defineProperties(ImageBasedLighting.prototype, {
    * </p>
    *
    * 这些值可以通过使用 <code>cmgen</code> 工具预处理环境映射获得。
-   * {@link https://github.com/google/filament/releases|Google 的 Filament 项目}。
+   * {@link https://github.com/google/filament/releases|Google's Filament project}.
    * 确保在 <code>cmgen</code> 中使用 <code>--no-mirror</code> 选项。
    *
    * @memberof ImageBasedLighting.prototype
@@ -443,7 +443,7 @@ ImageBasedLighting.prototype.isDestroyed = function () {
  * 一旦对象被销毁，不应使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将引发 {@link DeveloperError} 异常。因此，
- * 应将返回值 (<code>undefined</code>) 赋给该对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 表明对象已被销毁，即调用了 destroy() 方法。
  *
  * @exception {DeveloperError} This object was destroyed, i.e., destroy() was called.

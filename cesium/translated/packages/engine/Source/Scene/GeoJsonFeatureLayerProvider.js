@@ -13,11 +13,11 @@ import FeatureLayerCollection from "./FeatureLayerCollection.js";
  */
 
 /**
- * 控件。</code>
- * 影像图层。</code>
+ * A {@link FeatureLayerProvider} for a GeoJSON object. Provides one
+ * {@link FeatureLayer} containing all of its features.
  * <p>
- * 控件。</code>
- * 控件。</code>
+ * Do not construct this directly. Use {@link GeoJsonFeatureLayerProvider.fromGeoJson}
+ * or {@link GeoJsonFeatureLayerProvider.fromUrl}.
  * </p>
  *
  * @implements {FeatureLayerProvider}

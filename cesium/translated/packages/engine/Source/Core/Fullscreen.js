@@ -22,7 +22,7 @@ const Fullscreen = {};
 Object.defineProperties(Fullscreen, {
   /**
    * 当前处于全屏状态的元素，如果有的话。仅用于检查浏览器是否处于全屏模式，请使用 {@link Fullscreen#fullscreen}。
-   * 全屏进入或退出时，文档中触发的事件名称。此事件名称适用于 addEventListener 的使用。
+   * browser is in fullscreen mode or not, use {@link Fullscreen#fullscreen}.
    * @memberof Fullscreen
    * @type {object}
    * @readonly
@@ -41,7 +41,7 @@ Object.defineProperties(Fullscreen, {
    * 当全屏模式进入或退出时，文档中触发的事件名称。此事件名称适用于 addEventListener 的使用。
    * 当全屏错误发生时，文档中触发的事件名称。此事件名称适用于 addEventListener 的使用。
    * 在事件处理程序中，要判断浏览器是否处于全屏模式，请使用 {@link Fullscreen#fullscreen}。
-   * 当全屏模式出现错误时，文档中触发的事件名称。此事件名称适用于 addEventListener 的使用。
+   * use {@link Fullscreen#fullscreen}.
    * @memberof Fullscreen
    * @type {string}
    * @readonly

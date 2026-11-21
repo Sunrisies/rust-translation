@@ -39,7 +39,7 @@ function EntityData(entity) {
 }
 
 /**
- * 一个控件，用于将 {@link Entity#point} 映射为 {@link PointPrimitive}。
+ * A {@link Visualizer} which maps {@link Entity#point} to a {@link PointPrimitive}.
  * @alias PointVisualizer
  * @constructor
  *

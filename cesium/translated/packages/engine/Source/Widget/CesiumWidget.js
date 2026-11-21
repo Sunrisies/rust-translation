@@ -165,7 +165,7 @@ function configureCameraFrustum(widget) {
  * @param {ContextOptions} [options.contextOptions] 传递给 {@link Scene} 的上下文和 WebGL 创建属性。
  * @param {Element|string} [options.creditContainer] 将包含 {@link CreditDisplay} 的 DOM 元素或 ID。如果未指定，徽标将添加到控件本身的底部。
  * 将包含由 {@linkCreditDisplay} 创建的徽标弹出窗口的 DOM 元素或 ID。如果未指定，该窗口将出现在控件本身之上。
- * @param {Element|string} [options.creditViewport] 由该控件可视化的数据源集合。如果提供此参数，则...
+ * @param {Element|string} [options.creditViewport] The DOM element or ID that will contain the credit pop up created by the {@link CreditDisplay}.  If not specified, it will appear over the widget itself.
  * @param {DataSourceCollection} [options.dataSources=new DataSourceCollection()] The collection of data sources visualized by the widget.  If this parameter is provided,
  * 该实例假定由调用者拥有，在控件被销毁时不会被销毁。
  * @param {boolean} [options.shadows=false] 确定阴影是否由光源产生。
@@ -782,7 +782,7 @@ Object.defineProperties(CesiumWidget.prototype, {
    * 如果为 true，则忽略浏览器的设备像素比，使用 1.0，
    * 根据 CSS 像素而非设备像素进行渲染。这可以在像素密度较高的低性能设备上提升性能。当为 false 时，渲染
    * 将基于设备像素进行。 {@link CesiumWidget#resolutionScale} 仍然生效，无论
-   * 此标志是 true 还是 false。
+   * will be in device pixels. {@link CesiumWidget#resolutionScale} will still take effect whether
    * 获取或设置数据源是否可以暂时暂停
    * @memberof CesiumWidget.prototype
    *

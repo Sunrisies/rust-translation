@@ -87,7 +87,7 @@ function createShaderProgram(
 }
 
 /**
- * 构建作为创建
+ * Builds the {@link DrawCommand} that serves as the basis for either creating
  * {@link ModelDrawCommand} 或 {@link ModelRuntimePrimitive}
  *
  * @param {PrimitiveRenderResources} primitiveRenderResources primitive 的渲染资源的基础的 {@link DrawCommand}。

@@ -25,10 +25,10 @@ Object.defineProperties(GlobeTranslucency.prototype, {
   /**
    * 当设置为 true 时，地球球体将以半透明表面形式渲染。
    * <br /><br />
-   * 透明度是通过混合 {@link Globe#material}、{@link Globe#imageryLayers} 以及 {@link Globe#baseColor} 来计算的，这些元素可能包含半透明效果，然后乘以
-   * {@link GlobeTranslucency#frontFaceAlpha} 和 {@link GlobeTranslucency#frontFaceAlphaByDistance} 用于正面面，
+   * The alpha is computed by blending {@link Globe#material}, {@link Globe#imageryLayers},
+   * and {@link Globe#baseColor}, all of which may contain translucency, and then multiplying by
    * {@link GlobeTranslucency#backFaceAlpha} 和 {@link GlobeTranslucency#backFaceAlphaByDistance} 用于背面面。
-   * 当相机位于地下时，背面面和正面面会被交换，即背向的几何图形
+   * {@link GlobeTranslucency#backFaceAlpha} and {@link GlobeTranslucency#backFaceAlphaByDistance} for back faces.
    * 被视为正面面向用户。
    * 半透明效果默认被禁用。
    * <br /><br />
@@ -169,8 +169,8 @@ Object.defineProperties(GlobeTranslucency.prototype, {
   /**
    * 根据与相机的距离，获取或设置地球球体背面面的近距和远距半透明属性。
    * 半透明效果将在 {@link NearFarScalar#nearValue} 和
-   * {@link NearFarScalar#farValue} 之间插值，此时相机距离位于指定 {@link NearFarScalar#near} 和 {@link NearFarScalar#far} 的上下边界内。
-   * 超出这些范围时，半透明效果会被限制在最近的边界值。如果未定义，
+   * {@link NearFarScalar#farValue} while the camera distance falls within the lower and upper bounds
+   * of the specified {@link NearFarScalar#near} and {@link NearFarScalar#far}.
    * Outside of these ranges the translucency remains clamped to the nearest bound.  If undefined,
    * backFaceAlphaByDistance 将被禁用。
    * <br /><br />

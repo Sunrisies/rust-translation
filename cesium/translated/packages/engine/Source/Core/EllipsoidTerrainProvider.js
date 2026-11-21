@@ -12,7 +12,7 @@ import TerrainProvider from "./TerrainProvider.js";
  *
  * @param {object} [options] Object with the following properties:
  * @param {TilingScheme} [options.tilingScheme] 分块方案，指定如何将椭球表面分割为小块。如果未提供此参数，则使用 {@link GeographicTilingScheme} 分块方案。
- * 椭球。如果指定了分块方案，则忽略此参数，使用分块方案的椭球数据。如果两者均未指定，则使用默认椭球数据。
+ * surface is broken into tiles.  If this parameter is not provided, a {@link GeographicTilingScheme}
  * 当地形提供器遇到异步错误时引发的事件。通过订阅该事件，您可以收到错误通知并可能进行恢复。事件监听器接收 {@link TileProviderError} 的实例。
  * @param {Ellipsoid} [options.ellipsoid=Ellipsoid.default] 此地形提供器处于活动状态时显示的信用信息。通常用于显示地形的来源。
  * 此提供器使用的分块方案。
@@ -46,7 +46,7 @@ Object.defineProperties(EllipsoidTerrainProvider.prototype, {
   /**
    * 指示请求的块是否包含顶点法线的值。
    * 可用于确定该提供器提供的地形可用性的对象，例如在点和矩形上。如果可用性信息不可得，此属性可能未定义。
-   * 请求特定块的几何数据。结果包括地形数据，并表明所有子块均可用。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof EllipsoidTerrainProvider.prototype
    * @type {Event}
    * @readonly

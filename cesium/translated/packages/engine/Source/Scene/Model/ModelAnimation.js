@@ -172,7 +172,7 @@ Object.defineProperties(ModelAnimation.prototype, {
   },
 
   /**
-   * 
+   * The {@link Model} that owns this animation.
    *
    * @memberof ModelAnimation.prototype
    *

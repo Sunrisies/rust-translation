@@ -102,7 +102,7 @@ function PrimitiveRenderResources(nodeRenderResources, runtimePrimitive) {
   /**
    * 用于创建 {@link RenderState} 的选项对象。
    * 管道阶段仅设置选项；实际的渲染状态是在构建 {@link DrawCommand} 时创建的。从节点渲染资源继承而来。
-   * 模型是否有轮廓。该值指示需要哪些绘制命令。从节点渲染资源继承而来。
+   * is created when the {@link DrawCommand} is constructed. Inherited from
    * 模型是否属于使用 skipLevelOfDetail 优化的 tileset。该值指示需要哪些绘制命令。从节点渲染资源继承而来。
    *
    * @type {object}

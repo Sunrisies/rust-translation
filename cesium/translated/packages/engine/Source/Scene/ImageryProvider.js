@@ -124,7 +124,7 @@ Object.defineProperties(ImageryProvider.prototype, {
   /**
    * 获取一个值，指示此影像提供方提供的图像是否包含 alpha 通道。如果此属性为 false，则存在的 alpha 通道将被忽略。如果此属性为 true，则没有 alpha 通道的图像将被视为其 alpha 为 1.0。当此属性为 false 时，内存使用和纹理上传时间都会减少。
    * 获取显示特定瓦片时显示的署名。
-   * 瓦片 X 坐标。
+   * are passed an instance of {@link TileProviderError}.
    * @memberof ImageryProvider.prototype
    * @type {Event}
    * @readonly
@@ -208,7 +208,7 @@ ImageryProvider.prototype.requestImage = function (x, y, level, request) {
  * @param {number} longitude 选择特征时的经度。
  * @param {number} latitude  选择特征时的纬度。
  * @return {Promise<ImageryLayerFeatureInfo[]>|undefined} A 所选特征的承诺，将在异步操作完成时解析。解析值是一个 {@link ImageryLayerFeatureInfo} 实例数组。如果给定位置没有找到特征，该数组可能为空。
- * 如果不支持选择功能，则也定义为未定义。
+ *                   picking completes.  The resolved value is an array of {@link ImageryLayerFeatureInfo}
  * 从给定 URL 加载图像。如果 URL 引用的服务器已有
  * 太多待处理请求，此函数将返回未定义，表示
  *

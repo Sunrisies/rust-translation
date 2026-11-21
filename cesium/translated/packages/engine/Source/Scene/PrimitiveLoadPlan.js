@@ -90,7 +90,7 @@ function IndicesLoadPlan(indices) {
 
   /**
    * 这些三角形索引在 {@link PrimitiveLoadPlan#postProcess} 完成时是否会被加载为 GPU 缓冲区副本。
-   * Primitives 在它们的属性和索引被加载后可能需要后期处理步骤，例如为 CESIUM_primitive_outline glTF 扩展生成轮廓。
+   * buffer by the time {@link PrimitiveLoadPlan#postProcess} is finished.
    *
    * @type {boolean}
    * @private

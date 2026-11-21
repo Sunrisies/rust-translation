@@ -92,7 +92,7 @@ function EllipsoidPrimitive(options) {
    * 将椭球体从模型坐标转换为世界坐标的 4x4 变换矩阵。
    * 当该矩阵为单位矩阵时，椭球体将在世界坐标中绘制，即地球 WGS84 坐标。
    * 可以通过提供不同的变换矩阵来使用本地参考框架，例如 {@link Transforms.eastNorthUpToFixedFrame} 返回的矩阵。
-   * const origin = Cesium.Cartesian3.fromDegrees(-95.0, 40.0, 200000.0);
+   * by {@link Transforms.eastNorthUpToFixedFrame}.
    *
    * @type {Matrix4}
    * @default {@link Matrix4.IDENTITY}
@@ -115,7 +115,7 @@ function EllipsoidPrimitive(options) {
 
   /**
    * {@link https://github.com/CesiumGS/cesium/wiki/Fabric|Fabric} 编写的自定义材质。
-   * 
+   * {@link https://github.com/CesiumGS/cesium/wiki/Fabric|Fabric}.
    * <p>
    * 默认材质为 <code>Material.ColorType</code>。
    * </p>

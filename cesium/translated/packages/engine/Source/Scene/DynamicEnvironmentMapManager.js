@@ -944,7 +944,7 @@ DynamicEnvironmentMapManager.prototype.isDestroyed = function () {
  * 一旦对象被销毁，就不应继续使用它；调用除
  * <br /><br />
  * <code>isDestroyed</code> 之外的任何函数将导致 {@link DeveloperError} 异常。因此，
- * 将返回值 (<code>undefined</code>) 赋给对象，如示例中所示。
+ * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
  * 对象被销毁，即调用了 destroy()。
  * @throws {DeveloperError} This mapManager = mapManager && mapManager.destroy();
  * @example

@@ -46,7 +46,7 @@ function EntityData(entity) {
 }
 
 /**
- * 一个控件，用于将{@link Entity#billboard}映射为{@link Billboard}。
+ * A {@link Visualizer} which maps {@link Entity#billboard} to a {@link Billboard}.
  * @alias BillboardVisualizer
  * @constructor
  *
