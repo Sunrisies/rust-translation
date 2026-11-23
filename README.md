@@ -9,6 +9,9 @@
 | **Nuxt** | v4.6.4 | 253 篇 markdown | https://nuxt.sunrise1024.top/ |
 | **Cesium** | v1.147.0 | 985 个 JSDoc 源 / 357 页 API | https://cesium.sunrise1024.top/ |
 | **Leaflet** | v1.9.4 稳定版 | 83 个 Leafdoc 源 + 65 篇教程 / 23 页 | https://leaflet.sunrise1024.top/ |
+| **Rust 五本书** | 官方最新版 | 909 篇译文 / 910 页 | https://rust.sunrise1024.top/ |
+
+Rust 五本：Rust 程序设计语言、Cargo 使用指南、Rust 参考手册、Clippy 文档、Rust 错误码说明。统一域名 + 子路径，顶部导航互相切换，共用 Umami 统计。
 
 另有 WorkBuddy 托管镜像：https://nuxt-docs-zh.app.workbuddy.host/?sharecode=AYJMZQT7S7
 
@@ -20,7 +23,7 @@
 2. **结构保留**：markdown / JSDoc 的代码、链接、类型、参数名、组件标记全部原样保留，只翻译自然语言。
 3. **术语统一**：术语表强制一致（composable→组合式函数、widget→控件…）。
 4. **断点续传**：每翻完一个文件立即写缓存，中断可重跑。
-5. **官网同款站点**：Nuxt 用 Docus 主题（顶部章节 tab + 侧边栏）；Cesium 用 JSDoc（API 参考标准布局）；Leaflet 复用官网 HTML 外壳（含可交互地图）。
+5. **官网同款站点**：Nuxt 用 Docus 主题（顶部章节 tab + 侧边栏）；Cesium 用 JSDoc（API 参考标准布局）；Leaflet 复用官网 HTML 外壳（含可交互地图）；Rust 用 mdBook（五本书统一门户 + 顶部切换导航）。
 6. **多目标部署**：WorkBuddy 托管 + 自有服务器（Caddy / nginx），各自独立的 Umami 统计 id。
 
 ---
@@ -50,13 +53,31 @@
 │   ├── translated/          # 985 个改了 JSDoc 注释的 js（译文）
 │   └── scripts/             # 拉取/翻译/修复/生成/统计 6 个脚本
 │
-└── leaflet/                 # Leaflet 项目（第三套文档）
+├── leaflet/                 # Leaflet 项目（第三套文档）
     ├── 部署说明.md           # Leaflet 完整构建+部署手册（先看这个）
     ├── translated/          # 83 个改了 Leafdoc 注释的 js + 65 篇教程 md
     ├── nav-translated/      # 导航页译文（首页/教程索引/安装）
     ├── scripts/             # 拉取/翻译/生成脚本
     └── *.py                 # 翻译器（leafdoc/tutorial/html/nav）
+│
+└── rust/                    # Rust 五本书（第四套文档）
+    ├── 部署说明.md           # Rust 完整构建+部署手册（先看这个）
+    ├── _shared/             # 13 个共用脚本（翻译/修复/构建/注入/打包）
+    ├── index.html           # 门户首页（五本书卡片入口）
+    ├── book/ cargo/ reference/ clippy/ error-codes/
+    │   ├── config.json      # 各书配置（源/术语/复制例外）
+    │   ├── cache.json       # 增量翻译缓存
+    │   └── content/         # 译文 markdown（本项目的交付物）
+    └── # repo/ build/ site/ deploy/ 均为可再生成产物，不提交
 ```
+
+## 提交约定
+
+四套文档统一遵循：**只提交译文 + 脚本 + 配置 + 部署文档**，不提交：
+- `repo/`（上游英文源，可重新拉取）
+- `build/`、`site/`、`deploy/`（构建/部署产物，可重新生成）
+- `*.tar.gz`、`*.gguf` 等打包文件与模型
+- `*.log` 临时日志
 
 > 三套文档统一放在 `nuxt/`、`cesium/`、`leaflet/` 三个同级目录，只上传译文、脚本、配置、文档；英文源码（repo/）、node_modules、构建产物（.output/）都不传。Nuxt 的英文源仓库在 `D:/hy-mt2-bench/nuxt-docs/repo/`（共享源材料，仍在仓库根，被 .gitignore 排除）。
 

@@ -16,6 +16,13 @@ node_modules/
 **/output/
 nuxt/serve.log
 
+# ============ Rust 五本书：构建产物与部署包（只提交 content/ 译文 + _shared/ 脚本） ============
+rust/*/build/
+rust/*/site/
+rust/deploy/
+rust/*.tar.gz
+rust/*/retranslate.list
+
 # ============ 上游英文源仓库（靠 update.sh 的 git pull 重新获取，不提交） ============
 repo/
 

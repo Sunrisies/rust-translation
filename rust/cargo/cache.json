@@ -1,0 +1,399 @@
+{
+  "appendix/git-authentication.md": {
+    "hash": "4b6d033bfd9cd97a75f5f48e3883d61f7907cbe733b735c9bd085700267e5e48",
+    "segments": 19
+  },
+  "appendix/glossary.md": {
+    "hash": "e2332fc7570ead552efef00b499290733e4844af9f42e6764ea072a7b17c7226",
+    "segments": 70
+  },
+  "CHANGELOG.md": {
+    "hash": "2c8984b50443213a348b829a036b7f4537af05f1d898e7a0c267b0dcd409c991",
+    "segments": 0,
+    "copied": true
+  },
+  "commands/build-commands.md": {
+    "hash": "4ac0978ce780f664c041c03838547bd799f3af296f1ed4a242aa53cc377f9f8c",
+    "segments": 1
+  },
+  "commands/cargo-add.md": {
+    "hash": "a9bbd6c0a31e79dd9e4120503a380dba5d72db574f3e646340c61a6fd54736ab",
+    "segments": 50
+  },
+  "commands/cargo-bench.md": {
+    "hash": "43f4b788c8a2722832f88351619a832e75b52736babc398cd57fa22ec005691e",
+    "segments": 88
+  },
+  "commands/cargo-build.md": {
+    "hash": "97ba75f3a196a84eb943dcf0cc02658828a74722747bb13ab914d0fa6ddada3c",
+    "segments": 72
+  },
+  "commands/cargo-check.md": {
+    "hash": "1a67f253f0253ccfce21e0cd1966cd121504c771c90e5a7fb6f9588e014674ce",
+    "segments": 70
+  },
+  "commands/cargo-clean.md": {
+    "hash": "cc4dd586665be78c99746a8bdaa75b1207f0f68840f0b2694bef9718ffc22e21",
+    "segments": 41
+  },
+  "commands/cargo-clippy.md": {
+    "hash": "45e3f68cfb94944d48c6fabd7520c3ab58284a43856a3be2f35249fc4e0806be",
+    "segments": 8
+  },
+  "commands/cargo-doc.md": {
+    "hash": "17b82a118eac01cf3a9d9782e5c44b39fce379ea2e20a3a29458c78d96b4b484",
+    "segments": 66
+  },
+  "commands/cargo-fetch.md": {
+    "hash": "9ff92f451ebf56b42cc1905e9fdcf7bf0ff5128892da68f80a038ed011a4bb10",
+    "segments": 33
+  },
+  "commands/cargo-fix.md": {
+    "hash": "0ce27b148cc9dd45e1d817c9c57b663fc36e400102d1ff11707e50197c38f35e",
+    "segments": 87
+  },
+  "commands/cargo-fmt.md": {
+    "hash": "f6931115b79c4a320c0470c214fa7835b92b176d71b43ab0b257c94408f1deb2",
+    "segments": 8
+  },
+  "commands/cargo-generate-lockfile.md": {
+    "hash": "564f7cd6a2b5facef7895f9874435b0892317d7e9d6eac6e3b91dcacf60d2a20",
+    "segments": 31
+  },
+  "commands/cargo-help.md": {
+    "hash": "42e55b59b50812036f137eb957b31c5ba70b3f4b218a914c9cce4742d94a1e75",
+    "segments": 39
+  },
+  "commands/cargo-info.md": {
+    "hash": "ba8f00a2b542867d0f4efef45de8421cbd0a787167e654212d14f013ea710c1d",
+    "segments": 36
+  },
+  "commands/cargo-init.md": {
+    "hash": "ec50c41bdf0f445083adf00444371ea7c2fc0dfd0bf17d4a66dce951d10c68e5",
+    "segments": 34
+  },
+  "commands/cargo-install.md": {
+    "hash": "9ccbd9677937dc8c08fb8a536a2424dd299ef3dd1999634a165fc7ce10bff767",
+    "segments": 76
+  },
+  "commands/cargo-locate-project.md": {
+    "hash": "e20612bbea27b7bef96a4ba00acd7d105d0f245f6278e244c6ff43d31eeb20ac",
+    "segments": 28
+  },
+  "commands/cargo-login.md": {
+    "hash": "f08d88387383db36332f84d528d4c4192ad0e456d85f93c6aa6a42ec6000cda1",
+    "segments": 35
+  },
+  "commands/cargo-logout.md": {
+    "hash": "0c00b6ece4f4a4f18690984e4209095d9577a833b27e199143b1e36a8a24252b",
+    "segments": 33
+  },
+  "commands/cargo-metadata.md": {
+    "hash": "f37216cf75eab518a77fd57f68e7c69dad89b83c6ea5f6fdac493f95cd1cf4f3",
+    "segments": 49
+  },
+  "commands/cargo-miri.md": {
+    "hash": "600e18feee0d3c238881581b7b79cb94f62e072ab277cda8ffc079d565092d52",
+    "segments": 9
+  },
+  "commands/cargo-new.md": {
+    "hash": "6ff7779cbaec69f8e99f865c93eb742f822dbcd4f200c5aad348894d1547c4f9",
+    "segments": 32
+  },
+  "commands/cargo-owner.md": {
+    "hash": "e743df3231cd0738994158267f966d676b898ab9061a9642e6c45b6420193ddb",
+    "segments": 36
+  },
+  "commands/cargo-package.md": {
+    "hash": "d10a200b7980518f8594babfc298b0604badd930c4036ce6ef50a335117affdb",
+    "segments": 63
+  },
+  "commands/cargo-pkgid.md": {
+    "hash": "dbd4817a8968e279db289551045963f1006c87d21c94f1f3b24e09899b1b3404",
+    "segments": 45
+  },
+  "commands/cargo-publish.md": {
+    "hash": "a8f1f73070ce1f6569119f63b4e703cccd4d330c2bbc66b3d15780389e71c9ec",
+    "segments": 53
+  },
+  "commands/cargo-remove.md": {
+    "hash": "0d6c4b1d4db79d7c86bf51136b643136acc2a8ce679f6c5a0707f20dc7e815bf",
+    "segments": 36
+  },
+  "commands/cargo-report-future-incompatibilities.md": {
+    "hash": "c928ab73ca343c452ca356e1fae3a27a6979a1bc494cc17aa90a34b274b21e60",
+    "segments": 36
+  },
+  "commands/cargo-report.md": {
+    "hash": "3670d1ca6d9800dec108ab1fb6f8f2415431a582a680f6c8aa0ef9d0306574fd",
+    "segments": 31
+  },
+  "commands/cargo-run.md": {
+    "hash": "cab57d765fcb0d977aa2365a3b06d9228651d94335796ec558d199439bbcaa69",
+    "segments": 60
+  },
+  "commands/cargo-rustc.md": {
+    "hash": "69782c49e759a6766b6384a2bd2a71b72c5e7ff527c6ed03075f24c5daf454bb",
+    "segments": 78
+  },
+  "commands/cargo-rustdoc.md": {
+    "hash": "210af7118a97a882881f825fdbe6756e33c104efd5fa8cc33d8f1b06cece33f8",
+    "segments": 70
+  },
+  "commands/cargo-search.md": {
+    "hash": "053a868f3771e55d59b9459cdf4a1c87dcdad6dcb95ea1e7447e4d98fa01074c",
+    "segments": 28
+  },
+  "commands/cargo-test.md": {
+    "hash": "77755fa92a7232f90d1aaa4796d87b367e2be81e58e10e0af41cebc65c2e5305",
+    "segments": 100
+  },
+  "commands/cargo-tree.md": {
+    "hash": "e01ab3df183786b005dcb2c9736462a730ccb962de6cf3447b357691040ef99d",
+    "segments": 69
+  },
+  "commands/cargo-uninstall.md": {
+    "hash": "b9c1830e2515bc4079e6deb093d8b7a243602fc7e10152edd6de836b507e4d7e",
+    "segments": 29
+  },
+  "commands/cargo-update.md": {
+    "hash": "c1674be76cd98fa0eb78c69b94367417d5d81500db1b097ff02e774ea06af32b",
+    "segments": 42
+  },
+  "commands/cargo-vendor.md": {
+    "hash": "fc821e2228494f92c77028e832d4fda2351564b95f94e1996bb4ce4805c798d1",
+    "segments": 43
+  },
+  "commands/cargo-version.md": {
+    "hash": "caeabd37e52e8da776432f3b4ab7816a2c4651e6ab1921855e1a1be7ecc90129",
+    "segments": 16
+  },
+  "commands/cargo-yank.md": {
+    "hash": "7c15d9053f3bc80ffc9f3e123daaf50bd9507307d47c1a4c22106d1ec16b5a82",
+    "segments": 42
+  },
+  "commands/cargo.md": {
+    "hash": "f639bd7aedcc780c4a93e67245b5604ac694816cca8460ef2334b1758e8a98b3",
+    "segments": 100
+  },
+  "commands/deprecated-and-removed.md": {
+    "hash": "b37580ab4d937a6e13d9836263c54ad3aa97b923c28df3c9f1b8149766c3df79",
+    "segments": 3
+  },
+  "commands/general-commands.md": {
+    "hash": "39fe84bade5d5c90c4605c46f2f3b5621027151f0454cba9db08d07c658ee0c1",
+    "segments": 1
+  },
+  "commands/index.md": {
+    "hash": "5529412be65a16e2bd531cce4b8749712df75806f0b2ffb15542e59e731c0e5a",
+    "segments": 1
+  },
+  "commands/manifest-commands.md": {
+    "hash": "c91d5c393d4a186e8e62e37c2b715c7b5ab24be2485c71323e1fe258359b8ec4",
+    "segments": 2
+  },
+  "commands/package-commands.md": {
+    "hash": "7ac06a1c1dd8af0449e85ccb1377ca8c6f9f05ebbb3bef6ff0a5f99bc644d456",
+    "segments": 1
+  },
+  "commands/publishing-commands.md": {
+    "hash": "c5c7833297939950e5069b0364d52ada5b05a8a8ced9e31178469981f4a04f70",
+    "segments": 1
+  },
+  "commands/report-commands.md": {
+    "hash": "ceff5e075485b5b7449ba09d5413850195429a62e07a47a9b1d83b749880dce2",
+    "segments": 2
+  },
+  "faq.md": {
+    "hash": "3eb4789075309b9ce93537d62b0b929aa5a2234d608e2e6133c4b7b5874bbcce",
+    "segments": 71
+  },
+  "getting-started/first-steps.md": {
+    "hash": "639d3997a4ccae98060e3e894cd8ab464c9dbf2b2439ed31ff4f27b457c05ad7",
+    "segments": 14
+  },
+  "getting-started/index.md": {
+    "hash": "9c9d3b3c397ee656cc5d5e2a90cb9372fe838d45c94929c100f233dd5fb7b8eb",
+    "segments": 4
+  },
+  "getting-started/installation.md": {
+    "hash": "bce6b13247c9fb0c2087f6e504fd6e85f443f88f16e1a1220756ab0839a98c0a",
+    "segments": 11
+  },
+  "guide/build-performance.md": {
+    "hash": "24d2ab2903eed655907fef680c89e27e3c387f750d72cef10cf4b4ac22ca5fc5",
+    "segments": 45
+  },
+  "guide/cargo-home.md": {
+    "hash": "53399d7f2251f8f06a7dfab47d3df74cbe3d54854fac4d64272edde1c4f83ec6",
+    "segments": 28
+  },
+  "guide/cargo-toml-vs-cargo-lock.md": {
+    "hash": "e85dfa4436f69d99f926a8c1cf97c32659e87ef8875c4367582a42b53164caa3",
+    "segments": 16
+  },
+  "guide/continuous-integration.md": {
+    "hash": "2aaf7cd41100f34b926d98112b450ddc42b52d6279e77775f71359f39c57ec1a",
+    "segments": 35
+  },
+  "guide/creating-a-new-project.md": {
+    "hash": "efbc26fd4b0c88a1a668456742d70d6f4e9ce92925d73073309fcf5c5c5bfba1",
+    "segments": 15
+  },
+  "guide/dependencies.md": {
+    "hash": "b21bc4b574eb62d8bac78900dbb03718e36bf00647f149c6ca2aad05dbcf2a90",
+    "segments": 15
+  },
+  "guide/index.md": {
+    "hash": "3a8af80e53a1d16bd9d38c392f02d5e2d049b52373b1b4e84085a7957677d653",
+    "segments": 3
+  },
+  "guide/project-layout.md": {
+    "hash": "8d6fae8239c631474911fff7eac839e17b6ec4a851104dd12ae347ce1b9cae56",
+    "segments": 8
+  },
+  "guide/tests.md": {
+    "hash": "0d2e0c9d64cf118206a8cf51f7ddc5655194a4ffe87beea2d64b5c2165cff947",
+    "segments": 8
+  },
+  "guide/why-cargo-exists.md": {
+    "hash": "d0b0d8d5bd5bd78a492908ad6a8eaddb765f02f6e310df2f2bc335c4d78ed69e",
+    "segments": 13
+  },
+  "guide/working-on-an-existing-project.md": {
+    "hash": "931ac25c63d695cd04ea9754cbb7917f619f8ddd442cf341e7aa8a4d50e1c0f1",
+    "segments": 6
+  },
+  "index.md": {
+    "hash": "1864b979eff9ed6fdfab515d296d4bf9211c6de3d5a35fd1fbe2892b641f54c5",
+    "segments": 15
+  },
+  "reference/build-cache.md": {
+    "hash": "983220cdb64584f715a4fda690ced97d8b43c07b324a7db788dab7a4192cc330",
+    "segments": 22
+  },
+  "reference/build-script-examples.md": {
+    "hash": "8a91fbcbb6b44d02e2483475292f120483d5da57973261dd9323f617b30215b0",
+    "segments": 64
+  },
+  "reference/build-scripts.md": {
+    "hash": "1cf4a078ef0392bd748cdb88bfb3d4d29f33ca317d2df780feebfd5f524674d5",
+    "segments": 126
+  },
+  "reference/cargo-targets.md": {
+    "hash": "390c9dd0fa5977338a1964dd17a9d5797ee09ac641c9517b0959a284e871f297",
+    "segments": 79
+  },
+  "reference/config.md": {
+    "hash": "9a613feaa98f8bc4a994778902f746daee57b23f59da99a40c7af85067a1b700",
+    "segments": 377
+  },
+  "reference/credential-provider-protocol.md": {
+    "hash": "639db5d0e97362b1585130ab9aef37ddb97404f8b8d3182bb1b453ad613ce17d",
+    "segments": 28
+  },
+  "reference/environment-variables.md": {
+    "hash": "dbf86501bdb5ff621eb88f1da6b78f534e6e4bfff7b3e20dcc942e9319573621",
+    "segments": 37
+  },
+  "reference/external-tools.md": {
+    "hash": "67a22a8ca329d223483a7a6056ed4877ba9e4bfa46f8fa6f945743edd4dcdd78",
+    "segments": 40
+  },
+  "reference/features-examples.md": {
+    "hash": "a674fc15ea20b91bf336cb140a7a83c94b7180535293886d53cc5afd29818163",
+    "segments": 36
+  },
+  "reference/features.md": {
+    "hash": "7dde8d4ec8faa1ab9fc06f185d88dada09bbfa5924a05f2fd303cd620a54c9d2",
+    "segments": 99
+  },
+  "reference/future-incompat-report.md": {
+    "hash": "901ed3dcf26a59ba031443a03577983eebb8b16c50cbc5558d8ffbaa2d31280b",
+    "segments": 8
+  },
+  "reference/index.md": {
+    "hash": "393e31d525c07283168fc416b132142a79a95bddd8fbe0225434e8b5a843f8aa",
+    "segments": 3
+  },
+  "reference/lints.md": {
+    "hash": "d4cf7bf5e59efb20b1f95f983b5fa7715a1cb4faa374c78e8c3e7da053f2b083",
+    "segments": 139
+  },
+  "reference/manifest.md": {
+    "hash": "f847c1faf001a202577eba711c40b27dc62ae5ec09f22219735ff97e7b8071c4",
+    "segments": 123
+  },
+  "reference/overriding-dependencies.md": {
+    "hash": "272589f980f55b44075ec4d6c1ff2eae7986d15eef9b48d05878b80e70abd9c0",
+    "segments": 56
+  },
+  "reference/pkgid-spec.md": {
+    "hash": "8649e56a386275e09c296cf21dcd45acf2948bf886a9b5105861a586f1de8cc5",
+    "segments": 15
+  },
+  "reference/profiles.md": {
+    "hash": "d4906c0a4aa615ad56c2b1bf846f91bd7b0b470233602004a086e979b76ebfb0",
+    "segments": 147
+  },
+  "reference/publishing.md": {
+    "hash": "75257b15d6e90f14ebbb520180fc42fd8b8f8d97a0f9b4a8052d1440729898f2",
+    "segments": 58
+  },
+  "reference/registries.md": {
+    "hash": "8c01b9822d2ba3ea9a166fe1dac0e9d5e5f1309613b0bfdc5a602247e56329d3",
+    "segments": 25
+  },
+  "reference/registry-authentication.md": {
+    "hash": "84e29c768cc368d039f2b30f8c1def3cb747803386be42938e8980cf51905f29",
+    "segments": 26
+  },
+  "reference/registry-index.md": {
+    "hash": "c8c1c0c27b05c2fe8110572e445d02b22edee0bd92a58c7773142517dafbdbed",
+    "segments": 41
+  },
+  "reference/registry-web-api.md": {
+    "hash": "7534f4445d2c7c26e0ab9f0ecc5248764bb6c39cd55f5251eaab71ab1ae0f976",
+    "segments": 47
+  },
+  "reference/resolver.md": {
+    "hash": "a633d9a505741dc2d485b6e8b699cc7f83db7abf149074862d8832ca02de9c5d",
+    "segments": 126
+  },
+  "reference/running-a-registry.md": {
+    "hash": "89bf58ef30692ab595ddd237d459761b93b0b865518108bf117f9a5d3845a080",
+    "segments": 5
+  },
+  "reference/rust-version.md": {
+    "hash": "d31f023c6180c41628a78a568c09e4589e256c22f8dd3942ea130025a66b9529",
+    "segments": 47
+  },
+  "reference/semver.md": {
+    "hash": "6be1021f7d41efc4ae3af5979ca6c6b54a3087644c6dd3084e4fa9cd44856950",
+    "segments": 206
+  },
+  "reference/source-replacement.md": {
+    "hash": "be43de5983ed70a2071b24265e1073309d2c2da523d2819f29f4f0d771c6aa92",
+    "segments": 32
+  },
+  "reference/specifying-dependencies.md": {
+    "hash": "f2436069a52b65df5f7f08ffdb80bba64f81b03baab014acc35ac4fd78e03eee",
+    "segments": 121
+  },
+  "reference/timings.md": {
+    "hash": "6c941ba8f1023a09b926c47ab472a80b83b89c449e392c7b1aabbdf284d4eb65",
+    "segments": 12
+  },
+  "reference/unstable.md": {
+    "hash": "6497254f9deaaf250e77940887dcf85c7c6d0130ad995c3cb81fb2b83c2e9327",
+    "segments": 514
+  },
+  "reference/workspaces.md": {
+    "hash": "f0fb5c40e9b64f04100a28c46412a90ba871ba662bc613692351a866c9632b3c",
+    "segments": 46
+  },
+  "SUMMARY.md": {
+    "hash": "dcd0cdcf92c606813f5f16710ffbcdc02c17ea6469947fc934bd2eaa4a15dde3",
+    "segments": 98
+  }
+}

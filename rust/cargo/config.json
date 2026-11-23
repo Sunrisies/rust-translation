@@ -1,0 +1,20 @@
+{
+  "name": "Cargo Book",
+  "repo": "rust-lang/cargo",
+  "branch": "master",
+  "src_path": "doc/book/src",
+  "src_dir": "repo/src",
+  "title": "Cargo 使用指南",
+  "copy_only": ["CHANGELOG.md"],
+  "terms": {
+    "crate": "crate",
+    "package": "包",
+    "workspace": "工作区",
+    "manifest": "清单",
+    "dependency": "依赖",
+    "feature": "特性",
+    "target": "目标",
+    "trait": "trait",
+    "lockfile": "锁文件"
+  }
+}

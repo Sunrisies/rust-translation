@@ -1,0 +1,150 @@
+{
+  "installation.md": {
+    "hash": "976a768e38d8eefbd926794cf80e233116fe64dff95f7ec5b4bd6bd3ea1d4307",
+    "segments": 7
+  },
+  "SUMMARY.md": {
+    "hash": "8103be29f9193a367492381a0eb9f90693f9456576d642dc28f4a9f44fcedb82",
+    "segments": 35
+  },
+  "attribs.md": {
+    "hash": "e91432a05842f9fb77c7e8aad2b681252695a2cf1c9bc589ba989f3702279591",
+    "segments": 8
+  },
+  "configuration.md": {
+    "hash": "22e3c4a07b380ee3ca8cb68acd1c0d7289a14d4f3c6086d02f92117792f0bb4d",
+    "segments": 37
+  },
+  "continuous_integration/github_actions.md": {
+    "hash": "be5215bf4825450c0977ba01a3b875b773a0186d5fe480c41b00c146b8474f41",
+    "segments": 2
+  },
+  "continuous_integration/gitlab.md": {
+    "hash": "8726ae4cab6d4cf489587199546c192370d86e0a101cfc1ac87796b16cee3fa2",
+    "segments": 2
+  },
+  "continuous_integration/travis.md": {
+    "hash": "f3304322b3121a095f9301a5a8e932dc2b7c3126a4b46db667bf42c154a20b0a",
+    "segments": 2
+  },
+  "development/infrastructure/benchmarking.md": {
+    "hash": "76c92c8bc35406d41136913d304a2ac46658420e90494d65a76edbdd34f320a3",
+    "segments": 11
+  },
+  "development/infrastructure/README.md": {
+    "hash": "c448c2bd8f852a9a565a542bbb940bc3381af341048faa420718ddd35a848bf5",
+    "segments": 4
+  },
+  "development/llm_usage.md": {
+    "hash": "fb87556504868bf577a5440264ea1cd203a79edf3aa409cdb4ae4b6c5b065409",
+    "segments": 7
+  },
+  "development/speedtest.md": {
+    "hash": "9a1ef476b44fba1c7461b73a7e65273965120bbb9f41d2dffe3376cfd1274f87",
+    "segments": 5
+  },
+  "README.md": {
+    "hash": "8876ce7f656dc86f40650b90968dc8c59d35c207c2d0dfddf7e76b91f105ecaf",
+    "segments": 8
+  },
+  "lints.md": {
+    "hash": "651003bc5edc07127b34f80f827a950516481a793ecc1faec3d29f33abe1a857",
+    "segments": 24
+  },
+  "continuous_integration/README.md": {
+    "hash": "05fb18397aaccf5dacfbab675e552a6dd7691e96af87597eab6bd5d0f7391017",
+    "segments": 5
+  },
+  "development/adding_lints.md": {
+    "hash": "fb0bbe3d9d72a47649bff1ed72e5360b2541bed85d6d03f034fbd8cec5ba277e",
+    "segments": 140
+  },
+  "development/basics.md": {
+    "hash": "7ff113ffe1a52086af8f0aa08b8eb787ce10489527c2271596a09915d35691de",
+    "segments": 34
+  },
+  "development/common_tools_writing_lints.md": {
+    "hash": "eb0e83cad496f5d10b0891a136b89ecbcab1d017d662265c4135e9fcf193e3c4",
+    "segments": 32
+  },
+  "development/defining_lints.md": {
+    "hash": "1a6c38fa9180ddeb9aae42cde7678593f5ce0b31dde5dc5c8ed915cf1aa1d23c",
+    "segments": 37
+  },
+  "development/emitting_lints.md": {
+    "hash": "515fc18933452d57a409d84ba39c166a60d20b163c7eaa77509552df407b4ca0",
+    "segments": 35
+  },
+  "development/infrastructure/backport.md": {
+    "hash": "f025beed1924ad5433d48641e5b2f2dafb53a04ccca949d518fc3dc142e08a60",
+    "segments": 29
+  },
+  "development/infrastructure/book.md": {
+    "hash": "1e7b6c2f1729b84aeee4ce2971ffe372c0ec1e8376b527b378dba1711fb874fc",
+    "segments": 10
+  },
+  "development/infrastructure/changelog_update.md": {
+    "hash": "a8aaa5aa59ee670cf07bef77fbd384f99e4cbc89d78a01050b7b066f5ccd10d6",
+    "segments": 28
+  },
+  "development/infrastructure/release.md": {
+    "hash": "ff1d188a7cc46c99eea1ec3df7246efefc9e801f20fd0d525d1c1db669cbef70",
+    "segments": 35
+  },
+  "development/infrastructure/sync.md": {
+    "hash": "d700772fb866acc648be03f037ba00422974470abeab48301f0b44558e7bed55",
+    "segments": 29
+  },
+  "development/lint_passes.md": {
+    "hash": "cfd59537360b0b8741191bf885d3326b4b82db1b339a7d338f94f0fb7595fefa",
+    "segments": 26
+  },
+  "development/macro_expansions.md": {
+    "hash": "b7aeeeafeb43969cbcaa760f21b3841afdd3640f9a37111ddd71169ee1e89d0f",
+    "segments": 41
+  },
+  "development/method_checking.md": {
+    "hash": "f4d9c366efefe4d4f15417ff7a5ebf840ba665276ae3d98b9d695a0ea9fa7d75",
+    "segments": 13
+  },
+  "development/proposals/README.md": {
+    "hash": "2047733b919e8266d357a56f2a53c45fdcc279a346b9bf496dc632a647a3e88d",
+    "segments": 2
+  },
+  "development/proposals/roadmap-2021.md": {
+    "hash": "74668ae4e989ed62c7a5f346f6862e27bb57cf9e97cae8162f9925a21afe799a",
+    "segments": 56
+  },
+  "development/proposals/syntax-tree-patterns.md": {
+    "hash": "3a197247b7c2fbb0dc97e68a71c08631a5b56d0c2125ef6e63f654510cbf59d5",
+    "segments": 117
+  },
+  "development/README.md": {
+    "hash": "6250883fcc22fcbcd92077c261fd0d8800183e885ccfc0c3024c1a76c5354708",
+    "segments": 16
+  },
+  "development/the_team.md": {
+    "hash": "bbdfb7cdcff4e7c683c0c2155da219aa0625311cb0dfe727ba8cd7a6b56bbb43",
+    "segments": 47
+  },
+  "development/trait_checking.md": {
+    "hash": "d98b661b7a31fc723bbf2a18b5a1436421b3802f9f3c8719db8aa258c5bdd4ec",
+    "segments": 21
+  },
+  "development/type_checking.md": {
+    "hash": "6b018c3694cd5e4162e2e3982e2737d49da02400543c5fbea50f45946f4e44c5",
+    "segments": 32
+  },
+  "development/writing_tests.md": {
+    "hash": "75bf949412034022c7cbd26987db173652fd372510e1e1b7f0f21c4ec413d5ee",
+    "segments": 50
+  },
+  "lint_configuration.md": {
+    "hash": "f6b53f0b2334c4da83c62cb03ac9d710dacfc897e7a4f55cb209fef7af9831eb",
+    "segments": 317
+  },
+  "usage.md": {
+    "hash": "a4779ed1205ba6103d2b866d8700a4aba28e99a7d00f8662753da31095f2305c",
+    "segments": 43
+  }
+}

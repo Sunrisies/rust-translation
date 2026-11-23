@@ -1,0 +1,17 @@
+{
+  "name": "Rust Error Codes",
+  "repo": "rust-lang/rust",
+  "branch": "main",
+  "src_path": "compiler/rustc_error_codes/src/error_codes",
+  "src_dir": "repo/src",
+  "title": "Rust 错误码说明",
+  "order": "numeric",
+  "terms": {
+    "error code": "错误码",
+    "compiler": "编译器",
+    "type": "类型",
+    "trait": "trait",
+    "lifetime": "生命周期",
+    "macro": "宏"
+  }
+}

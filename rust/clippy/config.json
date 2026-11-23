@@ -1,0 +1,15 @@
+{
+  "name": "Clippy Book",
+  "repo": "rust-lang/rust-clippy",
+  "branch": "main",
+  "src_path": "book/src",
+  "src_dir": "repo/src",
+  "title": "Clippy 文档",
+  "terms": {
+    "lint": "lint",
+    "clippy": "Clippy",
+    "crate": "crate",
+    "trait": "trait",
+    "macro": "宏"
+  }
+}

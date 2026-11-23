@@ -1,0 +1,15 @@
+{
+  "name": "The Rust Reference",
+  "repo": "rust-lang/reference",
+  "branch": "master",
+  "src_path": "src",
+  "src_dir": "repo/src",
+  "title": "Rust 参考手册",
+  "terms": {
+    "trait": "trait",
+    "lifetime": "生命周期",
+    "crate": "crate",
+    "generic": "泛型",
+    "type system": "类型系统"
+  }
+}

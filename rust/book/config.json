@@ -1,0 +1,21 @@
+{
+  "name": "The Rust Programming Language",
+  "repo": "rust-lang/book",
+  "branch": "main",
+  "src_path": "src",
+  "src_dir": "repo/src",
+  "title": "Rust 程序设计语言",
+  "terms": {
+    "ownership": "所有权",
+    "borrowing": "借用",
+    "borrow checker": "借用检查器",
+    "trait": "trait",
+    "lifetime": "生命周期",
+    "crate": "crate",
+    "macro": "宏",
+    "enum": "枚举",
+    "struct": "结构体",
+    "module": "模块",
+    "match": "匹配"
+  }
+}
