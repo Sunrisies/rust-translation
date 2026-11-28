@@ -1,0 +1,1940 @@
+//! 用于宏作者在定义新宏时使用的支持库。
+//!
+//! 该库由标准发行版提供，包含以下类型：
+//! 这些类型被用于程序化定义的宏定义接口中，例如：
+//! function-like macros `#[proc_macro]`, macro attributes `#[proc_macro_attribute]` and
+//! custom derive attributes `#[proc_macro_derive]`.
+//!
+//! 更多内容请参见 [书籍]。
+//!
+//! [the book]: ../book/ch19-06-macros.html#procedural-macros-for-generating-code-from-attributes
+
+#![stable(feature = "proc_macro_lib", since = "1.15.0")]
+#![deny(missing_docs)]
+#![doc(
+    html_playground_url = "https://play.rust-lang.org/",
+    issue_tracker_base_url = "https://github.com/rust-lang/rust/issues/",
+    test(no_crate_inject, attr(deny(warnings))),
+    test(attr(allow(dead_code, deprecated, unused_variables, unused_mut)))
+)]
+#![doc(rust_logo)]
+#![feature(rustdoc_internals)]
+#![feature(staged_api)]
+#![feature(allow_internal_unstable)]
+#![feature(decl_macro)]
+#![feature(negative_impls)]
+#![feature(panic_can_unwind)]
+#![feature(restricted_std)]
+#![feature(rustc_attrs)]
+#![feature(extend_one)]
+#![feature(f16)]
+#![recursion_limit = "256"]
+#![allow(internal_features)]
+#![deny(ffi_unwind_calls)]
+#![allow(rustc::internal)] // Can't use FxHashMap when compiled as part of the standard library
+#![warn(rustdoc::unescaped_backticks)]
+#![warn(unreachable_pub)]
+#![deny(unsafe_op_in_unsafe_fn)]
+
+#[unstable(feature = "proc_macro_internals", issue = "none")]
+#[doc(hidden)]
+pub mod bridge;
+
+mod diagnostic;
+mod escape;
+mod to_tokens;
+
+use core::convert::From;
+use core::ops::BitOr;
+use std::borrow::Cow;
+use std::ffi::{CStr, CString};
+use std::ops::{Range, RangeBounds};
+use std::path::PathBuf;
+use std::str::FromStr;
+use std::{error, fmt};
+
+#[unstable(feature = "proc_macro_diagnostic", issue = "54140")]
+pub use diagnostic::{Diagnostic, Level, MultiSpan};
+use rustc_literal_escaper::{
+    MixedUnit, unescape_byte, unescape_byte_str, unescape_c_str, unescape_char, unescape_str,
+};
+#[unstable(feature = "proc_macro_totokens", issue = "130977")]
+pub use to_tokens::ToTokens;
+
+use crate::bridge::client::Methods as BridgeMethods;
+use crate::escape::{EscapeOptions, escape_bytes};
+
+/// 主要与错误的转义序列有关，但也涉及一些其他问题。
+#[derive(Debug, PartialEq, Eq)]
+#[unstable(feature = "proc_macro_value", issue = "136652")]
+pub struct EscapeError {
+    kind: EscapeErrorKind,
+}
+
+#[unstable(feature = "proc_macro_value", issue = "136652")]
+impl error::Error for EscapeError {}
+
+#[unstable(feature = "proc_macro_value", issue = "136652")]
+impl fmt::Display for EscapeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(&self.kind, f)
+    }
+}
+
+#[unstable(feature = "proc_macro_value", issue = "136652")]
+#[doc(hidden)]
+impl From<rustc_literal_escaper::EscapeError> for EscapeError {
+    fn from(value: rustc_literal_escaper::EscapeError) -> Self {
+        use rustc_literal_escaper::EscapeError as EE;
+
+        let kind = match value {
+            EE::ZeroChars => EscapeErrorKind::ZeroChars,
+            EE::MoreThanOneChar => EscapeErrorKind::MoreThanOneChar,
+            EE::LoneSlash => EscapeErrorKind::LoneSlash,
+            EE::InvalidEscape => EscapeErrorKind::InvalidEscape,
+            EE::BareCarriageReturn => EscapeErrorKind::BareCarriageReturn,
+            EE::BareCarriageReturnInRawString => EscapeErrorKind::BareCarriageReturnInRawString,
+            EE::EscapeOnlyChar => EscapeErrorKind::EscapeOnlyChar,
+            EE::TooShortHexEscape => EscapeErrorKind::TooShortHexEscape,
+            EE::InvalidCharInHexEscape => EscapeErrorKind::InvalidCharInHexEscape,
+            EE::OutOfRangeHexEscape => EscapeErrorKind::OutOfRangeHexEscape,
+            EE::NoBraceInUnicodeEscape => EscapeErrorKind::NoBraceInUnicodeEscape,
+            EE::InvalidCharInUnicodeEscape => EscapeErrorKind::InvalidCharInUnicodeEscape,
+            EE::EmptyUnicodeEscape => EscapeErrorKind::EmptyUnicodeEscape,
+            EE::UnclosedUnicodeEscape => EscapeErrorKind::UnclosedUnicodeEscape,
+            EE::LeadingUnderscoreUnicodeEscape => EscapeErrorKind::LeadingUnderscoreUnicodeEscape,
+            EE::OverlongUnicodeEscape => EscapeErrorKind::OverlongUnicodeEscape,
+            EE::LoneSurrogateUnicodeEscape => EscapeErrorKind::LoneSurrogateUnicodeEscape,
+            EE::OutOfRangeUnicodeEscape => EscapeErrorKind::OutOfRangeUnicodeEscape,
+            EE::UnicodeEscapeInByte => EscapeErrorKind::UnicodeEscapeInByte,
+            EE::NonAsciiCharInByte => EscapeErrorKind::NonAsciiCharInByte,
+            EE::NulInCStr => EscapeErrorKind::NulInCStr,
+            EE::UnskippedWhitespaceWarning => EscapeErrorKind::UnskippedWhitespaceWarning,
+            EE::MultipleSkippedLinesWarning => EscapeErrorKind::MultipleSkippedLinesWarning,
+        };
+        Self { kind }
+    }
+}
+
+/// 主要与错误的转义序列有关，但也涉及一些其他问题。
+#[derive(Debug, PartialEq, Eq)]
+#[non_exhaustive]
+enum EscapeErrorKind {
+    /// 期望1个字符，但找到了0个。
+    ZeroChars,
+    /// 期望1个字符，但找到了超过1个。
+    MoreThanOneChar,
+
+    /// 未连续转义的 '\' 字符。
+    LoneSlash,
+    /// 无效的转义字符（例如 '\z'）。
+    InvalidEscape,
+    /// 遇到原始 '\r'。
+    BareCarriageReturn,
+    /// 在原始字符串中遇到原始 '\r'。
+    BareCarriageReturnInRawString,
+    /// 未转义的字符，而预期该字符应被转义（例如原始 '\t'）。
+    EscapeOnlyChar,
+
+    /// 数字字符转义长度不足（例如 '\x1'）。
+    TooShortHexEscape,
+    /// 数字转义中的无效字符（例如 '\xz'）。
+    InvalidCharInHexEscape,
+    /// 数字转义中的字符代码不是非ASCII的（例如 '\xFF'）。
+    OutOfRangeHexEscape,
+
+    /// '\u' 后没有 '{'。
+    NoBraceInUnicodeEscape,
+    /// '\u{..}' 中的非十六进制值。
+    InvalidCharInUnicodeEscape,
+    /// '\u{}'
+    EmptyUnicodeEscape,
+    /// '\u{..}' 中没有闭合花括号，例如 '\u{12}'。
+    UnclosedUnicodeEscape,
+    /// '\u{_12}'
+    LeadingUnderscoreUnicodeEscape,
+    /// '\u{..}' 中有超过6个字符，例如 '\u{10FFFF_FF}'。
+    OverlongUnicodeEscape,
+    /// 无效的入站Unicode字符代码，例如 '\u{DFFF}'。
+    LoneSurrogateUnicodeEscape,
+    /// 超出范围的Unicode字符代码，例如 '\u{FFFFFF}'。
+    OutOfRangeUnicodeEscape,
+
+    /// 字节字面量中的Unicode转义码。
+    UnicodeEscapeInByte,
+    /// 字节字面量、字节字符串字面量或原始字节字符串字面量中的非非ASCII字符。
+    NonAsciiCharInByte,
+
+    /// `\0` in a C string literal.
+    NulInCStr,
+
+    /// 以 '\' 结尾的行之后，下一行包含空白字符。
+    /// 未被跳过字符。
+    UnskippedWhitespaceWarning,
+
+    /// 以 '\' 结尾的行之后，会跳过多行。
+    MultipleSkippedLinesWarning,
+}
+
+impl error::Error for EscapeErrorKind {}
+
+impl fmt::Display for EscapeErrorKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(match self {
+            Self::ZeroChars => "zero chars",
+            Self::MoreThanOneChar => "more than one char",
+            Self::LoneSlash => "lone slash",
+            Self::InvalidEscape => "invalid escape",
+            Self::BareCarriageReturn => "bare carriage return",
+            Self::BareCarriageReturnInRawString => "bare carriage return in raw string",
+            Self::EscapeOnlyChar => "escape only char",
+            Self::TooShortHexEscape => "too short hex escape",
+            Self::InvalidCharInHexEscape => "invalid char in hex escape",
+            Self::OutOfRangeHexEscape => "out of range hex escape",
+            Self::NoBraceInUnicodeEscape => "no brace in unicode escape",
+            Self::InvalidCharInUnicodeEscape => "invalid char in unicode escape",
+            Self::EmptyUnicodeEscape => "empty unicode escape",
+            Self::UnclosedUnicodeEscape => "unclosed unicode escape",
+            Self::LeadingUnderscoreUnicodeEscape => "leading underscore unicode escape",
+            Self::OverlongUnicodeEscape => "overlong unicode escape",
+            Self::LoneSurrogateUnicodeEscape => "lone surrogate unicode escape",
+            Self::OutOfRangeUnicodeEscape => "out of range unicode escape",
+            Self::UnicodeEscapeInByte => "unicode escape in byte",
+            Self::NonAsciiCharInByte => "non ascii char in byte",
+            Self::NulInCStr => "nul in CStr",
+            Self::UnskippedWhitespaceWarning => "unskipped whitespace warning",
+            Self::MultipleSkippedLinesWarning => "multiple skipped lines warning",
+        })
+    }
+}
+
+/// 尝试获取未转义字面量时返回错误。
+#[unstable(feature = "proc_macro_value", issue = "136652")]
+#[derive(Debug, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum ConversionErrorKind {
+    /// The literal failed to be escaped, take a look at [`EscapeError`] for more information.
+    FailedToUnescape(EscapeError),
+    /// 尝试将错误类型的字面量进行转换。
+    InvalidLiteralKind,
+}
+
+/// 确定proc-macro是否对当前运行的程序可访问。
+/// proc-macro crate仅适用于程序化宏的实现。如果从
+///
+/// 程序化宏之外的地方调用此crate中的所有函数，例如来自构建脚本、单元测试或
+/// 普通Rust二进制文件，则会导致panic。
+/// outside of a procedural macro, such as from a build script or unit test or
+/// 不会引发panic的方式来检测使用所需的基础设施。
+///
+/// With consideration for Rust libraries that are designed to support both
+/// macro and non-macro use cases, `proc_macro::is_available()` provides a
+/// non-panicking way to detect whether the infrastructure required to use the
+/// proc_macro 的 API 现已可用。如果从 procedural macro 内部调用则返回 true，从其他二进制文件调用则返回 false。
+/// 此 crate 提供的主要类型，代表一个抽象的标记流
+#[stable(feature = "proc_macro_is_available", since = "1.57.0")]
+pub fn is_available() -> bool {
+    bridge::client::is_available()
+}
+
+/// 或更具体地说是标记树的序列。
+/// 该类型提供了对这些标记树进行迭代的接口，反之，
+/// 也可以将多个标记树收集成一条流。
+/// collecting a number of token trees into one stream.
+///
+/// This is both the input and output of `#[proc_macro]`, `#[proc_macro_attribute]`
+/// and `#[proc_macro_derive]` definitions.
+#[cfg_attr(feature = "rustc-dep-of-std", rustc_diagnostic_item = "TokenStream")]
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+#[derive(Clone)]
+pub struct TokenStream(Option<bridge::client::TokenStream>);
+
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl !Send for TokenStream {}
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl !Sync for TokenStream {}
+
+/// Error returned from `TokenStream::from_str`.
+///
+/// 包含的错误消息在任何方面都不保证稳定，
+/// 可能在 Rust 版本之间或编译过程中发生变化。
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+#[derive(Debug)]
+pub struct LexError(String);
+
+#[stable(feature = "proc_macro_lexerror_impls", since = "1.44.0")]
+impl fmt::Display for LexError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[stable(feature = "proc_macro_lexerror_impls", since = "1.44.0")]
+impl error::Error for LexError {}
+
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl !Send for LexError {}
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl !Sync for LexError {}
+
+/// Error returned from `TokenStream::expand_expr`.
+#[unstable(feature = "proc_macro_expand", issue = "90765")]
+#[non_exhaustive]
+#[derive(Debug)]
+pub struct ExpandError;
+
+#[unstable(feature = "proc_macro_expand", issue = "90765")]
+impl fmt::Display for ExpandError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("macro expansion failed")
+    }
+}
+
+#[unstable(feature = "proc_macro_expand", issue = "90765")]
+impl error::Error for ExpandError {}
+
+#[unstable(feature = "proc_macro_expand", issue = "90765")]
+impl !Send for ExpandError {}
+
+#[unstable(feature = "proc_macro_expand", issue = "90765")]
+impl !Sync for ExpandError {}
+
+impl TokenStream {
+    /// Returns an empty `TokenStream` containing no token trees.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn new() -> TokenStream {
+        TokenStream(None)
+    }
+
+    /// Checks if this `TokenStream` is empty.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn is_empty(&self) -> bool {
+        self.0.as_ref().map(BridgeMethods::ts_is_empty).unwrap_or(true)
+    }
+
+    /// Parses this `TokenStream` as an expression and attempts to expand any
+    /// macros within it. Returns the expanded `TokenStream`.
+    ///
+    /// 目前只有展开为字面量的表达式会成功，不过
+    /// 未来可能会放宽此限制。
+    ///
+    /// NOTE: In error conditions, `expand_expr` may leave macros unexpanded,
+    /// report an error, failing compilation, and/or return an `Err(..)`. The
+    /// 以及哪些情况被视为错误，均未指定，未来可能会发生变化。
+    /// 尝试将字符串拆分为标记并将这些标记解析为标记流。
+    #[unstable(feature = "proc_macro_expand", issue = "90765")]
+    pub fn expand_expr(&self) -> Result<TokenStream, ExpandError> {
+        let stream = self.0.as_ref().ok_or(ExpandError)?;
+        match BridgeMethods::ts_expand_expr(stream) {
+            Ok(stream) => Ok(TokenStream(Some(stream))),
+            Err(_) => Err(ExpandError),
+        }
+    }
+}
+
+/// 可能因多种原因失败，例如字符串包含不平衡的分隔符或语言中不存在的字符。
+/// May fail for a number of reasons, for example, if the string contains unbalanced delimiters
+/// or characters not existing in the language.
+/// All tokens in the parsed stream get `Span::call_site()` spans.
+///
+/// NOTE: some errors may cause panics instead of returning `LexError`. We reserve the right to
+/// change these errors into `LexError`s later.
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl FromStr for TokenStream {
+    type Err = LexError;
+
+    fn from_str(src: &str) -> Result<TokenStream, LexError> {
+        Ok(TokenStream(Some(BridgeMethods::ts_from_str(src).map_err(LexError)?)))
+    }
+}
+
+/// 注意：输出的具体形式可能会发生变化，例如标记之间的空格可能会改变。因此，在实现 proc macro 时
+/// into the same token stream (modulo spans), except for possibly `TokenTree::Group`s
+/// with `Delimiter::None` delimiters and negative numeric literals.
+///
+/// Note: the exact form of the output is subject to change, e.g. there might
+/// be changes in the whitespace used between tokens. Therefore, you should
+/// *not* do any kind of simple substring matching on the output string (as
+/// produced by `to_string`) to implement a proc macro, because that matching
+/// might stop working if such changes happen. Instead, you should work at the
+/// `TokenTree` level, e.g. matching against `TokenTree::Ident`,
+/// `TokenTree::Punct`, or `TokenTree::Literal`.
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl fmt::Display for TokenStream {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match &self.0 {
+            Some(ts) => write!(f, "{}", BridgeMethods::ts_to_string(ts)),
+            None => Ok(()),
+        }
+    }
+}
+
+/// 以便于调试的形式输出令牌。
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl fmt::Debug for TokenStream {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("TokenStream ")?;
+        f.debug_list().entries(self.clone()).finish()
+    }
+}
+
+#[stable(feature = "proc_macro_token_stream_default", since = "1.45.0")]
+impl Default for TokenStream {
+    fn default() -> Self {
+        TokenStream::new()
+    }
+}
+
+#[unstable(feature = "proc_macro_quote", issue = "54722")]
+pub use quote::{HasIterator, RepInterp, ThereIsNoIteratorInRepetition, ext, quote, quote_span};
+
+fn tree_to_bridge_tree(
+    tree: TokenTree,
+) -> bridge::TokenTree<bridge::client::TokenStream, bridge::client::Span, bridge::client::Symbol> {
+    match tree {
+        TokenTree::Group(tt) => bridge::TokenTree::Group(tt.0),
+        TokenTree::Punct(tt) => bridge::TokenTree::Punct(tt.0),
+        TokenTree::Ident(tt) => bridge::TokenTree::Ident(tt.0),
+        TokenTree::Literal(tt) => bridge::TokenTree::Literal(tt.0),
+    }
+}
+
+/// 创建一个包含单个令牌树的令牌流。
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl From<TokenTree> for TokenStream {
+    fn from(tree: TokenTree) -> TokenStream {
+        TokenStream(Some(BridgeMethods::ts_from_token_tree(tree_to_bridge_tree(tree))))
+    }
+}
+
+/// Non-generic helper for implementing `FromIterator<TokenTree>` and
+/// `Extend<TokenTree>` with less monomorphization in calling crates.
+struct ConcatTreesHelper {
+    trees: Vec<
+        bridge::TokenTree<
+            bridge::client::TokenStream,
+            bridge::client::Span,
+            bridge::client::Symbol,
+        >,
+    >,
+}
+
+impl ConcatTreesHelper {
+    fn new(capacity: usize) -> Self {
+        ConcatTreesHelper { trees: Vec::with_capacity(capacity) }
+    }
+
+    fn push(&mut self, tree: TokenTree) {
+        self.trees.push(tree_to_bridge_tree(tree));
+    }
+
+    fn build(self) -> TokenStream {
+        if self.trees.is_empty() {
+            TokenStream(None)
+        } else {
+            TokenStream(Some(BridgeMethods::ts_concat_trees(None, self.trees)))
+        }
+    }
+
+    fn append_to(self, stream: &mut TokenStream) {
+        if self.trees.is_empty() {
+            return;
+        }
+        stream.0 = Some(BridgeMethods::ts_concat_trees(stream.0.take(), self.trees))
+    }
+}
+
+/// Non-generic helper for implementing `FromIterator<TokenStream>` and
+/// `Extend<TokenStream>` with less monomorphization in calling crates.
+struct ConcatStreamsHelper {
+    streams: Vec<bridge::client::TokenStream>,
+}
+
+impl ConcatStreamsHelper {
+    fn new(capacity: usize) -> Self {
+        ConcatStreamsHelper { streams: Vec::with_capacity(capacity) }
+    }
+
+    fn push(&mut self, stream: TokenStream) {
+        if let Some(stream) = stream.0 {
+            self.streams.push(stream);
+        }
+    }
+
+    fn build(mut self) -> TokenStream {
+        if self.streams.len() <= 1 {
+            TokenStream(self.streams.pop())
+        } else {
+            TokenStream(Some(BridgeMethods::ts_concat_streams(None, self.streams)))
+        }
+    }
+
+    fn append_to(mut self, stream: &mut TokenStream) {
+        if self.streams.is_empty() {
+            return;
+        }
+        let base = stream.0.take();
+        if base.is_none() && self.streams.len() == 1 {
+            stream.0 = self.streams.pop();
+        } else {
+            stream.0 = Some(BridgeMethods::ts_concat_streams(base, self.streams));
+        }
+    }
+}
+
+/// 将多个令牌树收集到单个流中。
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl FromIterator<TokenTree> for TokenStream {
+    fn from_iter<I: IntoIterator<Item = TokenTree>>(trees: I) -> Self {
+        let iter = trees.into_iter();
+        let mut builder = ConcatTreesHelper::new(iter.size_hint().0);
+        iter.for_each(|tree| builder.push(tree));
+        builder.build()
+    }
+}
+
+/// 对令牌流进行的“扁平化”操作，将多个令牌树收集为单个流。
+/// from multiple token streams into a single stream.
+#[stable(feature = "proc_macro_lib", since = "1.15.0")]
+impl FromIterator<TokenStream> for TokenStream {
+    fn from_iter<I: IntoIterator<Item = TokenStream>>(streams: I) -> Self {
+        let iter = streams.into_iter();
+        let mut builder = ConcatStreamsHelper::new(iter.size_hint().0);
+        iter.for_each(|stream| builder.push(stream));
+        builder.build()
+    }
+}
+
+#[stable(feature = "token_stream_extend", since = "1.30.0")]
+impl Extend<TokenTree> for TokenStream {
+    fn extend<I: IntoIterator<Item = TokenTree>>(&mut self, trees: I) {
+        let iter = trees.into_iter();
+        let mut builder = ConcatTreesHelper::new(iter.size_hint().0);
+        iter.for_each(|tree| builder.push(tree));
+        builder.append_to(self);
+    }
+}
+
+#[stable(feature = "token_stream_extend", since = "1.30.0")]
+impl Extend<TokenStream> for TokenStream {
+    fn extend<I: IntoIterator<Item = TokenStream>>(&mut self, streams: I) {
+        let iter = streams.into_iter();
+        let mut builder = ConcatStreamsHelper::new(iter.size_hint().0);
+        iter.for_each(|stream| builder.push(stream));
+        builder.append_to(self);
+    }
+}
+
+macro_rules! extend_items {
+    ($($item:ident)*) => {
+        $(
+            #[stable(feature = "token_stream_extend_ts_items", since = "1.92.0")]
+            impl Extend<$item> for TokenStream {
+                fn extend<I: IntoIterator<Item = $item>>(&mut self, iter: I) {
+                    self.extend(iter.into_iter().map(TokenTree::$item));
+                }
+            }
+        )*
+    };
+}
+
+extend_items!(Group Literal Punct Ident);
+
+/// Public implementation details for the `TokenStream` type, such as iterators.
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+pub mod token_stream {
+    use crate::{BridgeMethods, Group, Ident, Literal, Punct, TokenStream, TokenTree, bridge};
+
+    /// An iterator over `TokenStream`'s `TokenTree`s.
+    /// 返回整个组作为令牌树。
+    /// and returns whole groups as token trees.
+    #[derive(Clone)]
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub struct IntoIter(
+        std::vec::IntoIter<
+            bridge::TokenTree<
+                bridge::client::TokenStream,
+                bridge::client::Span,
+                bridge::client::Symbol,
+            >,
+        >,
+    );
+
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    impl Iterator for IntoIter {
+        type Item = TokenTree;
+
+        fn next(&mut self) -> Option<TokenTree> {
+            self.0.next().map(|tree| match tree {
+                bridge::TokenTree::Group(tt) => TokenTree::Group(Group(tt)),
+                bridge::TokenTree::Punct(tt) => TokenTree::Punct(Punct(tt)),
+                bridge::TokenTree::Ident(tt) => TokenTree::Ident(Ident(tt)),
+                bridge::TokenTree::Literal(tt) => TokenTree::Literal(Literal(tt)),
+            })
+        }
+
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            self.0.size_hint()
+        }
+
+        fn count(self) -> usize {
+            self.0.count()
+        }
+    }
+
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    impl IntoIterator for TokenStream {
+        type Item = TokenTree;
+        type IntoIter = IntoIter;
+
+        fn into_iter(self) -> IntoIter {
+            IntoIter(self.0.map(BridgeMethods::ts_into_trees).unwrap_or_default().into_iter())
+        }
+    }
+}
+
+/// `quote!(..)` accepts arbitrary tokens and expands into a `TokenStream` describing the input.
+/// For example, `quote!(a + b)` will produce an expression, that, when evaluated, constructs
+/// the `TokenStream` `[Ident("a"), Punct('+', Alone), Ident("b")]`.
+///
+/// Unquoting is done with `$`, and works by taking the single next ident as the unquoted term.
+/// To quote `$` itself, use `$$`.
+#[unstable(feature = "proc_macro_quote", issue = "54722")]
+#[allow_internal_unstable(proc_macro_def_site, proc_macro_internals, proc_macro_totokens)]
+#[rustc_builtin_macro]
+pub macro quote($($t:tt)*) {
+    /* compiler built-in */
+}
+
+#[unstable(feature = "proc_macro_internals", issue = "none")]
+#[doc(hidden)]
+mod quote;
+
+/// A region of source code, along with macro expansion information.
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+#[derive(Copy, Clone)]
+pub struct Span(bridge::client::Span);
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Send for Span {}
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Sync for Span {}
+
+macro_rules! diagnostic_method {
+    ($name:ident, $level:expr) => {
+        /// Creates a new `Diagnostic` with the given `message` at the span
+        /// `self`.
+        #[unstable(feature = "proc_macro_diagnostic", issue = "54140")]
+        pub fn $name<T: Into<String>>(self, message: T) -> Diagnostic {
+            Diagnostic::spanned(self, $level, message)
+        }
+    };
+}
+
+impl Span {
+    /// 在宏定义处解析的跨度。
+    #[unstable(feature = "proc_macro_def_site", issue = "54724")]
+    pub fn def_site() -> Span {
+        Span(bridge::client::Span::def_site())
+    }
+
+    /// 当前过程式宏调用的跨度。
+    /// 使用此跨度创建的标识符将如同直接写在宏调用位置一样被解析，其他代码
+    /// 在宏调用位置也能引用它们。
+    /// at the macro call site will be able to refer to them as well.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn call_site() -> Span {
+        Span(bridge::client::Span::call_site())
+    }
+
+    /// A span that represents `macro_rules` hygiene, and sometimes resolves at the macro
+    /// definition site (local variables, labels, `$crate`) and sometimes at the macro
+    /// 从调用处获取跨度位置。
+    /// The span location is taken from the call-site.
+    #[stable(feature = "proc_macro_mixed_site", since = "1.45.0")]
+    pub fn mixed_site() -> Span {
+        Span(bridge::client::Span::mixed_site())
+    }
+
+    /// The `Span` for the tokens in the previous macro expansion from which
+    /// `self` was generated from, if any.
+    #[unstable(feature = "proc_macro_span", issue = "54725")]
+    pub fn parent(&self) -> Option<Span> {
+        BridgeMethods::span_parent(self.0).map(Span)
+    }
+
+    /// The span for the origin source code that `self` was generated from. If
+    /// this `Span` wasn't generated from other macro expansions then the return
+    /// value is the same as `*self`.
+    #[unstable(feature = "proc_macro_span", issue = "54725")]
+    pub fn source(&self) -> Span {
+        Span(BridgeMethods::span_source(self.0))
+    }
+
+    /// 创建一个指向该跨度之前位置的空跨度。
+    #[unstable(feature = "proc_macro_span", issue = "54725")]
+    pub fn byte_range(&self) -> Range<usize> {
+        BridgeMethods::span_byte_range(self.0)
+    }
+
+    /// 创建一个指向该跨度之后位置的空跨度。
+    #[stable(feature = "proc_macro_span_location", since = "1.88.0")]
+    pub fn start(&self) -> Span {
+        Span(BridgeMethods::span_start(self.0))
+    }
+
+    /// 创建一个指向该跨度之后位置的空跨度。
+    #[stable(feature = "proc_macro_span_location", since = "1.88.0")]
+    pub fn end(&self) -> Span {
+        Span(BridgeMethods::span_end(self.0))
+    }
+
+    /// 源文件中跨度开始的行号。
+    ///
+    /// To obtain the line of the span's end, use `span.end().line()`.
+    #[stable(feature = "proc_macro_span_location", since = "1.88.0")]
+    pub fn line(&self) -> usize {
+        BridgeMethods::span_line(self.0)
+    }
+
+    /// 范围起始的源文件中的一索引列。
+    ///
+    /// To obtain the column of the span's end, use `span.end().column()`.
+    #[stable(feature = "proc_macro_span_location", since = "1.88.0")]
+    pub fn column(&self) -> usize {
+        BridgeMethods::span_column(self.0)
+    }
+
+    /// 用于显示此范围所在源文件的路径。
+    ///
+    /// 这可能不是有效的文件系统路径。
+    /// It might be remapped (e.g. `"/src/lib.rs"`) or an artificial path (e.g. `"<command line>"`).
+    #[stable(feature = "proc_macro_span_file", since = "1.88.0")]
+    pub fn file(&self) -> String {
+        BridgeMethods::span_file(self.0)
+    }
+
+    /// 本地文件系统中此范围所在源文件的路径。
+    ///
+    /// 这是磁盘上的实际路径。它不受路径重新映射的影响。
+    ///
+    /// This path should not be embedded in the output of the macro; prefer `file()` instead.
+    #[stable(feature = "proc_macro_span_file", since = "1.88.0")]
+    pub fn local_file(&self) -> Option<PathBuf> {
+        BridgeMethods::span_local_file(self.0).map(PathBuf::from)
+    }
+
+    /// Creates a new span encompassing `self` and `other`.
+    ///
+    /// Returns `None` if `self` and `other` are from different files.
+    #[unstable(feature = "proc_macro_span", issue = "54725")]
+    pub fn join(&self, other: Span) -> Option<Span> {
+        BridgeMethods::span_join(self.0, other.0).map(Span)
+    }
+
+    /// Creates a new span with the same line/column information as `self` but
+    /// that resolves symbols as though it were at `other`.
+    #[stable(feature = "proc_macro_span_resolved_at", since = "1.45.0")]
+    pub fn resolved_at(&self, other: Span) -> Span {
+        Span(BridgeMethods::span_resolved_at(self.0, other.0))
+    }
+
+    /// Creates a new span with the same name resolution behavior as `self` but
+    /// with the line/column information of `other`.
+    #[stable(feature = "proc_macro_span_located_at", since = "1.45.0")]
+    pub fn located_at(&self, other: Span) -> Span {
+        other.resolved_at(*self)
+    }
+
+    /// 比较两个范围以判断它们是否相等。
+    #[unstable(feature = "proc_macro_span", issue = "54725")]
+    pub fn eq(&self, other: &Span) -> bool {
+        self.0 == other.0
+    }
+
+    /// 返回范围后的源文本。这保留了原始源代码，包括空格和注释。只有当范围
+    /// 与真实源代码对应时，才会返回结果。
+    /// 注意：宏的可观察结果应仅依赖于标记，而不是此源文本。此函数的结果是一种尽力而为的结果，
+    ///
+    /// 仅用于诊断。
+    /// 以便于调试的形式打印范围。
+    /// be used for diagnostics only.
+    #[stable(feature = "proc_macro_source_text", since = "1.66.0")]
+    pub fn source_text(&self) -> Option<String> {
+        BridgeMethods::span_source_text(self.0)
+    }
+
+    // Used by the implementation of `Span::quote`
+    #[doc(hidden)]
+    #[unstable(feature = "proc_macro_internals", issue = "none")]
+    pub fn save_span(&self) -> usize {
+        BridgeMethods::span_save_span(self.0)
+    }
+
+    // Used by the implementation of `Span::quote`
+    #[doc(hidden)]
+    #[unstable(feature = "proc_macro_internals", issue = "none")]
+    pub fn recover_proc_macro_span(id: usize) -> Span {
+        Span(BridgeMethods::span_recover_proc_macro_span(id))
+    }
+
+    diagnostic_method!(error, Level::Error);
+    diagnostic_method!(warning, Level::Warning);
+    diagnostic_method!(note, Level::Note);
+    diagnostic_method!(help, Level::Help);
+}
+
+/// 被括号分隔符包围的标记流。
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Debug for Span {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+/// A single token or a delimited sequence of token trees (e.g., `[1, (), ..]`).
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+#[derive(Clone)]
+pub enum TokenTree {
+    /// A token stream surrounded by bracket delimiters.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Group(#[stable(feature = "proc_macro_lib2", since = "1.29.0")] Group),
+    /// An identifier.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Ident(#[stable(feature = "proc_macro_lib2", since = "1.29.0")] Ident),
+    /// A single punctuation character (`+`, `,`, `$`, etc.).
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Punct(#[stable(feature = "proc_macro_lib2", since = "1.29.0")] Punct),
+    /// A literal character (`'a'`), string (`"hello"`), number (`2.3`), etc.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Literal(#[stable(feature = "proc_macro_lib2", since = "1.29.0")] Literal),
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Send for TokenTree {}
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Sync for TokenTree {}
+
+impl TokenTree {
+    /// Returns the span of this tree, delegating to the `span` method of
+    /// the contained token or a delimited stream.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn span(&self) -> Span {
+        match *self {
+            TokenTree::Group(ref t) => t.span(),
+            TokenTree::Ident(ref t) => t.span(),
+            TokenTree::Punct(ref t) => t.span(),
+            TokenTree::Literal(ref t) => t.span(),
+        }
+    }
+
+    /// 为 *仅这个标记** 配置范围。
+    ///
+    /// Note that if this token is a `Group` then this method will not configure
+    /// the span of each of the internal tokens, this will simply delegate to
+    /// the `set_span` method of each variant.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn set_span(&mut self, span: Span) {
+        match *self {
+            TokenTree::Group(ref mut t) => t.set_span(span),
+            TokenTree::Ident(ref mut t) => t.set_span(span),
+            TokenTree::Punct(ref mut t) => t.set_span(span),
+            TokenTree::Literal(ref mut t) => t.set_span(span),
+        }
+    }
+}
+
+/// 以字符串形式打印标记树，该字符串应能够无损地转换回
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Debug for TokenTree {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Each of these has the name in the struct type in the derived debug,
+        // so don't bother with an extra layer of indirection
+        match *self {
+            TokenTree::Group(ref tt) => tt.fmt(f),
+            TokenTree::Ident(ref tt) => tt.fmt(f),
+            TokenTree::Punct(ref tt) => tt.fmt(f),
+            TokenTree::Literal(ref tt) => tt.fmt(f),
+        }
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl From<Group> for TokenTree {
+    fn from(g: Group) -> TokenTree {
+        TokenTree::Group(g)
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl From<Ident> for TokenTree {
+    fn from(g: Ident) -> TokenTree {
+        TokenTree::Ident(g)
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl From<Punct> for TokenTree {
+    fn from(g: Punct) -> TokenTree {
+        TokenTree::Punct(g)
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl From<Literal> for TokenTree {
+    fn from(g: Literal) -> TokenTree {
+        TokenTree::Literal(g)
+    }
+}
+
+/// Prints the token tree as a string that is supposed to be losslessly convertible back
+/// into the same token tree (modulo spans), except for possibly `TokenTree::Group`s
+/// with `Delimiter::None` delimiters and negative numeric literals.
+///
+/// 注意：输出的具体形式可能会发生变化，例如
+/// be changes in the whitespace used between tokens. Therefore, you should
+/// 可能会因上述变化而失效。相反，您应在
+/// produced by `to_string`) to implement a proc macro, because that matching
+/// 一个被分隔的标记流。
+/// `TokenTree` level, e.g. matching against `TokenTree::Ident`,
+/// `TokenTree::Punct`, or `TokenTree::Literal`.
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Display for TokenTree {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            TokenTree::Group(t) => write!(f, "{t}"),
+            TokenTree::Ident(t) => write!(f, "{t}"),
+            TokenTree::Punct(t) => write!(f, "{t}"),
+            TokenTree::Literal(t) => write!(f, "{t}"),
+        }
+    }
+}
+
+/// 描述了如何对标记树序列进行分隔。
+///
+/// A `Group` internally contains a `TokenStream` which is surrounded by `Delimiter`s.
+#[derive(Clone)]
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+pub struct Group(bridge::Group<bridge::client::TokenStream, bridge::client::Span>);
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Send for Group {}
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Sync for Group {}
+
+/// 描述了如何对标记树序列进行分隔。
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+pub enum Delimiter {
+    /// `( ... )`
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Parenthesis,
+    /// `{ ... }`
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Brace,
+    /// `[ ... ]`
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Bracket,
+    /// `∅ ... ∅`
+    /// 一个不可见的分隔符，例如可能出现在来自
+    /// "macro variable" `$var`. It is important to preserve operator priorities in cases like
+    /// `$var * 3` where `$var` is `1 + 2`.
+    /// 不可见的分隔符可能在标记流通过字符串的往返过程中丢失。
+    ///
+    /// <div class="warning">
+    ///
+    /// Note: rustc currently can ignore the grouping of tokens delimited by `None` in the output
+    /// of a proc_macro. Only `None`-delimited groups created by a macro_rules macro in the input
+    /// of a proc_macro macro are preserved, and only in very specific circumstances.
+    /// Any `None`-delimited groups (re)created by a proc_macro will therefore not preserve
+    /// operator priorities as indicated above. The other `Delimiter` variants should be used
+    /// instead in this context. This is a rustc bug. For details, see
+    /// [rust-lang/rust#67062](https://github.com/rust-lang/rust/issues/67062).
+    ///
+    /// </div>
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    None,
+}
+
+impl Group {
+    /// Creates a new `Group` with the given delimiter and token stream.
+    ///
+    /// 此构造函数将把该组的 span 设置为
+    /// `Span::call_site()`. To change the span you can use the `set_span`
+    /// 该方法。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn new(delimiter: Delimiter, stream: TokenStream) -> Group {
+        Group(bridge::Group {
+            delimiter,
+            stream: stream.0,
+            span: bridge::DelimSpan::from_single(Span::call_site().0),
+        })
+    }
+
+    /// Returns the delimiter of this `Group`
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn delimiter(&self) -> Delimiter {
+        self.0.delimiter
+    }
+
+    /// Returns the `TokenStream` of tokens that are delimited in this `Group`.
+    ///
+    /// 注意，返回的标记流不包含上述分隔符。
+    /// 上述返回的分隔符。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn stream(&self) -> TokenStream {
+        TokenStream(self.0.stream.clone())
+    }
+
+    /// Returns the span for the delimiters of this token stream, spanning the
+    /// entire `Group`.
+    ///
+    /// ```text
+    /// pub fn span(&self) -> Span {
+    ///            ^^^^^^^
+    /// ```
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn span(&self) -> Span {
+        Span(self.0.span.entire)
+    }
+
+    /// 返回指向该组闭闭分隔符的 span。
+    ///
+    /// ```text
+    /// pub fn span_open(&self) -> Span {
+    ///                 ^
+    /// ```
+    #[stable(feature = "proc_macro_group_span", since = "1.55.0")]
+    pub fn span_open(&self) -> Span {
+        Span(self.0.span.open)
+    }
+
+    /// Returns the span pointing to the closing delimiter of this group.
+    ///
+    /// ```text
+    /// pub fn span_close(&self) -> Span {
+    ///                        ^
+    /// ```
+    #[stable(feature = "proc_macro_group_span", since = "1.55.0")]
+    pub fn span_close(&self) -> Span {
+        Span(self.0.span.close)
+    }
+
+    /// Configures the span for this `Group`'s delimiters, but not its internal
+    /// tokens.
+    ///
+    /// This method will **not** set the span of all the internal tokens spanned
+    /// by this group, but rather it will only set the span of the delimiter
+    /// tokens at the level of the `Group`.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn set_span(&mut self, span: Span) {
+        self.0.span = bridge::DelimSpan::from_single(span.0);
+    }
+}
+
+/// 将该组以字符串形式输出，该字符串可以无损地转换回同一组（仅保留跨度）。
+/// into the same group (modulo spans), except for possibly `TokenTree::Group`s
+/// with `Delimiter::None` delimiters.
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Display for Group {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", TokenStream::from(TokenTree::from(self.clone())))
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Debug for Group {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Group")
+            .field("delimiter", &self.delimiter())
+            .field("stream", &self.stream())
+            .field("span", &self.span())
+            .finish()
+    }
+}
+
+/// A `Punct` is a single punctuation character such as `+`, `-` or `#`.
+///
+/// Multi-character operators like `+=` are represented as two instances of `Punct` with different
+/// forms of `Spacing` returned.
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+#[derive(Clone)]
+pub struct Punct(bridge::Punct<bridge::client::Span>);
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Send for Punct {}
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl !Sync for Punct {}
+
+/// Indicates whether a `Punct` token can join with the following token
+/// 与后续标记结合形成多字符运算符。
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+pub enum Spacing {
+    /// A `Punct` token can join with the following token to form a multi-character operator.
+    ///
+    /// In token streams constructed using proc macro interfaces, `Joint` punctuation tokens can be
+    /// 后接其他任何标记。然而，在从源代码解析的标记流中，
+    /// compiler will only set spacing to `Joint` in the following cases.
+    /// - When a `Punct` is immediately followed by another `Punct` without a whitespace. E.g. `+`
+    ///   is `Joint` in `+=` and `++`.
+    /// - When a single quote `'` is immediately followed by an identifier without a whitespace.
+    ///   E.g. `'` is `Joint` in `'lifetime`.
+    ///
+    /// 此列表未来可能会扩展，以支持更多标记组合。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Joint,
+    /// A `Punct` token cannot join with the following token to form a multi-character operator.
+    ///
+    /// `Alone` punctuation tokens can be followed by any other tokens. In token streams parsed
+    /// from source code, the compiler will set spacing to `Alone` in all cases not covered by the
+    /// conditions for `Joint` above. E.g. `+` is `Alone` in `+ =`, `+ident` and `+()`. In
+    /// particular, tokens not followed by anything will be marked as `Alone`.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    Alone,
+}
+
+impl Punct {
+    /// Creates a new `Punct` from the given character and spacing.
+    /// The `ch` argument must be a valid punctuation character permitted by the language,
+    /// otherwise the function will panic.
+    ///
+    /// The returned `Punct` will have the default span of `Span::call_site()`
+    /// which can be further configured with the `set_span` method below.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn new(ch: char, spacing: Spacing) -> Punct {
+        const LEGAL_CHARS: &[char] = &[
+            '=', '<', '>', '!', '~', '+', '-', '*', '/', '%', '^', '&', '|', '@', '.', ',', ';',
+            ':', '#', '$', '?', '\'',
+        ];
+        if !LEGAL_CHARS.contains(&ch) {
+            panic!("unsupported character `{:?}`", ch);
+        }
+        Punct(bridge::Punct {
+            ch: ch as u8,
+            joint: spacing == Spacing::Joint,
+            span: Span::call_site().0,
+        })
+    }
+
+    /// Returns the value of this punctuation character as `char`.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn as_char(&self) -> char {
+        self.0.ch as char
+    }
+
+    /// 返回该标点符号的跨度。
+    /// combined into a multi-character operator with the following token (`Joint`), or whether the
+    /// operator has definitely ended (`Alone`).
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn spacing(&self) -> Spacing {
+        if self.0.joint { Spacing::Joint } else { Spacing::Alone }
+    }
+
+    /// Returns the span for this punctuation character.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn span(&self) -> Span {
+        Span(self.0.span)
+    }
+
+    /// 配置此标点符号的切片。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn set_span(&mut self, span: Span) {
+        self.0.span = span.0;
+    }
+}
+
+/// 将标点符号以字符串形式输出，该字符串应可无损转换回原字符。
+/// back into the same character.
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Display for Punct {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.as_char())
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Debug for Punct {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Punct")
+            .field("ch", &self.as_char())
+            .field("spacing", &self.spacing())
+            .field("span", &self.span())
+            .finish()
+    }
+}
+
+#[stable(feature = "proc_macro_punct_eq", since = "1.50.0")]
+impl PartialEq<char> for Punct {
+    fn eq(&self, rhs: &char) -> bool {
+        self.as_char() == *rhs
+    }
+}
+
+#[stable(feature = "proc_macro_punct_eq_flipped", since = "1.52.0")]
+impl PartialEq<Punct> for char {
+    fn eq(&self, rhs: &Punct) -> bool {
+        *self == rhs.as_char()
+    }
+}
+
+/// An identifier (`ident`).
+#[derive(Clone)]
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+pub struct Ident(bridge::Ident<bridge::client::Span, bridge::client::Symbol>);
+
+impl Ident {
+    /// Creates a new `Ident` with the given `string` as well as the specified
+    /// `span`.
+    /// The `string` argument must be a valid identifier permitted by the
+    /// language (including keywords, e.g. `self` or `fn`). Otherwise, the function will panic.
+    ///
+    /// The constructed identifier will be NFC-normalized. See the [Reference] for more info.
+    ///
+    /// Note that `span`, currently in rustc, configures the hygiene information
+    /// for this identifier.
+    ///
+    /// As of this time `Span::call_site()` explicitly opts-in to "call-site" hygiene
+    /// meaning that identifiers created with this span will be resolved as if they were written
+    /// 这意味着使用此切片创建的标识符将在宏定义位置被解析，其他代码在宏调用位置无法引用它们。
+    /// able to refer to them as well.
+    ///
+    /// Later spans like `Span::def_site()` will allow to opt-in to "definition-site" hygiene
+    /// meaning that identifiers created with this span will be resolved at the location of the
+    /// macro definition and other code at the macro call site will not be able to refer to them.
+    ///
+    /// Due to the current importance of hygiene this constructor, unlike other
+    /// tokens, requires a `Span` to be specified at construction.
+    ///
+    /// [Reference]: https://doc.rust-lang.org/nightly/reference/identifiers.html#r-ident.normalization
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn new(string: &str, span: Span) -> Ident {
+        Ident(bridge::Ident {
+            sym: bridge::client::Symbol::new_ident(string, false),
+            kind: bridge::IdentKind::Normal,
+            span: span.0,
+        })
+    }
+
+    /// Same as `Ident::new`, but creates a raw identifier (`r#ident`).
+    /// The `string` argument be a valid identifier permitted by the language
+    /// (including keywords, e.g. `fn`). Keywords which are usable in path segments
+    /// (e.g. `self`, `super`) are not supported, and will cause a panic.
+    #[stable(feature = "proc_macro_raw_ident", since = "1.47.0")]
+    pub fn new_raw(string: &str, span: Span) -> Ident {
+        Ident(bridge::Ident {
+            sym: bridge::client::Symbol::new_ident(string, true),
+            kind: bridge::IdentKind::Raw,
+            span: span.0,
+        })
+    }
+
+    /// Returns the span of this `Ident`, encompassing the entire string returned
+    /// by [`to_string`](ToString::to_string).
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn span(&self) -> Span {
+        Span(self.0.span)
+    }
+
+    /// Configures the span of this `Ident`, possibly changing its hygiene context.
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn set_span(&mut self, span: Span) {
+        self.0.span = span.0;
+    }
+}
+
+/// 将标识符以字符串形式输出，该字符串应可无损转换回原标识符。
+/// 成为相同的标识符。
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Display for Ident {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if let Some(prefix) = self.0.kind.prefix() {
+            f.write_str(prefix)?;
+        }
+        fmt::Display::fmt(&self.0.sym, f)
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Debug for Ident {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Ident")
+            .field("ident", &self.to_string())
+            .field("span", &self.span())
+            .finish()
+    }
+}
+
+/// A literal string (`"hello"`), byte string (`b"hello"`), C string (`c"hello"`),
+/// character (`'a'`), byte character (`b'a'`), an integer or floating point number
+/// with or without a suffix (`1`, `1u8`, `2.3`, `2.3f32`).
+/// Boolean literals like `true` and `false` do not belong here, they are `Ident`s.
+#[derive(Clone)]
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+pub struct Literal(bridge::Literal<bridge::client::Span, bridge::client::Symbol>);
+
+macro_rules! suffixed_int_literals {
+    ($($name:ident => $kind:ident,)*) => ($(
+        /// Creates a new suffixed integer literal with the specified value.
+        ///
+        /// This function will create an integer like `1u32` where the integer
+        /// 指定的值是该令牌的第一部分，而整数部分则带有后缀。
+        /// 同样在末尾也带有后缀。
+        /// 由负数生成的字面量可能无法通过多次转换保留下来。
+        /// `TokenStream` or strings and may be broken into two tokens (`-` and positive literal).
+        ///
+        /// Literals created through this method have the `Span::call_site()`
+        /// span by default, which can be configured with the `set_span` method
+        /// 如下所述。
+        #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+        pub fn $name(n: $kind) -> Literal {
+            Literal(bridge::Literal {
+                kind: bridge::LitKind::Integer,
+                symbol: bridge::client::Symbol::new(&n.to_string()),
+                suffix: Some(bridge::client::Symbol::new(stringify!($kind))),
+                span: Span::call_site().0,
+            })
+        }
+    )*)
+}
+
+macro_rules! unsuffixed_int_literals {
+    ($($name:ident => $kind:ident,)*) => ($(
+        /// 创建一个带有指定值的未带后缀整数字面量。
+        ///
+        /// This function will create an integer like `1` where the integer
+        /// 指定的值是该令牌的第一部分，没有后缀。
+        /// specified on this token, meaning that invocations like
+        /// `Literal::i8_unsuffixed(1)` are equivalent to
+        /// `Literal::u32_unsuffixed(1)`.
+        /// 由负数生成的字面量可能无法通过多次转换保留下来。
+        /// `TokenStream` or strings and may be broken into two tokens (`-` and positive literal).
+        ///
+        /// Literals created through this method have the `Span::call_site()`
+        /// span by default, which can be configured with the `set_span` method
+        /// 如下所述。
+        #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+        pub fn $name(n: $kind) -> Literal {
+            Literal(bridge::Literal {
+                kind: bridge::LitKind::Integer,
+                symbol: bridge::client::Symbol::new(&n.to_string()),
+                suffix: None,
+                span: Span::call_site().0,
+            })
+        }
+    )*)
+}
+
+macro_rules! integer_values {
+    ($($nb:ident => $fn_name:ident,)+) => {
+        $(
+            #[doc = concat!(
+                "Returns the unescaped `",
+                stringify!($nb),
+                "` value if the literal is a `",
+                stringify!($nb),
+                "` or if it's an \"unmarked\" integer which doesn't overflow.")]
+            #[unstable(feature = "proc_macro_value", issue = "136652")]
+            pub fn $fn_name(&self) -> Result<$nb, ConversionErrorKind> {
+                if self.0.kind != bridge::LitKind::Integer {
+                    return Err(ConversionErrorKind::InvalidLiteralKind);
+                }
+                self.with_symbol_and_suffix(|symbol, suffix| {
+                    match suffix {
+                        stringify!($nb) | "" => {
+                            let symbol = strip_underscores(symbol);
+                            let (number, base) = parse_number(&symbol);
+                            $nb::from_str_radix(&number, base as u32).map_err(|_| ConversionErrorKind::InvalidLiteralKind)
+                        }
+                        _ => Err(ConversionErrorKind::InvalidLiteralKind),
+                    }
+                })
+            }
+        )+
+    }
+}
+
+macro_rules! float_values {
+    ($($nb:ident => $fn_name:ident,)+) => {
+        $(
+            #[doc = concat!(
+                "Returns the unescaped `",
+                stringify!($nb),
+                "` value if the literal is a `",
+                stringify!($nb),
+                "` or if it's an \"unmarked\" float which doesn't overflow.")]
+            #[unstable(feature = "proc_macro_value", issue = "136652")]
+            pub fn $fn_name(&self) -> Result<$nb, ConversionErrorKind> {
+                if self.0.kind != bridge::LitKind::Float {
+                    return Err(ConversionErrorKind::InvalidLiteralKind);
+                }
+                self.with_symbol_and_suffix(|symbol, suffix| {
+                    match suffix {
+                        stringify!($nb) | "" => {
+                            let number = strip_underscores(symbol);
+                            $nb::from_str(&number).map_err(|_| ConversionErrorKind::InvalidLiteralKind)
+                        }
+                        _ => Err(ConversionErrorKind::InvalidLiteralKind),
+                    }
+                })
+            }
+        )+
+    }
+}
+
+impl Literal {
+    fn new(kind: bridge::LitKind, value: &str, suffix: Option<&str>) -> Self {
+        Literal(bridge::Literal {
+            kind,
+            symbol: bridge::client::Symbol::new(value),
+            suffix: suffix.map(bridge::client::Symbol::new),
+            span: Span::call_site().0,
+        })
+    }
+
+    suffixed_int_literals! {
+        u8_suffixed => u8,
+        u16_suffixed => u16,
+        u32_suffixed => u32,
+        u64_suffixed => u64,
+        u128_suffixed => u128,
+        usize_suffixed => usize,
+        i8_suffixed => i8,
+        i16_suffixed => i16,
+        i32_suffixed => i32,
+        i64_suffixed => i64,
+        i128_suffixed => i128,
+        isize_suffixed => isize,
+    }
+
+    unsuffixed_int_literals! {
+        u8_unsuffixed => u8,
+        u16_unsuffixed => u16,
+        u32_unsuffixed => u32,
+        u64_unsuffixed => u64,
+        u128_unsuffixed => u128,
+        usize_unsuffixed => usize,
+        i8_unsuffixed => i8,
+        i16_unsuffixed => i16,
+        i32_unsuffixed => i32,
+        i64_unsuffixed => i64,
+        i128_unsuffixed => i128,
+        isize_unsuffixed => isize,
+    }
+
+    /// 创建一个带有未带后缀浮点字面量。
+    ///
+    /// This constructor is similar to those like `Literal::i8_unsuffixed` where
+    /// 浮点数的值直接被输出到令牌中，但没有使用后缀，
+    /// used, so it may be inferred to be a `f64` later in the compiler.
+    /// 由负数生成的字面量可能无法通过多次转换保留下来。
+    /// `TokenStream` or strings and may be broken into two tokens (`-` and positive literal).
+    ///
+    /// # Panics
+    ///
+    /// 此函数要求指定的浮点数必须是有限的，否则
+    /// 例如，如果它是无穷大或 NaN，此函数会触发 panic。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn f32_unsuffixed(n: f32) -> Literal {
+        if !n.is_finite() {
+            panic!("Invalid float literal {n}");
+        }
+        let mut repr = n.to_string();
+        if !repr.contains('.') {
+            repr.push_str(".0");
+        }
+        Literal::new(bridge::LitKind::Float, &repr, None)
+    }
+
+    /// 创建一个带有后缀的浮点字面量。
+    ///
+    /// This constructor will create a literal like `1.0f32` where the value
+    /// specified is the preceding part of the token and `f32` is the suffix of
+    /// the token. This token will always be inferred to be an `f32` in the
+    /// 此令牌。
+    /// 由负数生成的字面量可能无法通过多次转换保留下来。
+    /// `TokenStream` or strings and may be broken into two tokens (`-` and positive literal).
+    ///
+    /// # Panics
+    ///
+    /// 此函数要求指定的浮点数必须是有限的，否则
+    /// 例如，如果它是无穷大或 NaN，此函数会触发 panic。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn f32_suffixed(n: f32) -> Literal {
+        if !n.is_finite() {
+            panic!("Invalid float literal {n}");
+        }
+        Literal::new(bridge::LitKind::Float, &n.to_string(), Some("f32"))
+    }
+
+    /// 创建一个带有未带后缀浮点字面量。
+    ///
+    /// This constructor is similar to those like `Literal::i8_unsuffixed` where
+    /// 浮点数的值直接被输出到令牌中，但没有使用后缀，
+    /// used, so it may be inferred to be a `f64` later in the compiler.
+    /// Literals created from negative numbers might not survive roundtrips through
+    /// `TokenStream` or strings and may be broken into two tokens (`-` and positive literal).
+    ///
+    /// # 引发 panic
+    ///
+    /// 此函数要求指定的浮点数是有限的，因为
+    /// 例如，如果它是无穷大或 NaN，此函数将引发 panic。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn f64_unsuffixed(n: f64) -> Literal {
+        if !n.is_finite() {
+            panic!("Invalid float literal {n}");
+        }
+        let mut repr = n.to_string();
+        if !repr.contains('.') {
+            repr.push_str(".0");
+        }
+        Literal::new(bridge::LitKind::Float, &repr, None)
+    }
+
+    /// 创建一个新的带后缀浮点字面量。
+    ///
+    /// This constructor will create a literal like `1.0f64` where the value
+    /// specified is the preceding part of the token and `f64` is the suffix of
+    /// the token. This token will always be inferred to be an `f64` in the
+    /// compiler.
+    /// Literals created from negative numbers might not survive roundtrips through
+    /// `TokenStream` or strings and may be broken into two tokens (`-` and positive literal).
+    ///
+    /// # 引发 panic
+    ///
+    /// 此函数要求指定的浮点数是有限的，因为
+    /// 例如，如果它是无穷大或 NaN，此函数将引发 panic。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn f64_suffixed(n: f64) -> Literal {
+        if !n.is_finite() {
+            panic!("Invalid float literal {n}");
+        }
+        Literal::new(bridge::LitKind::Float, &n.to_string(), Some("f64"))
+    }
+
+    /// 字符串字面量。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn string(string: &str) -> Literal {
+        let escape = EscapeOptions {
+            escape_single_quote: false,
+            escape_double_quote: true,
+            escape_nonascii: false,
+        };
+        let repr = escape_bytes(string.as_bytes(), escape);
+        Literal::new(bridge::LitKind::Str, &repr, None)
+    }
+
+    /// 字符字面量。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn character(ch: char) -> Literal {
+        let escape = EscapeOptions {
+            escape_single_quote: true,
+            escape_double_quote: false,
+            escape_nonascii: false,
+        };
+        let repr = escape_bytes(ch.encode_utf8(&mut [0u8; 4]).as_bytes(), escape);
+        Literal::new(bridge::LitKind::Char, &repr, None)
+    }
+
+    /// 字节字符字面量。
+    #[stable(feature = "proc_macro_byte_character", since = "1.79.0")]
+    pub fn byte_character(byte: u8) -> Literal {
+        let escape = EscapeOptions {
+            escape_single_quote: true,
+            escape_double_quote: false,
+            escape_nonascii: true,
+        };
+        let repr = escape_bytes(&[byte], escape);
+        Literal::new(bridge::LitKind::Byte, &repr, None)
+    }
+
+    /// 字节字符串字面量。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn byte_string(bytes: &[u8]) -> Literal {
+        let escape = EscapeOptions {
+            escape_single_quote: false,
+            escape_double_quote: true,
+            escape_nonascii: true,
+        };
+        let repr = escape_bytes(bytes, escape);
+        Literal::new(bridge::LitKind::ByteStr, &repr, None)
+    }
+
+    /// C 字符串字面量。
+    #[stable(feature = "proc_macro_c_str_literals", since = "1.79.0")]
+    pub fn c_string(string: &CStr) -> Literal {
+        let escape = EscapeOptions {
+            escape_single_quote: false,
+            escape_double_quote: true,
+            escape_nonascii: false,
+        };
+        let repr = escape_bytes(string.to_bytes(), escape);
+        Literal::new(bridge::LitKind::CStr, &repr, None)
+    }
+
+    /// 返回包含该字面的范围。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn span(&self) -> Span {
+        Span(self.0.span)
+    }
+
+    /// 配置与该字面对应的范围。
+    #[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+    pub fn set_span(&mut self, span: Span) {
+        self.0.span = span.0;
+    }
+
+    /// Returns a `Span` that is a subset of `self.span()` containing only the
+    /// source bytes in range `range`. Returns `None` if the would-be trimmed
+    /// span is outside the bounds of `self`.
+    // FIXME(SergioBenitez): check that the byte range starts and ends at a
+    // UTF-8 boundary of the source. otherwise, it's likely that a panic will
+    // occur elsewhere when the source text is printed.
+    // FIXME(SergioBenitez): there is no way for the user to know what
+    // `self.span()` actually maps to, so this method can currently only be
+    // called blindly. For example, `to_string()` for the character 'c' returns
+    // "'\u{63}'"; there is no way for the user to know whether the source text
+    // was 'c' or whether it was '\u{63}'.
+    #[unstable(feature = "proc_macro_span", issue = "54725")]
+    pub fn subspan<R: RangeBounds<usize>>(&self, range: R) -> Option<Span> {
+        BridgeMethods::span_subspan(
+            self.0.span,
+            range.start_bound().cloned(),
+            range.end_bound().cloned(),
+        )
+        .map(Span)
+    }
+
+    fn with_symbol_and_suffix<R>(&self, f: impl FnOnce(&str, &str) -> R) -> R {
+        self.0.symbol.with(|symbol| match self.0.suffix {
+            Some(suffix) => suffix.with(|suffix| f(symbol, suffix)),
+            None => f(symbol, ""),
+        })
+    }
+
+    /// Invokes the callback with a `&[&str]` consisting of each part of the
+    /// literal's representation. This is done to allow the `ToString` and
+    /// `Display` implementations to borrow references to symbol values, and
+    /// both be optimized to reduce overhead.
+    fn with_stringify_parts<R>(&self, f: impl FnOnce(&[&str]) -> R) -> R {
+        /// Returns a string containing exactly `num` '#' characters.
+        /// Uses a 256-character source string literal which is always safe to
+        /// index with a `u8` index.
+        fn get_hashes_str(num: u8) -> &'static str {
+            const HASHES: &str = "\
+            ################################################################\
+            ################################################################\
+            ################################################################\
+            ################################################################\
+            ";
+            const _: () = assert!(HASHES.len() == 256);
+            &HASHES[..num as usize]
+        }
+
+        self.with_symbol_and_suffix(|symbol, suffix| match self.0.kind {
+            bridge::LitKind::Byte => f(&["b'", symbol, "'", suffix]),
+            bridge::LitKind::Char => f(&["'", symbol, "'", suffix]),
+            bridge::LitKind::Str => f(&["\"", symbol, "\"", suffix]),
+            bridge::LitKind::StrRaw(n) => {
+                let hashes = get_hashes_str(n);
+                f(&["r", hashes, "\"", symbol, "\"", hashes, suffix])
+            }
+            bridge::LitKind::ByteStr => f(&["b\"", symbol, "\"", suffix]),
+            bridge::LitKind::ByteStrRaw(n) => {
+                let hashes = get_hashes_str(n);
+                f(&["br", hashes, "\"", symbol, "\"", hashes, suffix])
+            }
+            bridge::LitKind::CStr => f(&["c\"", symbol, "\"", suffix]),
+            bridge::LitKind::CStrRaw(n) => {
+                let hashes = get_hashes_str(n);
+                f(&["cr", hashes, "\"", symbol, "\"", hashes, suffix])
+            }
+
+            bridge::LitKind::Integer | bridge::LitKind::Float | bridge::LitKind::ErrWithGuar => {
+                f(&[symbol, suffix])
+            }
+        })
+    }
+
+    /// 如果当前字面量是字节字符字面量，则返回未转义字符值。
+    #[unstable(feature = "proc_macro_value", issue = "136652")]
+    pub fn byte_character_value(&self) -> Result<u8, ConversionErrorKind> {
+        self.0.symbol.with(|symbol| match self.0.kind {
+            bridge::LitKind::Byte => unescape_byte(symbol)
+                .map_err(|err| ConversionErrorKind::FailedToUnescape(err.into())),
+            _ => Err(ConversionErrorKind::InvalidLiteralKind),
+        })
+    }
+
+    /// 如果当前字面量是字符字面量，则返回未转义字符值。
+    #[unstable(feature = "proc_macro_value", issue = "136652")]
+    pub fn character_value(&self) -> Result<char, ConversionErrorKind> {
+        self.0.symbol.with(|symbol| match self.0.kind {
+            bridge::LitKind::Char => unescape_char(symbol)
+                .map_err(|err| ConversionErrorKind::FailedToUnescape(err.into())),
+            _ => Err(ConversionErrorKind::InvalidLiteralKind),
+        })
+    }
+
+    /// 如果当前字面量是字符串或字符串字面量，则返回未转义字符串值。
+    #[unstable(feature = "proc_macro_value", issue = "136652")]
+    pub fn str_value(&self) -> Result<String, ConversionErrorKind> {
+        self.0.symbol.with(|symbol| match self.0.kind {
+            bridge::LitKind::Str => {
+                if symbol.contains('\\') {
+                    let mut buf = String::with_capacity(symbol.len());
+                    let mut error = None;
+                    // Force-inlining here is aggressive but the closure is
+                    // called on every char in the string, so it can be hot in
+                    // programs with many long strings containing escapes.
+                    unescape_str(
+                        symbol,
+                        #[inline(always)]
+                        |_, c| match c {
+                            Ok(c) => buf.push(c),
+                            Err(err) => {
+                                if err.is_fatal() {
+                                    error = Some(ConversionErrorKind::FailedToUnescape(err.into()));
+                                }
+                            }
+                        },
+                    );
+                    if let Some(error) = error { Err(error) } else { Ok(buf) }
+                } else {
+                    Ok(symbol.to_string())
+                }
+            }
+            bridge::LitKind::StrRaw(_) => Ok(symbol.to_string()),
+            _ => Err(ConversionErrorKind::InvalidLiteralKind),
+        })
+    }
+
+    /// 如果当前字面量是 C 字符串或 C 字符串
+    /// 字面量。
+    #[unstable(feature = "proc_macro_value", issue = "136652")]
+    pub fn cstr_value(&self) -> Result<CString, ConversionErrorKind> {
+        self.0.symbol.with(|symbol| match self.0.kind {
+            bridge::LitKind::CStr => {
+                let mut error = None;
+                let mut buf = Vec::with_capacity(symbol.len());
+
+                unescape_c_str(symbol, |_span, res| match res {
+                    Ok(MixedUnit::Char(c)) => {
+                        buf.extend_from_slice(c.get().encode_utf8(&mut [0; 4]).as_bytes())
+                    }
+                    Ok(MixedUnit::HighByte(b)) => buf.push(b.get()),
+                    Err(err) => {
+                        if err.is_fatal() {
+                            error = Some(ConversionErrorKind::FailedToUnescape(err.into()));
+                        }
+                    }
+                });
+                if let Some(error) = error {
+                    Err(error)
+                } else {
+                    buf.push(0);
+                    // Safety: The `buf` content was already checked by the compiler when generating
+                    // the literal.
+                    unsafe { Ok(CString::from_vec_with_nul_unchecked(buf)) }
+                }
+            }
+            bridge::LitKind::CStrRaw(_) => {
+                // Raw strings have no escapes so we can convert the symbol
+                // directly to a `Lrc<u8>` after appending the terminating NUL
+                // char.
+                Ok(CString::new(symbol.to_owned()).expect("invalid cstr literal"))
+            }
+            _ => Err(ConversionErrorKind::InvalidLiteralKind),
+        })
+    }
+
+    /// 如果当前字面量是字节字符串或字节字符串
+    /// 字面量。
+    #[unstable(feature = "proc_macro_value", issue = "136652")]
+    pub fn byte_str_value(&self) -> Result<Vec<u8>, ConversionErrorKind> {
+        self.0.symbol.with(|symbol| match self.0.kind {
+            bridge::LitKind::ByteStr => {
+                let mut buf = Vec::with_capacity(symbol.len());
+                let mut error = None;
+
+                unescape_byte_str(symbol, |_, res| match res {
+                    Ok(b) => buf.push(b),
+                    Err(err) => {
+                        if err.is_fatal() {
+                            error = Some(ConversionErrorKind::FailedToUnescape(err.into()));
+                        }
+                    }
+                });
+                if let Some(error) = error { Err(error) } else { Ok(buf) }
+            }
+            bridge::LitKind::ByteStrRaw(_) => {
+                // Raw strings have no escapes so we can convert the symbol
+                // directly to a `Lrc<u8>`.
+                Ok(symbol.to_owned().into_bytes())
+            }
+            _ => Err(ConversionErrorKind::InvalidLiteralKind),
+        })
+    }
+
+    integer_values! {
+        u8 => u8_value,
+        u16 => u16_value,
+        u32 => u32_value,
+        u64 => u64_value,
+        u128 => u128_value,
+        i8 => i8_value,
+        i16 => i16_value,
+        i32 => i32_value,
+        i64 => i64_value,
+        i128 => i128_value,
+    }
+
+    float_values! {
+        f16 => f16_value,
+        f32 => f32_value,
+        f64 => f64_value,
+        // FIXME: `f128` doesn't implement `FromStr` for the moment so we cannot obtain it from
+        // a `&str`. To be uncommented when it's added.
+        // f128 => f128_value,
+    }
+}
+
+#[repr(u32)]
+#[derive(PartialEq, Eq)]
+enum Base {
+    Decimal = 10,
+    Binary = 2,
+    Octal = 8,
+    Hexadecimal = 16,
+}
+
+fn parse_number(value: &str) -> (&str, Base) {
+    let mut iter = value.as_bytes().iter().copied();
+    let Some(first_digit) = iter.next() else {
+        return ("0", Base::Decimal);
+    };
+    let Some(second_digit) = iter.next() else {
+        return (value, Base::Decimal);
+    };
+
+    let mut base = Base::Decimal;
+    if first_digit == b'0' {
+        // Attempt to parse encoding base.
+        match second_digit {
+            b'b' => {
+                base = Base::Binary;
+            }
+            b'o' => {
+                base = Base::Octal;
+            }
+            b'x' => {
+                base = Base::Hexadecimal;
+            }
+            _ => {}
+        }
+    }
+
+    let offset = if base == Base::Decimal { 0 } else { 2 };
+
+    (&value[offset..], base)
+}
+
+fn strip_underscores(value_s: &str) -> Cow<'_, str> {
+    let value = value_s.as_bytes();
+    if value.iter().copied().all(|c| c != b'_' && c != b'f') {
+        return Cow::Borrowed(value_s);
+    }
+    let mut output = String::with_capacity(value.len());
+    for c in value.iter().copied() {
+        if c != b'_' {
+            output.push(c as char);
+        }
+    }
+    Cow::Owned(output)
+}
+
+/// 从字符串化表示中解析单个字面量。
+///
+/// 为了成功解析，输入字符串不能包含任何内容
+/// 除了字面量标记本身。具体来说，不能包含空格或其他内容。
+/// 字面量之外的注释。
+///
+/// The resulting literal token will have a `Span::call_site()` span.
+///
+/// NOTE: some errors may cause panics instead of returning `LexError`. We
+/// reserve the right to change these errors into `LexError`s later.
+#[stable(feature = "proc_macro_literal_parse", since = "1.54.0")]
+impl FromStr for Literal {
+    type Err = LexError;
+
+    fn from_str(src: &str) -> Result<Self, LexError> {
+        match BridgeMethods::literal_from_str(src) {
+            Ok(literal) => Ok(Literal(literal)),
+            Err(msg) => Err(LexError(msg)),
+        }
+    }
+}
+
+/// 将字面量以字符串形式输出，且应能够无损转换回相同的字面量（浮点字面量的数值可能会有舍入误差）。
+/// 支持将环境状态添加到构建依赖信息中。
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Display for Literal {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.with_stringify_parts(|parts| {
+            for part in parts {
+                fmt::Display::fmt(part, f)?;
+            }
+            Ok(())
+        })
+    }
+}
+
+#[stable(feature = "proc_macro_lib2", since = "1.29.0")]
+impl fmt::Debug for Literal {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Literal")
+            // format the kind on one line even in {:#?} mode
+            .field("kind", &format_args!("{:?}", self.0.kind))
+            .field("symbol", &self.0.symbol)
+            // format `Some("...")` on one line even in {:#?} mode
+            .field("suffix", &format_args!("{:?}", self.0.suffix))
+            .field("span", &self.0.span)
+            .finish()
+    }
+}
+
+#[unstable(
+    feature = "proc_macro_tracked_path",
+    issue = "99515",
+    implied_by = "proc_macro_tracked_env"
+)]
+/// 检索环境变量并将其添加到构建依赖信息中。
+pub mod tracked {
+    use std::env::{self, VarError};
+    use std::ffi::OsStr;
+    use std::path::Path;
+
+    use crate::BridgeMethods;
+
+    /// 构建系统在编译时知道该变量被访问过，当该变量的值改变时，能够重新运行构建。
+    /// The build system executing the compiler will know that the variable was accessed during
+    /// 明确跟踪文件或目录。
+    /// Besides the dependency tracking this function should be equivalent to `env::var` from the
+    /// standard library, except that the argument must be UTF-8.
+    #[unstable(feature = "proc_macro_tracked_env", issue = "99515")]
+    pub fn env_var<K: AsRef<OsStr> + AsRef<str>>(key: K) -> Result<String, VarError> {
+        let key: &str = key.as_ref();
+        let value = env::var(key);
+        BridgeMethods::track_env_var(key, value.as_deref().ok());
+        value
+    }
+
+    /// Track a file or directory explicitly.
+    ///
+    /// Commonly used for tracking asset preprocessing.
+    #[unstable(feature = "proc_macro_tracked_path", issue = "99515")]
+    pub fn path<P: AsRef<Path>>(path: P) {
+        let path: &str = path.as_ref().to_str().unwrap();
+        BridgeMethods::track_path(path);
+    }
+}

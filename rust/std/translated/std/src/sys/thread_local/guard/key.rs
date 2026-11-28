@@ -1,0 +1,81 @@
+//! 许多 UNIX 平台没有专门的方法来注册原生 TLS 的析构函数。
+//! (i.e., `#[thread_local] static`). Instead, we use one TLS key with a destructor that will run
+//! all native TLS destructors in the destructor list. It also runs `rt::thread_cleanup`.
+
+#[cfg(target_thread_local)]
+pub fn enable() {
+    use crate::ptr;
+    use crate::sys::thread_local::destructors;
+    use crate::sys::thread_local::key::{LazyKey, set};
+
+    static DTORS: LazyKey = LazyKey::new(Some(run));
+
+    // Setting the key value to something other than NULL will result in the
+    // destructor being run at thread exit.
+    unsafe {
+        set(DTORS.force(), ptr::without_provenance_mut(1));
+    }
+
+    unsafe extern "C" fn run(_: *mut u8) {
+        unsafe {
+            // Rust thread-local destructors should run *before* `rt::thread_cleanup`.
+            destructors::run();
+            // On platforms with `__cxa_thread_atexit_impl`, `destructors::run` does nothing as the
+            // TLS destructors are registered with the system. But because all of those platforms
+            // call the destructors of TLS keys *after* the registered "atexit" ones, this function
+            // will still be run last (at the time of writing). The `thread_current_in_dtor` test
+            // confirms this.
+            crate::rt::thread_cleanup();
+        }
+    }
+}
+
+#[cfg(not(target_thread_local))]
+pub use key_based::{LOCAL_POINTER_NEEDS_DTOR, cleanup_pending, enable};
+
+#[cfg(not(target_thread_local))]
+mod key_based {
+    use crate::ptr;
+    use crate::sys::thread_local::key::{LazyKey, get, set};
+
+    const DEFER: *mut u8 = ptr::without_provenance_mut(1);
+    const RUN: *mut u8 = ptr::without_provenance_mut(2);
+
+    static CLEANUP: LazyKey = LazyKey::new(Some(run));
+
+    /// 在基于密钥的 TLS 平台上，系统会自动执行析构函数，因此我们无需
+    /// call `destructors::run`. We still have to make sure that [`crate::rt::thread_cleanup`] is
+    /// 并且应确保其 *最后* 被调用，在所有常规 Rust 线程局部变量释放之后。
+    /// 这是通过将 TLS 析构函数的执行推迟到
+    /// TLS 析构函数内部的下一轮销毁过程中来实现的。
+    pub fn enable() {
+        unsafe { set(CLEANUP.force(), DEFER) }
+    }
+
+    unsafe extern "C" fn run(state: *mut u8) {
+        if state == DEFER {
+            // Make sure that this function is run again in the next round of
+            // TLS destruction. If there is no further round, there will be leaks,
+            // but that's okay, `thread_cleanup` is not guaranteed to be called.
+            unsafe { set(CLEANUP.force(), RUN) }
+        } else {
+            debug_assert_eq!(state, RUN);
+            // If the state is still RUN in the next round of TLS destruction,
+            // it means that no other TLS destructors defined by this runtime
+            // have been run, as they would have set the state to DEFER.
+            crate::rt::thread_cleanup();
+        }
+    }
+
+    /// Whether [`crate::rt::thread_cleanup`] has yet to run on this thread.
+    pub fn cleanup_pending() -> bool {
+        !unsafe { get(CLEANUP.force()) }.is_null()
+    }
+
+    /// The OS may free the values of the keys without a destructor **before**
+    /// [`crate::rt::thread_cleanup`] runs (e.g. ESP-IDF, glibc and musl free
+    /// them in the first round of TLS destruction). Hence, local pointers need
+    /// a destructor, which stores the value again for as long as
+    /// [`cleanup_pending`] returns `true`.
+    pub const LOCAL_POINTER_NEEDS_DTOR: bool = true;
+}
